@@ -1,0 +1,65 @@
+---
+name: PurePerms
+main: _64FF00\PurePerms\PurePerms
+version: 1.3.7
+api:
+- 2.0.0
+- 3.0.0
+- 3.0.0-ALPHA1
+- 3.0.0-ALPHA2
+- 3.0.0-ALPHA3
+- 3.0.0-ALPHA4
+- 3.0.0-ALPHA5
+- 3.0.0-ALPHA6
+load: STARTUP
+author: 64FF00 & ProjectInfinity
+website: https://github.com/PurePlugins/PurePerms
+permissions:
+  pperms:
+    description: 'PurePerms by 64FF00! (Twitter: @64FF00)'
+    children:
+      pperms.command:
+        description: Allows you to use all PurePerms commands.
+        children:
+          pperms.command.addgroup:
+            description: Allows you to add a new group to the groups list.
+          pperms.command.addparent:
+            description: Allows you to add a group to another group inheritance list.
+          pperms.command.defgroup:
+            description: Allows you to set the default group manually.
+          pperms.command.fperms:
+            description: Allows you to find permissions for a specific plugin.
+          pperms.command.groups:
+            description: Allows you to see a list of all groups.
+          pperms.command.listgperms:
+            description: Allows you to see a list of all permissions from a group.
+          pperms.command.listuperms:
+            description: Allows you to see a list of all permissions from a user.
+          pperms.command.ppinfo:
+            default: true
+            description: Allows you to get current PurePerms information.
+          pperms.command.ppreload:
+            description: Allows you to reload all PurePerms configurations.
+          pperms.command.rmgroup:
+            description: Allows you to remove a group from the groups list.
+          pperms.command.rmparent:
+            description: Allows you to remove a group from another group inheritance
+              list.
+          pperms.command.setgperm:
+            description: Allows you to add a permission to the group.
+          pperms.command.setgroup:
+            description: Allows you to set group for a user.
+          pperms.command.setuperm:
+            description: Allows you to add a permission to a user.
+          pperms.command.unsetgperm:
+            description: Allows you to remove a permission from the group.
+          pperms.command.unsetuperm:
+            description: Allows you to remove a permission from the user.
+          pperms.command.usrinfo:
+            description: Allows you to see info about a user.
+      pperms.noeul:
+        description: Allows you to access all 'Noeul' related features.
+        children:
+          pperms.noeul.ppsudo:
+            description: Allows you to use the Noeul 'ppsudo' command.
+...

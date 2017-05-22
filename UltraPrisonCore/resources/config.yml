@@ -1,0 +1,66 @@
+---
+prefferedEconomy: EconomyAPI
+prefix: ""
+broadcastMessageOnRankUp: true
+order:
+ - A
+ - B
+ - C
+ - D
+ - E
+ - F
+ - G
+ - H
+ - I
+ - J
+ - K
+ - L
+ - M
+ - N-PRISONER
+ - O
+ - P
+ - Q
+ - R
+ - S
+ - T
+ - U
+ - V
+ - W
+ - X
+ - Y-PRISONER
+ - Z
+ - Alpha
+prices:
+ A: 0
+ B: 7000
+ C: 24000
+ D: 50000
+ E: 75000
+ F: 180000
+ G: 305000
+ H: 455000
+ I: 600000
+ J: 780000
+ K: 990000
+ L: 1200000
+ M: 2600000
+ N-PRISONER: 4100000
+ O: 7600000
+ P: 10000000
+ Q: 20000000
+ R: 45000000
+ S: 90000000
+ T: 150000000
+ U: 200000000
+ V: 300000000
+ W: 350000000
+ X: 550000000
+ Y-PRISONER: 650000000
+ Z: 760000000
+ Alpha: 100000000
+
+# Avaliable variables: money, rumoney, nextgroupprice, nextrank, rank, name, onlineplayers, maxplayer, itemid, itemname, itemdamage, health.
+hud-text: ""
+hud-sub-text: "§6{rank} §7| §e{name} §7| §e${money} §7| {rumoney}"
+...
+

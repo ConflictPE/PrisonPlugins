@@ -1,0 +1,44 @@
+---
+name: UltraPrisonCore
+author: By love from Primus @EvalGamingPE
+main: primus\pc\PrisonCore
+version: 1.1.5
+api:
+- 2.0.0
+- 3.0.0
+- 3.0.0-ALPHA1
+- 3.0.0-ALPHA2
+- 3.0.0-ALPHA3
+- 3.0.0-ALPHA4
+- 3.0.0-ALPHA5
+- 3.0.0-ALPHA6
+depend: EconomyAPI
+permissions:
+  pc:
+    default: false
+    description: Allow to access every PrisonCore feature
+    children:
+      pc.sign:
+        default: false
+        description: Allow to access every Prison's sign feature
+        children:
+          pc.sign.create:
+            description: Allow to create Prison's sign
+            default: op
+          pc.sign.destroy:
+            description: Allow to destroy Prison's sign
+            default: op
+          pc.sign.use:
+            description: Allow to use Prison's sign
+            default: true
+      pc.command:
+        default: false
+        description: Allow to use every PrisonCore command
+        children:
+          pc.command.rankup:
+            default: true
+            description: Allows to get next rank
+          pc.command.hud:
+            default: true
+            description: Allows toggling HUD
+...

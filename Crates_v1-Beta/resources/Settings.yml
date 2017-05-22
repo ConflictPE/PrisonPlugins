@@ -1,0 +1,16 @@
+---
+# Settings.yml Configeration file - Conflict Crates plugin
+economy:
+    enabled: false
+    api: none
+keys:
+    1: "&l&eStandard crate key"
+    2: "&l&dAdvanced crate key"
+messages:
+    non-crate-key: "&cThat isn't a crate key, silly!"
+    no-crate-key: "&6 - You don't have any crate keys for this crate!"
+    crate-reward: "&l&b=-=-=-=-=-=-=\n&r&eYou have received&7:&r\n{prizes}\n&l&b=-=-=-=-=-=-="
+    reward-color: "&b"
+    keys-remaining: "&aYou have &6{amount} {name}&a's remaining!"
+    open-crate: "&aYou've opened a {name}&a!"
+...

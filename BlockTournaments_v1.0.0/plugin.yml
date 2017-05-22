@@ -1,0 +1,27 @@
+---
+name: BlockTournaments
+author: XFuryMCPE
+description: Block Mining Tournaments
+version: 1.0.0
+api:
+- 2.0.0
+- 3.0.0
+- 3.0.0-ALPHA1
+- 3.0.0-ALPHA2
+- 3.0.0-ALPHA3
+- 3.0.0-ALPHA4
+- 3.0.0-ALPHA5
+- 3.0.0-ALPHA6
+main: xfury\MainClass
+commands:
+  bt:
+    description: Schedule Block Tourneys!
+    permission: ops
+permissions:
+  def:
+    description: Default Prison Commands
+    default: true
+  ops:
+    description: OP BMT Commands
+    default: op
+...

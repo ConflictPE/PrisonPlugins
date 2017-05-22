@@ -1,0 +1,12 @@
+---
+rankshop:
+- '%prefix%'
+- 'Group: %group%'
+- 'Cost: %price%'
+- '--=[+]=--'
+rankup:
+- '%prefix%'
+- RankUp
+- /\
+- '|'
+...
