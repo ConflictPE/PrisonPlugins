@@ -1,0 +1,10 @@
+---
+name: PrisonCore
+description: Conflict's prison core plugin
+authors:
+  - "Angelo Rin"
+  - "Others included"
+version: 0.0.1_ALPHA
+main: prisoncore\Main
+api: [3.0.0-ALPHA6]
+...
