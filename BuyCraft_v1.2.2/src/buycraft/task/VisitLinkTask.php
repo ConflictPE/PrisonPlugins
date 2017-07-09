@@ -1,4 +1,5 @@
 <?php
+
 namespace buycraft\task;
 
 use buycraft\api\Actions;
@@ -6,27 +7,26 @@ use buycraft\api\ApiAsyncTask;
 use buycraft\BuyCraft;
 use pocketmine\command\CommandSender;
 
-class VisitLinkTask extends ApiAsyncTask{
+class VisitLinkTask extends ApiAsyncTask {
 
-	public function onConfig(BuyCraft $plugin){
+	public function onConfig(BuyCraft $plugin) {
 		$data = $this->getData();
 		$data['action'] = Actions::URL;
 		$this->setData($data);
 	}
 
-	public function onProcess(){
-
+	public function onProcess() {
 	}
 
-	public function onOutput(BuyCraft $main, CommandSender $sender){
+	public function onOutput(BuyCraft $main, CommandSender $sender) {
 		$out = $this->getOutput()['payload'];
-		if($out !== null && $out !== false){
-			if(isset($out['url']) && $out['url'] !== null){
+		if($out !== null && $out !== false) {
+			if(isset($out['url']) && $out['url'] !== null) {
 				$sender->sendMessage($main->getConfig()->get('pleaseVisit') . ": " . $out['url']);
-			}else{
+			} else {
 				$sender->sendMessage($out['errormessage']);
 			}
-		}else{
+		} else {
 			$sender->sendMessage("HTTP request error during url shortening.");
 		}
 	}

@@ -1,4 +1,5 @@
 <?php
+
 namespace falkirks\simplewarp;
 
 use falkirks\simplewarp\api\SimpleWarpAPI;
@@ -16,7 +17,7 @@ use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
-class SimpleWarp extends PluginBase{
+class SimpleWarp extends PluginBase {
 
 	/** @var  SimpleWarpAPI */
 	private $api;
@@ -25,22 +26,19 @@ class SimpleWarp extends PluginBase{
 	/** @var  TranslationManager */
 	private $translationManager;
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->saveDefaultConfig();
-
 		$this->api = new SimpleWarpAPI($this);
 		$this->translationManager = new TranslationManager($this->api, new YAMLStore(new Config($this->getDataFolder() . "lang.yml", Config::YAML)));
 		$this->warpManager = new WarpManager($this->api, new YAMLStore(new Config($this->getDataFolder() . "warps.yml", Config::YAML)), ($this->getConfig()->get('storage-mode') != null ? $this->getConfig()->get('storage-mode') : WarpManager::MEMORY_TILL_CLOSE));
-		if($this->getServer()->getPluginManager()->getPlugin("EssentialsPE") instanceof Plugin && $this->getConfig()->get("essentials-support")){
+		if($this->getServer()->getPluginManager()->getPlugin("EssentialsPE") instanceof Plugin && $this->getConfig()->get("essentials-support")) {
 			$this->getLogger()->info("Enabling EssentialsPE support...");
 			$warpCommand = $this->getServer()->getCommandMap()->getCommand("warp");
 			$delWarpCommand = $this->getServer()->getCommandMap()->getCommand("delwarp");
-
 			$this->unregisterCommands([
 				"warp",
 				"delwarp",
 			]);
-
 			$this->getServer()->getCommandMap()->registerAll("simplewarp", [
 				new EssentialsWarpCommand($this->api, $warpCommand),
 				new AddWarpCommand($this->api),
@@ -49,8 +47,7 @@ class SimpleWarp extends PluginBase{
 				new OpenWarpCommand($this->api),
 				new CloseWarpCommand($this->api),
 			]);
-
-		}else{
+		} else {
 			$this->getServer()->getCommandMap()->registerAll("simplewarp", [
 				new WarpCommand($this->api),
 				new AddWarpCommand($this->api),
@@ -62,28 +59,28 @@ class SimpleWarp extends PluginBase{
 		}
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->warpManager->saveAll();
 	}
 
 	/**
 	 * @return WarpManager
 	 */
-	public function getWarpManager(){
+	public function getWarpManager() {
 		return $this->warpManager;
 	}
 
 	/**
 	 * @return TranslationManager
 	 */
-	public function getTranslationManager(){
+	public function getTranslationManager() {
 		return $this->translationManager;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getApi(){
+	public function getApi() {
 		return $this->api;
 	}
 
@@ -92,9 +89,9 @@ class SimpleWarp extends PluginBase{
 	 *
 	 * @param array $commands
 	 */
-	private function unregisterCommands(array $commands){
+	private function unregisterCommands(array $commands) {
 		$commandMap = $this->getServer()->getCommandMap();
-		foreach($commands as $label){
+		foreach($commands as $label) {
 			$command = $commandMap->getCommand($label);
 			$command->setLabel($label . "_disabled");
 			$command->unregister($commandMap);

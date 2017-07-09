@@ -1,4 +1,5 @@
 <?php
+
 namespace aliuly\worldprotect\common;
 
 use pocketmine\item\Item;
@@ -6,7 +7,7 @@ use pocketmine\item\Item;
 /**
  * ItemName database
  */
-abstract class ItemName{
+abstract class ItemName {
 
 	/** @var array $xnames extended names */
 	static protected $xnames = null;
@@ -20,7 +21,7 @@ abstract class ItemName{
 	 *
 	 * @param str[] $names - names to load
 	 */
-	static public function initUsrNames(array $names){
+	static public function initUsrNames(array $names) {
 		self::$usrnames = $names;
 	}
 
@@ -32,15 +33,18 @@ abstract class ItemName{
 	 *
 	 * @return int
 	 */
-	public static function loadUsrNames($f){
+	public static function loadUsrNames($f) {
 		$tx = file($f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 		$i = 0;
-		if($tx === false) return -1;
-		foreach($tx as $x){
+		if($tx === false)
+			return -1;
+		foreach($tx as $x) {
 			$x = trim($x);
-			if(substr($x, 0, 1) == "#" || substr($x, 0, 1) == ";") continue;
+			if(substr($x, 0, 1) == "#" || substr($x, 0, 1) == ";")
+				continue;
 			$x = preg_split('/\s*=\s*/', $x, 2);
-			if(count($x) != 2) continue;
+			if(count($x) != 2)
+				continue;
 			++$i;
 			self::$usrnames[$x[0]] = $x[1];
 		}
@@ -55,40 +59,44 @@ abstract class ItemName{
 	 *
 	 * @return str
 	 */
-	static public function str(Item $item){
+	static public function str(Item $item) {
 		$id = $item->getId();
 		$meta = $item->getDamage();
-		if(isset(self::$usrnames[$id . ":" . $meta])) return self::$usrnames[$id . ":" . $meta];
-		if(isset(self::$usrnames[$id])) return self::$usrnames[$id];
-		if(self::$xnames == null) self::initXnames();
-
-		if(isset(self::$xnames[$id])){
-			if(isset(self::$xnames[$id][$meta])){
+		if(isset(self::$usrnames[$id . ":" . $meta]))
+			return self::$usrnames[$id . ":" . $meta];
+		if(isset(self::$usrnames[$id]))
+			return self::$usrnames[$id];
+		if(self::$xnames == null)
+			self::initXnames();
+		if(isset(self::$xnames[$id])) {
+			if(isset(self::$xnames[$id][$meta])) {
 				return self::$xnames[$id][$meta];
-			}elseif(isset(self::$xnames[$id]["*"])){
+			} elseif(isset(self::$xnames[$id]["*"])) {
 				return self::$xnames[$id]["*"];
-			}else{
+			} else {
 				return self::$xnames[$id][0];
 			}
 		}
 		$n = $item->getName();
-		if($n != "Unknown") return $n;
-		if(count(self::$items) == 0){
+		if($n != "Unknown")
+			return $n;
+		if(count(self::$items) == 0) {
 			$constants = array_keys((new \ReflectionClass("pocketmine\\item\\Item"))->getConstants());
-			foreach($constants as $constant){
+			foreach($constants as $constant) {
 				$cid = constant("pocketmine\\item\\Item::$constant");
 				$constant = str_replace("_", " ", $constant);
 				self::$items[$cid] = $constant;
 			}
 		}
-		if(isset(self::$items[$id])) return self::$items[$id];
+		if(isset(self::$items[$id]))
+			return self::$items[$id];
 		return $n;
 	}
 
 	/**
 	 * Initialize extended names table
 	 */
-	static protected function initXnames(){
+	static protected function initXnames() {
 		self::$xnames = [
 			Item::DYE => [
 				0 => "Ink Sac",

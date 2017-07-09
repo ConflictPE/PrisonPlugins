@@ -1,5 +1,4 @@
 <?php
-
 /*
  * DevTools plugin for PocketMine-MP
  * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
@@ -25,9 +24,9 @@ use DevTools\commands\MakeServerCommand;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLoadOrder;
 
-class DevTools extends PluginBase{
+class DevTools extends PluginBase {
 
-	public function onLoad(){
+	public function onLoad() {
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register("devtools", new ExtractPharCommand($this, "extractphar"));
 		$commandMap->register("devtools", new ExtractPluginCommand($this, "extractplugin"));
@@ -36,20 +35,19 @@ class DevTools extends PluginBase{
 		$commandMap->register("devtools", new MakeServerCommand($this, "makeserver"));
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getWorkingDirectory());
-
 		$this->getServer()->getPluginManager()->registerInterface("FolderPluginLoader\\FolderPluginLoader");
 		$this->getServer()->getPluginManager()->loadPlugins($this->getServer()->getPluginPath(), ["FolderPluginLoader\\FolderPluginLoader"]);
 		$this->getLogger()->info("Registered folder plugin loader");
 		$this->getServer()->enablePlugins(PluginLoadOrder::STARTUP);
 	}
 
-	public function getWorkingDirectory(){
+	public function getWorkingDirectory() {
 		return $this->getServer()->getPluginPath() . "DevTools_OUTPUT" . DIRECTORY_SEPARATOR;
 	}
 
-	public function getFile(){
+	public function getFile() {
 		return parent::getFile(); //parent method is protected
 	}
 }

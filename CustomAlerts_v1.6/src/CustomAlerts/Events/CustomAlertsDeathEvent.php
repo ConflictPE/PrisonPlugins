@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -16,7 +15,7 @@ use pocketmine\event\plugin\PluginEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class CustomAlertsDeathEvent extends PluginEvent{
+class CustomAlertsDeathEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -28,10 +27,10 @@ class CustomAlertsDeathEvent extends PluginEvent{
 
 	/**
 	 * @param Player $player
-	 * @param Level  $origin
-	 * @param Level  $target
+	 * @param Level $origin
+	 * @param Level $target
 	 */
-	public function __construct(Player $player, $cause = null){
+	public function __construct(Player $player, $cause = null) {
 		$this->player = $player;
 		$this->cause = $cause;
 	}
@@ -41,7 +40,7 @@ class CustomAlertsDeathEvent extends PluginEvent{
 	 *
 	 * @return Player
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -50,7 +49,7 @@ class CustomAlertsDeathEvent extends PluginEvent{
 	 *
 	 * @return EntityDamageEvent|null
 	 */
-	public function getCause(){
+	public function getCause() {
 		return $this->cause;
 	}
 

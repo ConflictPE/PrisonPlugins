@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CrateManager class
  *
@@ -19,67 +18,67 @@ use pocketmine\math\Vector3;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat as TF;
 
-class CrateManager{
+class CrateManager {
 
 	private $plugin;
 
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		$this->plugin = $plugin;
 		$this->register();
 	}
 
-	public static function clean($string){
+	public static function clean($string) {
 		return strtolower(TF::clean(str_replace(["\n", " "], [" ", "-"], Main::applyColors($string))));
 	}
 
-	public static function parsePositions(array $strings){
+	public static function parsePositions(array $strings) {
 		$positions = [];
-		foreach($strings as $string){
+		foreach($strings as $string) {
 			$positions[] = self::parsePosition($string);
 		}
 		return $positions;
 	}
 
-	public static function parsePosition($string){
+	public static function parsePosition($string) {
 		$temp = explode(",", str_replace(" ", "", $string));
-		if(Server::getInstance()->isLevelLoaded($temp[0])){
+		if(Server::getInstance()->isLevelLoaded($temp[0])) {
 			return new Position($temp[1], $temp[2], $temp[3], Server::getInstance()->getLevelByName($temp[0]));
 		}
 		return null;
 	}
 
-	public static function parseItems(array $strings){
+	public static function parseItems(array $strings) {
 		$items = [];
-		foreach($strings as $string){
+		foreach($strings as $string) {
 			$items[] = self::parseItem($string);
 		}
 		return $items;
 	}
 
-	public static function parseItem($string){
+	public static function parseItem($string) {
 		$temp = explode(",", str_replace(" ", "", $string));
-		if(isset($temp[4])){
+		if(isset($temp[4])) {
 			$item = Item::get((int) $temp[0], (int) $temp[1], (int) $temp[2]);
 			$item->addEnchantment(Enchantment::getEnchantment((int) $temp[3])->setLevel((int) $temp[4]));
 			return $item;
-		}elseif(isset($temp[3])){
+		} elseif(isset($temp[3])) {
 			$item = Item::get((int) $temp[0], (int) $temp[1], (int) $temp[2]);
 			$item->addEnchantment(Enchantment::getEnchantment((int) $temp[3]));
 			return $item;
-		}else{
+		} else {
 			return Item::get((int) $temp[0], (int) $temp[1], (int) $temp[2]);
 		}
 	}
 
-	public function register(){
-		foreach($this->plugin->crateData as $data){
+	public function register() {
+		foreach($this->plugin->crateData as $data) {
 			$this->add(Main::applyColors($data["name"]), Main::applyColors($data["description"]), (int) $data["tripwire-id"], self::parsePositions($data["locations"]), self::parseItems($data["prizes"]["items"]), $data["prizes"]["money"]);
 		}
 	}
 
-	public function add($name, $description, $crateId, array $locations, array $itemPrizes, array $moneyPrizes){
-		foreach($locations as $crate){
-			if($crate instanceof Position){
+	public function add($name, $description, $crateId, array $locations, array $itemPrizes, array $moneyPrizes) {
+		foreach($locations as $crate) {
+			if($crate instanceof Position) {
 				//				if(!$crate->getLevel()->getBlock($crate)->getId() === Block::CHEST) {
 				//					$nbt = new CompoundTag(false, [
 				//						new ListTag("Items", []),
@@ -100,15 +99,15 @@ class CrateManager{
 		}
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function __destruct(){
+	public function __destruct() {
 		$this->close();
 	}
 
-	public function close(){
+	public function close() {
 		unset($this->plugin);
 	}
 

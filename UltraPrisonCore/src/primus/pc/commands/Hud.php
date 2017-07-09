@@ -15,12 +15,12 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use primus\pc\PrisonCore;
 
-class Hud extends Command implements PluginIdentifiableCommand{
+class Hud extends Command implements PluginIdentifiableCommand {
 
 	/** @var PrisonCore */
 	private $plugin;
 
-	public function __construct(PrisonCore $plugin){
+	public function __construct(PrisonCore $plugin) {
 		parent::__construct("hud", "Toggle your HUD!", "/hud");
 		$this->plugin = $plugin;
 		$this->setPermission("pc.command.hud");
@@ -29,23 +29,23 @@ class Hud extends Command implements PluginIdentifiableCommand{
 	/**
 	 * @return PrisonCore
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args){
-		if($sender instanceof Player){
+	public function execute(CommandSender $sender, $commandLabel, array $args) {
+		if($sender instanceof Player) {
 			$name = $sender->getName();
-			if(isset($this->plugin->exemptHud[$name])){
+			if(isset($this->plugin->exemptHud[$name])) {
 				unset($this->plugin->exemptHud[$name]);
 				$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::GREEN . "Enabled HUD successfully!");
 				return true;
-			}else{
+			} else {
 				$this->plugin->exemptHud[$name] = $name;
 				$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::GREEN . "Disabled HUD successfully!");
 				return true;
 			}
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::RED . "Please run this command in-game");
 			return true;
 		}

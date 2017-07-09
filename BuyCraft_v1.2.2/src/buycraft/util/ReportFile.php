@@ -1,19 +1,20 @@
 <?php
+
 namespace buycraft\util;
 
 use pocketmine\Server;
 
-class ReportFile{
+class ReportFile {
 
 	protected $content;
 	protected $path;
 
-	public function __construct($path){
+	public function __construct($path) {
 		$this->path = $path;
 		$this->content = [];
 	}
 
-	public function generate(){
+	public function generate() {
 		$server = Server::getInstance();
 		$this->content["pocketmine"] = [
 			"version" => $server->getPocketMineVersion(),
@@ -21,7 +22,7 @@ class ReportFile{
 		];
 	}
 
-	public function save(){
+	public function save() {
 		file_put_contents($this->path, json_encode($this->content));
 	}
 }

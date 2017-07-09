@@ -8,7 +8,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\utils\TextFormat;
 
-class AddParent extends Command implements PluginIdentifiableCommand{
+class AddParent extends Command implements PluginIdentifiableCommand {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -22,7 +22,6 @@ class AddParent extends Command implements PluginIdentifiableCommand{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $plugin;
 
 	/**
@@ -30,44 +29,37 @@ class AddParent extends Command implements PluginIdentifiableCommand{
 	 * @param           $name
 	 * @param           $description
 	 */
-	public function __construct(PurePerms $plugin, $name, $description){
+	public function __construct(PurePerms $plugin, $name, $description) {
 		$this->plugin = $plugin;
-
 		parent::__construct($name, $description);
-
 		$this->setPermission("pperms.command.addparent");
 	}
 
 	/**
 	 * @param CommandSender $sender
 	 * @param               $label
-	 * @param array         $args
+	 * @param array $args
 	 *
 	 * @return bool
 	 */
-	public function execute(CommandSender $sender, $label, array $args){
-		if(!$this->testPermission($sender)) return false;
-
-		if(count($args) < 2 || count($args) > 3){
+	public function execute(CommandSender $sender, $label, array $args) {
+		if(!$this->testPermission($sender))
+			return false;
+		if(count($args) < 2 || count($args) > 3) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addparent.usage"));
-
 			return true;
 		}
-
 		$target_group = $this->plugin->getGroup($args[0]);
-
 		$parent_group = $this->plugin->getGroup($args[1]);
-
-		if($target_group->addParent($parent_group)){
+		if($target_group->addParent($parent_group)) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addparent.messages.addparent_successfully", $parent_group->getName(), $target_group->getName()));
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::RED . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addparent.messages.target_already_inherits", $parent_group->getName(), $target_group->getName()));
 		}
-
 		return true;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 }

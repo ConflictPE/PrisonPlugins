@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is a part of LaunchPad.
  * Copyright (C) 2015 CyberCube-HK
@@ -17,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with LaunchPad. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace hoyinm14mc\launchpad;
 
 use pocketmine\command\Command;
@@ -25,27 +25,27 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class LaunchPadCommand extends PluginBase implements CommandExecutor{
+class LaunchPadCommand extends PluginBase implements CommandExecutor {
 
 	private $plugin;
 
-	public function __construct(LaunchPad $plugin){
+	public function __construct(LaunchPad $plugin) {
 		$this->plugin = $plugin;
 	}
 
-	public function onCommand(CommandSender $issuer, Command $cmd, $label, array $args){
-		switch($cmd->getName()){
+	public function onCommand(CommandSender $issuer, Command $cmd, $label, array $args) {
+		switch($cmd->getName()) {
 			case "launchpad":
-				if(isset($args[0]) !== true){
+				if(isset($args[0]) !== true) {
 					return false;
 				}
-				switch($args[0]){
+				switch($args[0]) {
 					case "create":
-						if($issuer instanceof Player !== true){
+						if($issuer instanceof Player !== true) {
 							$issuer->sendMessage($this->plugin->colourMessage("&eCommand only works in-game!"));
 							return true;
 						}
-						if($issuer->hasPermission("launchpad.command") !== true || $issuer->hasPermission("launchpad.create") !== true){
+						if($issuer->hasPermission("launchpad.command") !== true || $issuer->hasPermission("launchpad.create") !== true) {
 							$issuer->sendMessage($this->plugin->colourMessage("&cYou don't have permission for this!"));
 							return true;
 						}
@@ -54,11 +54,11 @@ class LaunchPadCommand extends PluginBase implements CommandExecutor{
 						return true;
 						break;
 					case "destroy":
-						if($issuer instanceof Player !== true){
+						if($issuer instanceof Player !== true) {
 							$issuer->sendMessage($this->plugin->colourMessage("&eCommand only works in-game!"));
 							return true;
 						}
-						if($issuer->hasPermission("launchpad.command") !== true || $issuer->hasPermission("launchpad.destroy") !== true){
+						if($issuer->hasPermission("launchpad.command") !== true || $issuer->hasPermission("launchpad.destroy") !== true) {
 							$issuer->sendMessage($this->plugin->colourMessage("&cYou don't have permission for this!"));
 							return true;
 						}
@@ -67,7 +67,7 @@ class LaunchPadCommand extends PluginBase implements CommandExecutor{
 						return true;
 						break;
 					case "version":
-						if($issuer->hasPermission("launchpad.command") !== true){
+						if($issuer->hasPermission("launchpad.command") !== true) {
 							$issuer->sendMessage($this->plugin->colourMessage("&cYou don't have permission for this!"));
 							return true;
 						}

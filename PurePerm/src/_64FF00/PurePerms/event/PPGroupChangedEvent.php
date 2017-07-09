@@ -7,7 +7,7 @@ use _64FF00\PurePerms\PurePerms;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\IPlayer;
 
-class PPGroupChangedEvent extends PluginEvent{
+class PPGroupChangedEvent extends PluginEvent {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -21,18 +21,16 @@ class PPGroupChangedEvent extends PluginEvent{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	public static $handlerList = null;
 
 	/**
 	 * @param PurePerms $plugin
-	 * @param IPlayer   $player
-	 * @param PPGroup   $group
+	 * @param IPlayer $player
+	 * @param PPGroup $group
 	 * @param           $levelName
 	 */
-	public function __construct(PurePerms $plugin, IPlayer $player, PPGroup $group, $levelName){
+	public function __construct(PurePerms $plugin, IPlayer $player, PPGroup $group, $levelName) {
 		parent::__construct($plugin);
-
 		$this->group = $group;
 		$this->player = $player;
 		$this->levelName = $levelName;
@@ -41,28 +39,28 @@ class PPGroupChangedEvent extends PluginEvent{
 	/**
 	 * @return PPGroup
 	 */
-	public function getGroup(){
+	public function getGroup() {
 		return $this->group;
 	}
 
 	/**
 	 * @return \pocketmine\level\Level
 	 */
-	public function getLevel(){
+	public function getLevel() {
 		return $this->getPlugin()->getServer()->getLevelByName($this->levelName);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLevelName(){
+	public function getLevelName() {
 		return $this->levelName;
 	}
 
 	/**
 	 * @return IPlayer
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 }

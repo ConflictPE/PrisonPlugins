@@ -9,27 +9,27 @@ use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat;
 
-class Commands implements CommandExecutor{
+class Commands implements CommandExecutor {
 
 	public $plugin;
 
-	public function __construct(MainClass $plugin){
+	public function __construct(MainClass $plugin) {
 		$this->plugin = $plugin;
 		$plugin->getCommand("bt")->setExecutor($this);
 	}
 
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
+	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
 		$smcmd = strtolower($cmd);
 		$economy = $this->plugin->getServer()->getPluginManager()->getPlugin("EconomyAPI")->getInstance();
-		switch($smcmd){
+		switch($smcmd) {
 			case "bt":
-				if(!isset($args[2])){
+				if(!isset($args[2])) {
 					$sender->sendMessage($this->plugin->formatMsg("Usage: /bt start <time> <prize money>", false));
 					return true;
 				}
-				switch(strtolower($args[0])){
+				switch(strtolower($args[0])) {
 					case "stop":
-						if(!$this->plugin->blockTourney() == true){
+						if(!$this->plugin->blockTourney() == true) {
 							$sender->sendMessage($this->plugin->formatMsg("There is no tournament going on right now!"));
 							return true;
 						}
@@ -59,23 +59,23 @@ class Commands implements CommandExecutor{
 						$winner = $this->plugin->getServer()->getPlayerExact($win[0]);
 						$prizeid = $this->plugin->btSetup["prizeid"];
 						$prizecount = $this->plugin->btSetup["prizecount"];
-						foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
+						foreach($this->plugin->getServer()->getOnlinePlayers() as $p) {
 							$p->sendMessage($this->plugin->formatMsg($winner->getName() . " won the block mining tournament with " . $this->plugin->bT[$winner->getName()] . " blocks mined!", true));
 							//$p->sendMessage($this->plugin->formatMsg($second->getName()." finished in second with ".$this->plugin->bT[$second->getName()]." blocks mined!", true));
 							//$p->sendMessage($this->plugin->formatMsg("And ".$third->getName()." finished in third with ".$this->plugin->bT[$third->getName()]." blocks mined!", true));
 						}
-						if($this->plugin->btSetup["prizetype"] == "items"){
+						if($this->plugin->btSetup["prizetype"] == "items") {
 							$winner->getInventory()->addItem(Item::get($this->plugin->btSetup["prizeid"], 0, $this->plugin->btSetup["prizecount"]));
 							unset($this->plugin->btSetup);
 							unset($this->plugin->bT);
 							return true;
 						}
-						if($this->plugin->btSetup["prizetype"] == "cash"){
-							if($this->plugin->btSetup["cashamount"] == "high"){
+						if($this->plugin->btSetup["prizetype"] == "cash") {
+							if($this->plugin->btSetup["cashamount"] == "high") {
 								$this->plugin->getServer()->getPluginManager()->getPlugin("EconomyAPI")->getInstance()->addMoney($winner, 3000000);
-							}elseif($this->plugin->btSetup["cashamount"] == "normal"){
+							} elseif($this->plugin->btSetup["cashamount"] == "normal") {
 								$this->plugin->getServer()->getPluginManager()->getPlugin("EconomyAPI")->getInstance()->addMoney($winner, 300000);
-							}elseif($this->plugin->btSetup["cashamount"] == "low"){
+							} elseif($this->plugin->btSetup["cashamount"] == "low") {
 								$this->plugin->getServer()->getPluginManager()->getPlugin("EconomyAPI")->getInstance()->addMoney($winner, 30000);
 							}
 							unset($this->plugin->btSetup);
@@ -84,15 +84,15 @@ class Commands implements CommandExecutor{
 						}
 						break;
 					case "start":
-						if(!is_numeric($args[1])){
+						if(!is_numeric($args[1])) {
 							$sender->sendMessage($this->plugin->formatMsg("Tournament time must be numeric!"));
 							return true;
 						}
-						if($args[1] > 15){
+						if($args[1] > 15) {
 							$sender->sendMessage($this->plugin->formatMsg("Tournaments can only be 15 minutes long!"));
 							return true;
 						}
-						if($args[1] < 10){
+						if($args[1] < 10) {
 							$sender->sendMessage($this->plugin->formatMsg("Tournaments must be at least 10 minutes long!"));
 							return true;
 						}
@@ -130,16 +130,16 @@ class Commands implements CommandExecutor{
 						// }
 						// if(strtolower($args[2]) == "cash"){
 						$cash = (int) $args[2];
-						if(!is_int($cash)){
+						if(!is_int($cash)) {
 							$sender->sendMessage($this->plugin->formatMsg("Invalid Cash amount! Cash must be be between $60,000-$6,000,000!"));
-						}elseif($cash < 60000){
+						} elseif($cash < 60000) {
 							$sender->sendMessage($this->plugin->formatMsg("Invalid Cash amount! Cash must be be more than $60,000!"));
-						}elseif($cash > 6000000){
+						} elseif($cash > 6000000) {
 							$sender->sendMessage($this->plugin->formatMsg("Invalid Cash amount! Cash must be be less than $6,000,000!"));
-						}else{
-							if($economy->myMoney($sender) < $cash){
+						} else {
+							if($economy->myMoney($sender) < $cash) {
 								$sender->sendMessage($this->plugin->formatMsg("You don't have enough money to start a block mining tournamnet for ${$cash}!"));
-							}else{
+							} else {
 								// if(!strtolower($args[3]) == "small"){
 								// 	$sender->sendMessage($this->plugin->formatMsg("Invalid Cash amount type! <small:normal:huge>"));
 								// 	return true;
@@ -192,7 +192,7 @@ class Commands implements CommandExecutor{
 								$this->plugin->btSetup["timestamp"] = time();
 								$this->plugin->btSetup["prizetype"] = "cash";
 								$this->plugin->btSetup["cashamount"] = $cash;
-								foreach($this->plugin->getServer()->getOnlinePlayers() as $pl){
+								foreach($this->plugin->getServer()->getOnlinePlayers() as $pl) {
 									$pl->sendMessage($this->plugin->formatMsg("A block mining tournament has started! Mine as many blocks as you can to win! Prize: " . TextFormat::GOLD . "$" . ($cash), true));
 								}
 							}

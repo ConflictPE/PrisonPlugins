@@ -1,11 +1,12 @@
 <?php
+
 namespace falkirks\simplewarp\permission;
 
 use falkirks\simplewarp\Warp;
 use pocketmine\permission\Permission;
 use pocketmine\Server;
 
-class SimpleWarpPermissions{
+class SimpleWarpPermissions {
 
 	const ADD_WARP_COMMAND = "simplewarp.command.addwarp";
 	const DEL_WARP_COMMAND = "simplewarp.command.delwarp";
@@ -21,8 +22,9 @@ class SimpleWarpPermissions{
 
 	static private $baseWarpPerm = null;
 
-	static public function setupPermission(Warp $warp){
-		if(self::$baseWarpPerm == null) self::$baseWarpPerm = Server::getInstance()->getPluginManager()->getPermission("simplewarp.warp");
+	static public function setupPermission(Warp $warp) {
+		if(self::$baseWarpPerm == null)
+			self::$baseWarpPerm = Server::getInstance()->getPluginManager()->getPermission("simplewarp.warp");
 		$permission = new Permission(self::BASE_WARP_PERMISSION . "." . $warp->getName(), "Allow use of " . $warp->getName()); //TODO correct default value
 		Server::getInstance()->getPluginManager()->addPermission($permission);
 		self::$baseWarpPerm->getChildren()[$permission->getName()] = true;

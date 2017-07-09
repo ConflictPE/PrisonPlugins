@@ -1,7 +1,8 @@
 <?php
+
 namespace buycraft\api;
 
-class Actions{
+class Actions {
 
 	const PLUGIN_VERSION = "6.7";
 

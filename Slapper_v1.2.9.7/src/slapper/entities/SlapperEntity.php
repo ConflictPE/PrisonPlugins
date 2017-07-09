@@ -1,4 +1,5 @@
 <?php
+
 namespace slapper\entities;
 
 use pocketmine\entity\Entity;
@@ -7,7 +8,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class SlapperEntity extends Entity{
+class SlapperEntity extends Entity {
 
 	public $entityId = -1;
 	public $tagId;
@@ -56,19 +57,18 @@ class SlapperEntity extends Entity{
 		90 => 0.5,
 	];
 
-	public function __construct(Level $level, CompoundTag $nbt){
+	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
-
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_IMMOBILE, true);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 	}
 
-	public function getName(){
+	public function getName() {
 		return $this->getNameTag();
 	}
 
-	public function spawnTo(Player $player){
+	public function spawnTo(Player $player) {
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();
 		$pk->type = $this->entityId;
@@ -82,10 +82,10 @@ class SlapperEntity extends Entity{
 		parent::spawnTo($player);
 	}
 
-	public function addNametag($name, $player){
+	public function addNametag($name, $player) {
 	}
 
-	public function getDisplayName($player){
+	public function getDisplayName($player) {
 		return str_ireplace(["{name}", "{display_name}", "{nametag}"], [
 			$player->getName(),
 			$player->getDisplayName(),

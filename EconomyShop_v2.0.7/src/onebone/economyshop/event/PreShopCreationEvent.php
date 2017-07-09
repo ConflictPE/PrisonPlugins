@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2015  onebone <jyc00410@gmail.com>
@@ -23,19 +22,19 @@ namespace onebone\economyshop\event;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\Player;
 
-class PreShopCreationEvent extends PluginEvent{
+class PreShopCreationEvent extends PluginEvent {
 
 	private $owner, $sign;
 
-	public function __construct(Player $owner){
+	public function __construct(Player $owner) {
 		$this->owner = $owner;
 	}
 
-	public function getOwner(){
+	public function getOwner() {
 		return $this->owner;
 	}
 
-	public function getSign(){
+	public function getSign() {
 		return $this->sign;
 	}
 }

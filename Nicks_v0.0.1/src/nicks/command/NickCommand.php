@@ -9,12 +9,12 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\utils\TextFormat;
 
-class NickCommand implements CommandExecutor, PluginIdentifiableCommand{
+class NickCommand implements CommandExecutor, PluginIdentifiableCommand {
 
 	/** @var Main */
 	private $plugin;
 
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		$this->plugin = $plugin;
 		$plugin->getCommand("nick")->setExecutor($this);
 	}
@@ -22,28 +22,28 @@ class NickCommand implements CommandExecutor, PluginIdentifiableCommand{
 	/**
 	 * @return Main
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
+	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
 		$subCommand = array_shift($args);
-		switch(strtolower($subCommand)){
+		switch(strtolower($subCommand)) {
 			case "set":
 			case "new":
 			case "on":
-				if($sender->hasPermission("nick.command.set")){
-					if(isset($args[0])){
+				if($sender->hasPermission("nick.command.set")) {
+					if(isset($args[0])) {
 						$player = array_shift($args);
-						if(isset($args[0])){
+						if(isset($args[0])) {
 							$this->getPlugin()->setNick($player, implode(" ", $args));
 							$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::GREEN . "Set {$player}'s nick successfully!");
 							return true;
-						}else{
+						} else {
 							$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::RED . "Please specify a nick!");
 							return true;
 						}
-					}else{
+					} else {
 						$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::RED . "Please specify a player!");
 						return true;
 					}
@@ -52,13 +52,13 @@ class NickCommand implements CommandExecutor, PluginIdentifiableCommand{
 			case "reset":
 			case "off":
 			case "remove":
-				if($sender->hasPermission("nick.command.remove")){
-					if(isset($args[0])){
+				if($sender->hasPermission("nick.command.remove")) {
+					if(isset($args[0])) {
 						$player = array_shift($args);
 						$this->getPlugin()->removeNick($player);
 						$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::GREEN . "Removed {$player}'s nick successfully!");
 						return true;
-					}else{
+					} else {
 						$sender->sendMessage(TextFormat::GOLD . "- " . TextFormat::RED . "Please specify a player!");
 						return true;
 					}

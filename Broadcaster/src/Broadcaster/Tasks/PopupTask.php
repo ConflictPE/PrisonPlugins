@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Broadcaster (v1.16) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -8,29 +7,28 @@
  * Copyright & License: (C) 2014-2015 EvolSoft
  * Licensed under MIT (https://github.com/EvolSoft/Broadcaster/blob/master/LICENSE)
  */
-
 namespace Broadcaster\Tasks;
-
 use Broadcaster\Main;
 use pocketmine\scheduler\PluginTask;
 
-class PopupTask extends PluginTask{
+class PopupTask extends PluginTask {
 
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		parent::__construct($plugin);
 		$this->plugin = $plugin;
 		$this->length = -1;
 	}
 
-	public function onRun($currentTick){
+	public function onRun($currentTick) {
 		$this->plugin = $this->getOwner();
 		$this->cfg = $this->plugin->getConfig()->getAll();
-		if($this->cfg["popup-broadcast-enabled"] == true){
+		if($this->cfg["popup-broadcast-enabled"] == true) {
 			$this->length = $this->length + 1;
 			$popups = $this->cfg["popups"];
 			$popupkey = $this->length;
 			$popup = $popups[$popupkey];
-			if($this->length == count($popups) - 1) $this->length = -1;
+			if($this->length == count($popups) - 1)
+				$this->length = -1;
 			$this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new PopupDurationTask($this->plugin, $this->plugin->broadcast($this->cfg, $popup), null, $this->cfg["popup-duration"]), 10);
 		}
 	}

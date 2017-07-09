@@ -64,7 +64,7 @@ use slapper\entities\SlapperZombie;
 use slapper\entities\SlapperZombieHorse;
 use slapper\entities\SlapperZombieVillager;
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener {
 
 	public $hitSessions = [];
 	public $idSessions = [];
@@ -99,7 +99,7 @@ class Main extends PluginBase implements Listener{
 		"menuname: /slapper edit <eid> menuname <name/remove>",
 	];
 
-	public function onEnable(){
+	public function onEnable() {
 		Entity::registerEntity(SlapperCreeper::class, true);
 		Entity::registerEntity(SlapperBat::class, true);
 		Entity::registerEntity(SlapperSheep::class, true);
@@ -145,44 +145,44 @@ class Main extends PluginBase implements Listener{
 		$this->getLogger()->debug("Events have been registered!");
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-		switch(strtolower($command->getName())){
+	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+		switch(strtolower($command->getName())) {
 			case 'nothing':
 				return true;
 				break;
 			case 'rca':
-				if(count($args) < 2){
+				if(count($args) < 2) {
 					$sender->sendMessage($this->prefix . "Please enter a player and a command.");
 					return true;
 				}
 				$player = $this->getServer()->getPlayer(array_shift($args));
-				if($player instanceof Player){
+				if($player instanceof Player) {
 					$this->getServer()->dispatchCommand($player, trim(implode(" ", $args)));
 					return true;
-				}else{
+				} else {
 					$sender->sendMessage($this->prefix . "Player not found.");
 					return true;
 				}
 				break;
 			case "slapper":
-				if($sender instanceof Player){
-					if(!(isset($args[0]))){
-						if($sender->hasPermission("slapper.command") || $sender->hasPermission("slapper")){
+				if($sender instanceof Player) {
+					if(!(isset($args[0]))) {
+						if($sender->hasPermission("slapper.command") || $sender->hasPermission("slapper")) {
 							$sender->sendMessage($this->prefix . "Please type '/slapper help'.");
 							return true;
-						}else{
+						} else {
 							$sender->sendMessage($this->noperm);
 							return true;
 						}
 					}
 					$arg = array_shift($args);
-					switch($arg){
+					switch($arg) {
 						case "id":
-							if($sender->hasPermission("slapper.id") || $sender->hasPermission("slapper")){
+							if($sender->hasPermission("slapper.id") || $sender->hasPermission("slapper")) {
 								$this->idSessions[$sender->getName()] = true;
 								$sender->sendMessage($this->prefix . "Hit an entity to get its ID!");
 								return true;
-							}else{
+							} else {
 								$sender->sendMessage($this->noperm);
 								return true;
 							}
@@ -192,22 +192,22 @@ class Main extends PluginBase implements Listener{
 						case "migrateall":
 							$server = $this->getServer();
 							$count = 0;
-							foreach($server->getLevels() as $level){
-								foreach($level->getEntities() as $entity){
-									if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman){
+							foreach($server->getLevels() as $level) {
+								foreach($level->getEntities() as $entity) {
+									if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman) {
 										$count++;
-										if(!(isset($entity->namedtag->Commands))){
+										if(!(isset($entity->namedtag->Commands))) {
 											$entity->namedtag->Commands = new CompoundTag("Commands", []);
 										}
 										$oldCmds = $this->getConfig()->get($entity->getName());
-										if($oldCmds){
-											foreach($oldCmds as $oldCmd){
+										if($oldCmds) {
+											foreach($oldCmds as $oldCmd) {
 												$entity->namedtag->Commands[$oldCmd] = new StringTag($oldCmd, $oldCmd);
 											}
 										}
 									}
-									if($entity instanceof SlapperHuman){
-										if($entity->getSkinId() === ""){
+									if($entity instanceof SlapperHuman) {
+										if($entity->getSkinId() === "") {
 											$entity->setSkin($entity->getSkinData(), "Standard_Custom");
 											$entity->despawnFromAll();
 											$entity->spawnToAll();
@@ -219,11 +219,11 @@ class Main extends PluginBase implements Listener{
 							return true;
 							break;
 						case "version":
-							if($sender->hasPermission("slapper.version") || $sender->hasPermission("slapper")){
+							if($sender->hasPermission("slapper.version") || $sender->hasPermission("slapper")) {
 								$desc = $this->getDescription();
 								$sender->sendMessage($this->prefix . TextFormat::BLUE . $desc->getName() . " " . $desc->getVersion() . " " . TextFormat::GREEN . "by " . TextFormat::GOLD . "jojoe77777");
 								return true;
-							}else{
+							} else {
 								$sender->sendMessage($this->noperm);
 								return true;
 							}
@@ -238,96 +238,96 @@ class Main extends PluginBase implements Listener{
 							return true;
 							break;
 						case "remove":
-							if($sender->hasPermission("slapper.remove") || $sender->hasPermission("slapper")){
-								if(isset($args[0])){
+							if($sender->hasPermission("slapper.remove") || $sender->hasPermission("slapper")) {
+								if(isset($args[0])) {
 									$entity = $sender->getLevel()->getEntity($args[0]);
-									if(!($entity == null)){
-										if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman){
-											if($entity instanceof SlapperHuman){
+									if(!($entity == null)) {
+										if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman) {
+											if($entity instanceof SlapperHuman) {
 												$entity->getInventory()->clearAll();
 											}
 											$entity->kill();
 											$sender->sendMessage($this->prefix . "Entity removed.");
-										}else{
+										} else {
 											$sender->sendMessage($this->prefix . "That entity is not handled by Slapper.");
 										}
-									}else{
+									} else {
 										$sender->sendMessage($this->prefix . "Entity does not exist.");
 									}
 									return true;
 								}
 								$this->hitSessions[$sender->getName()] = true;
 								$sender->sendMessage($this->prefix . "Hit an entity to remove it.");
-							}else{
+							} else {
 								$sender->sendMessage($this->noperm);
 								return true;
 							}
 							return true;
 							break;
 						case "edit":
-							if($sender->hasPermission("slapper.edit") || $sender->hasPermission("slapper")){
-								if(isset($args[0])){
+							if($sender->hasPermission("slapper.edit") || $sender->hasPermission("slapper")) {
+								if(isset($args[0])) {
 									$level = $sender->getLevel();
 									$entity = $level->getEntity($args[0]);
-									if($entity !== null){
-										if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman){
-											if(isset($args[1])){
-												switch($args[1]){
+									if($entity !== null) {
+										if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman) {
+											if(isset($args[1])) {
+												switch($args[1]) {
 													case "helm":
 													case "helmet":
 													case "head":
 													case "hat":
 													case "cap":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$entity->getInventory()->setHelmet(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Helmet updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not wear armor.");
 														}
 														return true;
 													case "chest":
 													case "shirt":
 													case "chestplate":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$entity->getInventory()->setChestplate(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Chestplate updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not wear armor.");
 														}
 														return true;
 													case "pants":
 													case "legs":
 													case "leggings":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$entity->getInventory()->setLeggings(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Leggings updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not wear armor.");
 														}
 														return true;
 													case "feet":
 													case "boots":
 													case "shoes":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$entity->getInventory()->setBoots(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Boots updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not wear armor.");
 														}
 														return true;
@@ -336,14 +336,14 @@ class Main extends PluginBase implements Listener{
 													case "holding":
 													case "arm":
 													case "held":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$entity->getInventory()->setItemInHand(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Item updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not wear armor.");
 														}
 														return true;
@@ -351,36 +351,36 @@ class Main extends PluginBase implements Listener{
 													case "changeskin":
 													case "editskin";
 													case "skin":
-														if($entity instanceof SlapperHuman){
+														if($entity instanceof SlapperHuman) {
 															$entity->setSkin($sender->getSkinData(), $sender->getSkinId());
 															$entity->respawnToAll();
 															$sender->sendMessage($this->prefix . "Skin updated.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can't have a skin.");
 														}
 														return true;
 													case "name":
 													case "customname":
-														if(isset($args[2])){
+														if(isset($args[2])) {
 															array_shift($args);
 															array_shift($args);
 															$entity->setNameTag(TextFormat::RESET . trim(implode(" ", $args)));
 															$entity->respawnToAll();
 															$sender->sendMessage($this->prefix . "Name updated.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "Please enter a name.");
 														}
 														return true;
 													case "listname":
 													case "nameonlist":
 													case "menuname":
-														if($entity instanceof SlapperHuman){
-															if(isset($args[2])){
+														if($entity instanceof SlapperHuman) {
+															if(isset($args[2])) {
 																$type = 0;
 																array_shift($args);
 																array_shift($args);
 																$input = trim(implode(" ", $args));
-																switch(strtolower($input)){
+																switch(strtolower($input)) {
 																	case "remove":
 																	case "":
 																	case "disable":
@@ -388,18 +388,18 @@ class Main extends PluginBase implements Listener{
 																	case "hide":
 																		$type = 1;
 																}
-																if($type === 0){
+																if($type === 0) {
 																	$entity->namedtag->MenuName = new StringTag("MenuName", $input);
-																}else{
+																} else {
 																	$entity->namedtag->MenuName = new StringTag("MenuName", "");
 																}
 																$entity->respawnToAll();
 																$sender->sendMessage($this->prefix . "Menu name updated.");
-															}else{
+															} else {
 																$sender->sendMessage($this->prefix . "Please enter a menu name.");
 																return true;
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity can not have a menu name.");
 														}
 														return true;
@@ -410,29 +410,29 @@ class Main extends PluginBase implements Listener{
 													case "name_visible":
 													case "custom_name_visible":
 													case "tag_visible":
-														if(isset($args[2])){
+														if(isset($args[2])) {
 															$entity->setNameTagVisible((bool) $args[2]);
 															$entity->setNameTagAlwaysVisible((bool) $args[2]);
 															$entity->respawnToAll();
 															$sender->sendMessage($this->prefix . "Name visibility updated.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "Please enter a value, 1 or 0.");
 														}
 														return true;
 													case "addc":
 													case "addcmd":
 													case "addcommand":
-														if(isset($args[2])){
+														if(isset($args[2])) {
 															array_shift($args);
 															array_shift($args);
 															$input = trim(implode(" ", $args));
-															if(isset($entity->namedtag->Commands[$input])){
+															if(isset($entity->namedtag->Commands[$input])) {
 																$sender->sendMessage($this->prefix . "That command has already been added.");
 																return true;
 															}
 															$entity->namedtag->Commands[$input] = new StringTag($input, $input);
 															$sender->sendMessage($this->prefix . "Command added.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "Please enter a command.");
 														}
 														return true;
@@ -440,38 +440,38 @@ class Main extends PluginBase implements Listener{
 													case "delcmd":
 													case "delcommand":
 													case "removecommand":
-														if(isset($args[2])){
+														if(isset($args[2])) {
 															array_shift($args);
 															array_shift($args);
 															$input = trim(implode(" ", $args));
 															unset($entity->namedtag->Commands[$input]);
 															$sender->sendMessage($this->prefix . "Command removed.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "Please enter a command.");
 														}
 														return true;
 													case "listcommands":
 													case "listcmds":
 													case "listcs":
-														if(!(empty($entity->namedtag->Commands))){
+														if(!(empty($entity->namedtag->Commands))) {
 															$id = 0;
-															foreach($entity->namedtag->Commands as $cmd){
+															foreach($entity->namedtag->Commands as $cmd) {
 																$id++;
 																$sender->sendMessage(TextFormat::GREEN . "[" . TextFormat::YELLOW . "S" . TextFormat::GREEN . "] " . TextFormat::YELLOW . $id . ". " . TextFormat::GREEN . $cmd . "\n");
 															}
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity does not have any commands.");
 														}
 														return true;
 													case "update":
 													case "fix":
 													case "migrate":
-														if($this->getConfig()->get($entity->getName()) !== false){
-															foreach($this->getConfig()->get($entity->getName()) as $cmd){
+														if($this->getConfig()->get($entity->getName()) !== false) {
+															foreach($this->getConfig()->get($entity->getName()) as $cmd) {
 																$entity->namedtag->Commands[$cmd] = new StringTag($cmd, $cmd);
 															}
 															$sender->sendMessage($this->prefix . "Commands migrated.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "No old commands found.");
 														}
 														return true;
@@ -479,11 +479,11 @@ class Main extends PluginBase implements Listener{
 													case "tile":
 													case "blockid":
 													case "tileid":
-														if($entity instanceof SlapperFallingSand){
+														if($entity instanceof SlapperFallingSand) {
 															$entity->namedtag->BlockID = new IntTag("BlockID", intval($args[2]));
 															$entity->respawnToAll();
 															$sender->sendMessage($this->prefix . "Block updated.");
-														}else{
+														} else {
 															$sender->sendMessage($this->prefix . "That entity is not a block.");
 														}
 														return true;
@@ -510,28 +510,28 @@ class Main extends PluginBase implements Listener{
 														$sender->sendMessage($this->prefix . "Unknown command.");
 														return true;
 												}
-											}else{
+											} else {
 												$sender->sendMessage($this->helpHeader);
-												foreach($this->editArgs as $msgArg){
+												foreach($this->editArgs as $msgArg) {
 													$sender->sendMessage(str_ireplace("<eid>", $args[0], (TextFormat::GREEN . " - " . $msgArg . "\n")));
 												}
 												return true;
 											}
-										}else{
+										} else {
 											$sender->sendMessage($this->prefix . "That entity is not handled by Slapper.");
 										}
-									}else{
+									} else {
 										$sender->sendMessage($this->prefix . "Entity does not exist.");
 									}
 									return true;
-								}else{
+								} else {
 									$sender->sendMessage($this->helpHeader);
-									foreach($this->editArgs as $msgArg){
+									foreach($this->editArgs as $msgArg) {
 										$sender->sendMessage(TextFormat::GREEN . " - " . $msgArg . "\n");
 									}
 									return true;
 								}
-							}else{
+							} else {
 								$sender->sendMessage($this->prefix . "You don't have permission.");
 							}
 							return true;
@@ -539,7 +539,7 @@ class Main extends PluginBase implements Listener{
 						case "help":
 						case "?":
 							$sender->sendMessage($this->helpHeader);
-							foreach($this->mainArgs as $msgArg){
+							foreach($this->mainArgs as $msgArg) {
 								$sender->sendMessage(TextFormat::GREEN . " - " . $msgArg . "\n");
 							}
 							return true;
@@ -552,12 +552,12 @@ class Main extends PluginBase implements Listener{
 							$type = array_shift($args);
 							$spawn = true;
 							$name = str_replace("{color}", "§", str_replace("{line}", "\n", trim(implode(" ", $args))));
-							if($type === null || $type === "" || $type === " "){
+							if($type === null || $type === "" || $type === " ") {
 								$sender->sendMessage($this->prefix . "Please enter an entity type.");
 								return true;
 							}
 							$defaultName = $sender->getDisplayName();
-							if(empty($name)){
+							if(empty($name)) {
 								$name = $defaultName;
 							}
 							$playerX = $sender->getX();
@@ -617,13 +617,13 @@ class Main extends PluginBase implements Listener{
 								        "SnowGolem",
 								        "Snowman",
 								        "MagmaCube",
-							        ] as $entityType){
-								if(strtolower($type) === strtolower($entityType)){
+							        ] as $entityType) {
+								if(strtolower($type) === strtolower($entityType)) {
 									$theOne = $entityType;
 								}
 							}
 							$typeToUse = "Nothing";
-							switch($theOne){
+							switch($theOne) {
 								case "Human":
 								case "Player":
 								case "Pig":
@@ -684,14 +684,13 @@ class Main extends PluginBase implements Listener{
 									$typeToUse = "SlapperLavaSlime";
 									break;
 							}
-							if($typeToUse !== "Nothing" && $theOne !== "Blank"){
+							if($typeToUse !== "Nothing" && $theOne !== "Blank") {
 								$nbt = $this->makeNBT($typeToUse, $sender->getSkinData(), $sender->getSkinId(), $name, $inventory, $sender->getYaw(), $sender->getPitch(), $playerX, $playerY, $playerZ);
 								$slapperEntity = Entity::createEntity($typeToUse, $sender->getLevel(), $nbt);
 								$sender->sendMessage($this->prefix . $theOne . " entity spawned with name " . TextFormat::WHITE . "\"" . TextFormat::BLUE . $name . TextFormat::WHITE . "\"" . TextFormat::GREEN . " and entity ID " . TextFormat::BLUE . $slapperEntity->getId());
 							}
-							if(isset($slapperEntity) && $slapperEntity instanceof SlapperHuman){
+							if(isset($slapperEntity) && $slapperEntity instanceof SlapperHuman) {
 								$inv = $slapperEntity->getInventory();
-
 								$inv->setHelmet($inventory->getHelmet());
 								$inv->setChestplate($inventory->getChestplate());
 								$inv->setLeggings($inventory->getLeggings());
@@ -699,11 +698,11 @@ class Main extends PluginBase implements Listener{
 								$inv->setHeldItemSlot($inventory->getHeldItemSlot());
 								$inv->setItemInHand($inventory->getItemInHand());
 							}
-							if($theOne !== "Blank" && isset($slapperEntity)){
+							if($theOne !== "Blank" && isset($slapperEntity)) {
 								$slapperEntity->spawnToAll();
 							}
-							if($typeToUse === "Nothing" || $theOne === "Blank"){
-								if($spawn){
+							if($typeToUse === "Nothing" || $theOne === "Blank") {
+								if($spawn) {
 									$sender->sendMessage($this->prefix . "Invalid entity.");
 								}
 							}
@@ -712,7 +711,7 @@ class Main extends PluginBase implements Listener{
 							$sender->sendMessage($this->prefix . "Unknown command. Type '/slapper help' for help.");
 							return true;
 					}
-				}else{
+				} else {
 					$sender->sendMessage($this->prefix . "This command only works in game.");
 					return true;
 				}
@@ -723,20 +722,21 @@ class Main extends PluginBase implements Listener{
 	/**
 	 * @ignoreCancelled true
 	 */
-	public function onEntityDamage(EntityDamageEvent $event){
+	public function onEntityDamage(EntityDamageEvent $event) {
 		$taker = $event->getEntity();
-		if($taker instanceof SlapperEntity || $taker instanceof SlapperHuman){
-			if(!($event instanceof EntityDamageByEntityEvent)) $event->setCancelled(true);
-			if($event instanceof EntityDamageByEntityEvent){
+		if($taker instanceof SlapperEntity || $taker instanceof SlapperHuman) {
+			if(!($event instanceof EntityDamageByEntityEvent))
+				$event->setCancelled(true);
+			if($event instanceof EntityDamageByEntityEvent) {
 				$hitter = $event->getDamager();
-				if(!$hitter instanceof Player){
+				if(!$hitter instanceof Player) {
 					$event->setCancelled(true);
 				}
-				if($hitter instanceof Player){
+				if($hitter instanceof Player) {
 					$giverName = $hitter->getName();
-					if($hitter instanceof Player){
-						if(isset($this->hitSessions[$giverName])){
-							if($taker instanceof SlapperHuman){
+					if($hitter instanceof Player) {
+						if(isset($this->hitSessions[$giverName])) {
+							if($taker instanceof SlapperHuman) {
 								$taker->getInventory()->clearAll();
 							}
 							$taker->close();
@@ -744,19 +744,19 @@ class Main extends PluginBase implements Listener{
 							$hitter->sendMessage($this->prefix . "Entity removed.");
 							return;
 						}
-						if(isset($this->idSessions[$giverName])){
+						if(isset($this->idSessions[$giverName])) {
 							$hitter->sendMessage($this->prefix . "Entity ID: " . $taker->getId());
 							unset($this->idSessions[$giverName]);
 							$event->setCancelled();
 							return;
 						}
 						$event->setCancelled(true);
-						if(isset($taker->namedtag->Commands)){
+						if(isset($taker->namedtag->Commands)) {
 							$server = $this->getServer();
-							foreach($taker->namedtag->Commands as $cmd){
+							foreach($taker->namedtag->Commands as $cmd) {
 								$server->dispatchCommand(new ConsoleCommandSender(), str_ireplace("{player}", $giverName, $cmd));
 							}
-						}else{
+						} else {
 							$this->getLogger()->warning("Outdated entity; adding blank commands compound. Please restore commands manually with '/slapper edit " . $taker->getId() . " fix'");
 							$taker->namedtag->Commands = new CompoundTag("Commands", []);
 						}
@@ -766,17 +766,17 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 
-	public function onEntitySpawn(EntitySpawnEvent $ev){
+	public function onEntitySpawn(EntitySpawnEvent $ev) {
 		$entity = $ev->getEntity();
-		if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman){
+		if($entity instanceof SlapperEntity || $entity instanceof SlapperHuman) {
 			$clearLagg = $this->getServer()->getPluginManager()->getPlugin("ClearLagg");
-			if($clearLagg !== null){
+			if($clearLagg !== null) {
 				$clearLagg->exemptEntity($entity);
 			}
 		}
 	}
 
-	private function makeNBT($type, $skin, $skinId, $name, $inv, $yaw, $pitch, $x, $y, $z){
+	private function makeNBT($type, $skin, $skinId, $name, $inv, $yaw, $pitch, $x, $y, $z) {
 		$nbt = new CompoundTag;
 		$nbt->Pos = new ListTag("Pos", [new DoubleTag("", $x), new DoubleTag("", $y), new DoubleTag("", $z)]);
 		$nbt->Rotation = new ListTag("Rotation", [new FloatTag("", $yaw), new FloatTag("", $pitch)]);
@@ -786,7 +786,7 @@ class Main extends PluginBase implements Listener{
 		$nbt->MenuName = new StringTag("MenuName", "");
 		$nbt->SlapperVersion = new StringTag("SlapperVersion", "1.2.9.6");
 		$nbt->CustomNameVisible = new ByteTag("CustomNameVisible", 1);
-		switch($type){
+		switch($type) {
 			case "SlapperHuman":
 				$nbt->Inventory = new ListTag("Inventory", $inv);
 				$nbt->Skin = new CompoundTag("Skin", [

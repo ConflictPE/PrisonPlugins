@@ -5,7 +5,7 @@ namespace _64FF00\PurePerms\task;
 use _64FF00\PurePerms\PurePerms;
 use pocketmine\scheduler\PluginTask;
 
-class PPMySQLTask extends PluginTask{
+class PPMySQLTask extends PluginTask {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -19,16 +19,14 @@ class PPMySQLTask extends PluginTask{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $db;
 
 	/**
 	 * @param PurePerms $plugin
-	 * @param \mysqli   $db
+	 * @param \mysqli $db
 	 */
-	public function __construct(PurePerms $plugin, \mysqli $db){
+	public function __construct(PurePerms $plugin, \mysqli $db) {
 		parent::__construct($plugin);
-
 		$this->plugin = $plugin;
 		$this->db = $db;
 	}
@@ -36,10 +34,10 @@ class PPMySQLTask extends PluginTask{
 	/**
 	 * @param $currentTick
 	 */
-	public function onRun($currentTick){
-		if($this->db->ping()){
+	public function onRun($currentTick) {
+		if($this->db->ping()) {
 			$this->plugin->getLogger()->debug("Connected to MySQLi Server");
-		}else{
+		} else {
 			$this->plugin->getLogger()->debug("[MySQL] Warning: " . $this->db->error);
 		}
 	}

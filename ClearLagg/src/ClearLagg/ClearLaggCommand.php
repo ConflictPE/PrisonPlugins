@@ -6,26 +6,26 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 
-class ClearLaggCommand extends Command implements PluginIdentifiableCommand{
+class ClearLaggCommand extends Command implements PluginIdentifiableCommand {
 
 	public $plugin;
 
-	public function __construct(Loader $plugin){
+	public function __construct(Loader $plugin) {
 		parent::__construct("clearlagg", "Clear the lag!", "/clearlagg <check/clear/killmobs/clearall>", ["lagg"]);
 		$this->setPermission("clearlagg.command.clearlagg");
 		$this->plugin = $plugin;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function execute(CommandSender $sender, $alias, array $args){
-		if(!$this->testPermission($sender)){
+	public function execute(CommandSender $sender, $alias, array $args) {
+		if(!$this->testPermission($sender)) {
 			return false;
 		}
-		if(isset($args[0])){
-			switch($args[0]){
+		if(isset($args[0])) {
+			switch($args[0]) {
 				case "clear":
 					$sender->sendMessage("Removed " . $this->getPlugin()->removeEntities() . " entities.");
 					return true;

@@ -1,4 +1,5 @@
 <?php
+
 namespace falkirks\simplewarp\store;
 
 /**
@@ -8,7 +9,7 @@ namespace falkirks\simplewarp\store;
  * Interface WarpStore
  * @package falkirks\simplewarp\store
  */
-interface DataStore{
+interface DataStore {
 
 	public function addAll($warps);
 

@@ -10,7 +10,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	/**@var kit[] */
 	public $kits = [];
@@ -22,38 +22,38 @@ class Main extends PluginBase{
 	/**@var LangManager */
 	public $langManager;
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder() . "cooldowns/");
 		$this->saveDefaultConfig();
 		$this->loadKits();
 		$this->economy = new EconomyManager($this);
 		$this->langManager = new LangManager($this);
-		if($this->getServer()->getPluginManager()->getPlugin("PurePerms") !== null and !$this->getConfig()->get("force-builtin-permissions")){
+		if($this->getServer()->getPluginManager()->getPlugin("PurePerms") !== null and !$this->getConfig()->get("force-builtin-permissions")) {
 			$this->permManager = true;
 		}
 		$this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new CoolDownTask($this), 1200, 1200);
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 	}
 
-	public function onDisable(){
-		foreach($this->kits as $kit){
+	public function onDisable() {
+		foreach($this->kits as $kit) {
 			$kit->save();
 		}
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-		switch(strtolower($command->getName())){
+	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+		switch(strtolower($command->getName())) {
 			case "kit":
-				if(!($sender instanceof Player)){
+				if(!($sender instanceof Player)) {
 					$sender->sendMessage($this->langManager->getTranslation("in-game"));
 					return true;
 				}
-				if(!isset($args[0])){
+				if(!isset($args[0])) {
 					$sender->sendMessage($this->langManager->getTranslation("av-kits", implode(", ", array_keys($this->kits))));
 					return true;
 				}
 				$kit = $this->getKit($args[0]);
-				if($kit === null){
+				if($kit === null) {
 					$sender->sendMessage($this->langManager->getTranslation("no-kit", $args[0]));
 					return true;
 				}
@@ -61,7 +61,7 @@ class Main extends PluginBase{
 				return true;
 				break;
 			case "akreload":
-				foreach($this->kits as $kit){
+				foreach($this->kits as $kit) {
 					$kit->save();
 				}
 				$this->kits = [];
@@ -78,10 +78,10 @@ class Main extends PluginBase{
 	 *
 	 * @return Kit|null
 	 */
-	public function getKit(string $kit){
+	public function getKit(string $kit) {
 		/**@var Kit[] $lowerKeys */
 		$lowerKeys = array_change_key_case($this->kits, CASE_LOWER);
-		if(isset($lowerKeys[strtolower($kit)])){
+		if(isset($lowerKeys[strtolower($kit)])) {
 			return $lowerKeys[strtolower($kit)];
 		}
 		return null;
@@ -93,27 +93,28 @@ class Main extends PluginBase{
 	 *
 	 * @return kit|null
 	 */
-	public function getPlayerKit($player, $object = false){
-		if($player instanceof Player) $player = $player->getName();
+	public function getPlayerKit($player, $object = false) {
+		if($player instanceof Player)
+			$player = $player->getName();
 		return isset($this->hasKit[strtolower($player)]) ? ($object ? $this->hasKit[strtolower($player)] : $this->hasKit[strtolower($player)]->getName()) : null;
 	}
 
-	private function loadKits(){
+	private function loadKits() {
 		$this->saveResource("kits.yml");
 		$kitsData = yaml_parse_file($this->getDataFolder() . "kits.yml");
 		$this->fixConfig($kitsData);
-		foreach($kitsData as $kitName => $kitData){
+		foreach($kitsData as $kitName => $kitData) {
 			$this->kits[$kitName] = new Kit($this, $kitData, $kitName);
 		}
 	}
 
-	private function fixConfig(&$config){
-		foreach($config as $name => $kit){
-			if(isset($kit["users"])){
+	private function fixConfig(&$config) {
+		foreach($config as $name => $kit) {
+			if(isset($kit["users"])) {
 				$users = array_map("strtolower", $kit["users"]);
 				$config[$name]["users"] = $users;
 			}
-			if(isset($kit["worlds"])){
+			if(isset($kit["worlds"])) {
 				$worlds = array_map("strtolower", $kit["worlds"]);
 				$config[$name]["worlds"] = $worlds;
 			}

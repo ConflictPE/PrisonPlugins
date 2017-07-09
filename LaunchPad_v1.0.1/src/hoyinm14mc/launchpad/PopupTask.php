@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is a part of LaunchPad.
  * Copyright (C) 2015 CyberCube-HK
@@ -17,25 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with LaunchPad. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace hoyinm14mc\launchpad;
 
 use pocketmine\scheduler\PluginTask;
 
-class PopupTask extends PluginTask{
+class PopupTask extends PluginTask {
 
 	private $plugin;
 
-	public function __construct(LaunchPad $plugin){
+	public function __construct(LaunchPad $plugin) {
 		$this->plugin = $plugin;
 		parent::__construct($plugin);
 	}
 
-	public function onRun($tick){
-		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
-			if(in_array($p->getName(), $this->plugin->create_mode)){
+	public function onRun($tick) {
+		foreach($this->plugin->getServer()->getOnlinePlayers() as $p) {
+			if(in_array($p->getName(), $this->plugin->create_mode)) {
 				$p->sendPopup($this->plugin->colourMessage("&aTap a block to create a &bLaunch Pad&a!"));
 			}
-			if(in_array($p->getName(), $this->plugin->destroy_mode)){
+			if(in_array($p->getName(), $this->plugin->destroy_mode)) {
 				$p->sendPopup($this->plugin->colourMessage("&aTap a block to destroy the &bLaunch Pad&a!"));
 			}
 		}

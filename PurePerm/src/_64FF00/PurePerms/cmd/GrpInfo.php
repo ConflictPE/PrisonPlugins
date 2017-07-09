@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\utils\TextFormat;
 
-class GrpInfo extends Command implements PluginIdentifiableCommand{
+class GrpInfo extends Command implements PluginIdentifiableCommand {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -23,7 +23,6 @@ class GrpInfo extends Command implements PluginIdentifiableCommand{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $plugin;
 
 	/**
@@ -31,75 +30,57 @@ class GrpInfo extends Command implements PluginIdentifiableCommand{
 	 * @param           $name
 	 * @param           $description
 	 */
-	public function __construct(PurePerms $plugin, $name, $description){
+	public function __construct(PurePerms $plugin, $name, $description) {
 		$this->plugin = $plugin;
-
 		parent::__construct($name, $description);
-
 		$this->setPermission("pperms.command.grpinfo");
 	}
 
 	/**
 	 * @param CommandSender $sender
 	 * @param               $label
-	 * @param array         $args
+	 * @param array $args
 	 *
 	 * @return bool
 	 */
-	public function execute(CommandSender $sender, $label, array $args){
-		if(!$this->testPermission($sender)) return false;
-
-		if(count($args) < 1 || count($args) > 2){
+	public function execute(CommandSender $sender, $label, array $args) {
+		if(!$this->testPermission($sender))
+			return false;
+		if(count($args) < 1 || count($args) > 2) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.usage"));
-
 			return true;
 		}
-
 		$group = $this->plugin->getGroup($args[0]);
-
-		if($group === null){
+		if($group === null) {
 			$sender->sendMessage(TextFormat::RED . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.group_not_exist", $args[0]));
-
 			return true;
 		}
-
 		$levelName = null;
-
-		if(isset($args[1])){
+		if(isset($args[1])) {
 			$level = $this->plugin->getServer()->getLevelByName($args[1]);
-
-			if($level === null){
+			if($level === null) {
 				$sender->sendMessage(TextFormat::RED . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.level_not_exist", $args[1]));
-
 				return true;
 			}
-
 			$levelName = $level->getName();
 		}
-
 		$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.grpinfo_header", $group->getName()));
-
 		$alias = TextFormat::DARK_GREEN . $group->getAlias();
 		$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.grpinfo_alias", $alias));
-
 		$isDefault = $group->isDefault($levelName) ? TextFormat::DARK_GREEN . "YES" : TextFormat::RED . "NO";
 		$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.grpinfo_default", $isDefault));
-
 		$result = TextFormat::DARK_GREEN . "...";
-
 		/** @var PPGroup $tempGroup */
-		foreach($group->getParentGroups() as $tempGroup){
+		foreach($group->getParentGroups() as $tempGroup) {
 			$parents[] = $tempGroup->getName();
 		}
-
-		if(!empty($group->getParentGroups())) $result = TextFormat::DARK_GREEN . implode(",", $parents);
-
+		if(!empty($group->getParentGroups()))
+			$result = TextFormat::DARK_GREEN . implode(",", $parents);
 		$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.grpinfo.messages.grpinfo_parents", $result));
-
 		return true;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 }

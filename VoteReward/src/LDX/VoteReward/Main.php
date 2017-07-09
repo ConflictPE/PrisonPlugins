@@ -9,7 +9,7 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	public $queue = [];
 	private $message = "";
@@ -17,18 +17,18 @@ class Main extends PluginBase{
 	private $commands = [];
 	private $debug = false;
 
-	public function onLoad(){
-		if(file_exists($this->getDataFolder() . "config.yml")){
+	public function onLoad() {
+		if(file_exists($this->getDataFolder() . "config.yml")) {
 			$c = $this->getConfig()->getAll();
-			if(isset($c["API-Key"])){
-				if(trim($c["API-Key"]) != ""){
-					if(!is_dir($this->getDataFolder() . "Lists/")){
+			if(isset($c["API-Key"])) {
+				if(trim($c["API-Key"]) != "") {
+					if(!is_dir($this->getDataFolder() . "Lists/")) {
 						mkdir($this->getDataFolder() . "Lists/");
 					}
 					file_put_contents($this->getDataFolder() . "Lists/minecraftpocket-servers.com.vrc", "{\"website\":\"http://minecraftpocket-servers.com/\",\"check\":\"http://minecraftpocket-servers.com/api-vrc/?object=votes&element=claim&key=" . $c["API-Key"] . "&username={USERNAME}\",\"claim\":\"http://minecraftpocket-servers.com/api-vrc/?action=post&object=votes&element=claim&key=" . $c["API-Key"] . "&username={USERNAME}\"}");
 					rename($this->getDataFolder() . "config.yml", $this->getDataFolder() . "config.old.yml");
 					$this->getLogger()->info("§eConverting API key to VRC file...");
-				}else{
+				} else {
 					rename($this->getDataFolder() . "config.yml", $this->getDataFolder() . "config.old.yml");
 					$this->getLogger()->info("§eSetting up new configuration file...");
 				}
@@ -36,20 +36,20 @@ class Main extends PluginBase{
 		}
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->reload();
 	}
 
-	public function reload(){
+	public function reload() {
 		$this->saveDefaultConfig();
-		if(!is_dir($this->getDataFolder() . "Lists/")){
+		if(!is_dir($this->getDataFolder() . "Lists/")) {
 			mkdir($this->getDataFolder() . "Lists/");
 		}
 		$this->lists = [];
-		foreach(scandir($this->getDataFolder() . "Lists/") as $file){
+		foreach(scandir($this->getDataFolder() . "Lists/") as $file) {
 			$ext = explode(".", $file);
 			$ext = (count($ext) > 1 && isset($ext[count($ext) - 1]) ? strtolower($ext[count($ext) - 1]) : "");
-			if($ext == "vrc"){
+			if($ext == "vrc") {
 				$this->lists[] = json_decode(file_get_contents($this->getDataFolder() . "Lists/$file"), true);
 			}
 		}
@@ -57,7 +57,7 @@ class Main extends PluginBase{
 		$config = $this->getConfig()->getAll();
 		$this->message = $config["Message"];
 		$this->items = [];
-		foreach($config["Items"] as $i){
+		foreach($config["Items"] as $i) {
 			$r = explode(":", $i);
 			$this->items[] = new Item($r[0], $r[1], $r[2]);
 		}
@@ -65,11 +65,11 @@ class Main extends PluginBase{
 		$this->debug = isset($config["Debug"]) && $config["Debug"] === true ? true : false;
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-		switch(strtolower($command->getName())){
+	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+		switch(strtolower($command->getName())) {
 			case "vote":
-				if(isset($args[0]) && strtolower($args[0]) == "reload"){
-					if(Utils::hasPermission($sender, "votereward.command.reload")){
+				if(isset($args[0]) && strtolower($args[0]) == "reload") {
+					if(Utils::hasPermission($sender, "votereward.command.reload")) {
 						$this->reload();
 						$sender->sendMessage("§6- §3All configurations have been reloaded.");
 						break;
@@ -77,22 +77,22 @@ class Main extends PluginBase{
 					$sender->sendMessage("You do not have permission to use this subcommand.");
 					break;
 				}
-				if(!$sender instanceof Player){
+				if(!$sender instanceof Player) {
 					$sender->sendMessage("This command must be used in-game.");
 					break;
 				}
-				if(!Utils::hasPermission($sender, "votereward.command.vote")){
+				if(!Utils::hasPermission($sender, "votereward.command.vote")) {
 					$sender->sendMessage("You do not have permission to use this command.");
 					break;
 				}
-				if(in_array(strtolower($sender->getName()), $this->queue)){
+				if(in_array(strtolower($sender->getName()), $this->queue)) {
 					$sender->sendMessage("§6- §cSlow down! We're already checking lists for you.");
 					break;
 				}
 				$this->queue[] = strtolower($sender->getName());
 				$requests = [];
-				foreach($this->lists as $list){
-					if(isset($list["check"]) && isset($list["claim"])){
+				foreach($this->lists as $list) {
+					if(isset($list["check"]) && isset($list["claim"])) {
 						$requests[] = new ServerListQuery($list["check"], $list["claim"]);
 					}
 				}
@@ -106,23 +106,23 @@ class Main extends PluginBase{
 		return true;
 	}
 
-	public function rewardPlayer($player, $multiplier){
-		if(!$player instanceof Player){
+	public function rewardPlayer($player, $multiplier) {
+		if(!$player instanceof Player) {
 			return;
 		}
-		if($multiplier < 1){
+		if($multiplier < 1) {
 			$player->sendMessage("§l§6| \n§e   You haven't vote / voted us! \n§3   Vote us on §btinyurl.com/cpeprison \n§l§6| ");
 			return;
 		}
 		$clones = [];
-		foreach($this->items as $item){
+		foreach($this->items as $item) {
 			$clones[] = clone $item;
 		}
-		foreach($clones as $item){
+		foreach($clones as $item) {
 			$item->setCount($item->getCount() * $multiplier);
 			$player->getInventory()->addItem($item);
 		}
-		foreach($this->commands as $command){
+		foreach($this->commands as $command) {
 			$this->getServer()->dispatchCommand(new ConsoleCommandSender, str_replace([
 				"{USERNAME}",
 				"{NICKNAME}",
@@ -139,7 +139,7 @@ class Main extends PluginBase{
 				$player->getZ(),
 			], Utils::translateColors($command)));
 		}
-		if(trim($this->message) != ""){
+		if(trim($this->message) != "") {
 			$message = str_replace([
 				"{USERNAME}",
 				"{NICKNAME}",
@@ -147,7 +147,7 @@ class Main extends PluginBase{
 				$player->getName(),
 				$player->getDisplayName(),
 			], Utils::translateColors($this->message));
-			foreach($this->getServer()->getOnlinePlayers() as $p){
+			foreach($this->getServer()->getOnlinePlayers() as $p) {
 				$p->sendMessage($message);
 			}
 			$this->getServer()->getLogger()->info($message);

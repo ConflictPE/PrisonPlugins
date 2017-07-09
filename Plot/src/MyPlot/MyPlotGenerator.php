@@ -1,15 +1,15 @@
 <?php
+
 namespace MyPlot;
 
 use pocketmine\block\Block;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\biome\Biome;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Random;
 
-class MyPlotGenerator extends Generator{
+class MyPlotGenerator extends Generator {
 
 	const PLOT = 0;
 	const ROAD = 1;
@@ -23,13 +23,13 @@ class MyPlotGenerator extends Generator{
 	/** @var string[] */
 	private $settings;
 
-	public function __construct(array $settings = []){
-		if(isset($settings["preset"])){
+	public function __construct(array $settings = []) {
+		if(isset($settings["preset"])) {
 			$settings = json_decode($settings["preset"], true);
-			if($settings === false){
+			if($settings === false) {
 				$settings = [];
 			}
-		}else{
+		} else {
 			$settings = [];
 		}
 		$this->roadBlock = $this->parseBlock($settings, "RoadBlock", new Block(5));
@@ -40,7 +40,6 @@ class MyPlotGenerator extends Generator{
 		$this->roadWidth = $this->parseNumber($settings, "RoadWidth", 7);
 		$this->plotSize = $this->parseNumber($settings, "PlotSize", 22);
 		$this->groundHeight = $this->parseNumber($settings, "GroundHeight", 64);
-
 		$this->settings = [];
 		$this->settings["preset"] = json_encode([
 			"RoadBlock" => $this->roadBlock->getId() . (($meta = $this->roadBlock->getDamage()) === 0 ? '' : ':' . $meta),
@@ -54,23 +53,22 @@ class MyPlotGenerator extends Generator{
 		]);
 	}
 
-	public function getName(){
+	public function getName() {
 		return "myplot";
 	}
 
-	public function getSettings(){
+	public function getSettings() {
 		return $this->settings;
 	}
 
-	public function init(ChunkManager $level, Random $random){
+	public function init(ChunkManager $level, Random $random) {
 		$this->level = $level;
 	}
 
-	public function generateChunk($chunkX, $chunkZ){
+	public function generateChunk($chunkX, $chunkZ) {
 		$shape = $this->getShape($chunkX << 4, $chunkZ << 4);
 		$chunk = $this->level->getChunk($chunkX, $chunkZ);
 		$chunk->setGenerated();
-
 		$bottomBlockId = $this->bottomBlock->getId();
 		$bottomBlockMeta = $this->bottomBlock->getDamage();
 		$plotFillBlockId = $this->plotFillBlock->getId();
@@ -82,21 +80,19 @@ class MyPlotGenerator extends Generator{
 		$wallBlockId = $this->wallBlock->getId();
 		$wallBlockMeta = $this->wallBlock->getDamage();
 		$groundHeight = $this->groundHeight;
-
-		for($Z = 0; $Z < 16; ++$Z){
-			for($X = 0; $X < 16; ++$X){
+		for($Z = 0; $Z < 16; ++$Z) {
+			for($X = 0; $X < 16; ++$X) {
 				$chunk->setBiomeId($X, $Z, 1);
-
 				$chunk->setBlock($X, 0, $Z, $bottomBlockId, $bottomBlockMeta);
-				for($y = 1; $y < $groundHeight; ++$y){
+				for($y = 1; $y < $groundHeight; ++$y) {
 					$chunk->setBlock($X, $y, $Z, $plotFillBlockId, $plotFillBlockMeta);
 				}
 				$type = $shape[($Z << 4) | $X];
-				if($type === self::PLOT){
+				if($type === self::PLOT) {
 					$chunk->setBlock($X, $groundHeight, $Z, $plotFloorBlockId, $plotFloorBlockMeta);
-				}elseif($type === self::ROAD){
+				} elseif($type === self::ROAD) {
 					$chunk->setBlock($X, $groundHeight, $Z, $roadBlockId, $roadBlockMeta);
-				}else{
+				} else {
 					$chunk->setBlock($X, $groundHeight, $Z, $roadBlockId, $roadBlockMeta);
 					$chunk->setBlock($X, $groundHeight + 1, $Z, $wallBlockId, $wallBlockMeta);
 				}
@@ -107,51 +103,48 @@ class MyPlotGenerator extends Generator{
 		$this->level->setChunk($chunkX, $chunkZ, $chunk);
 	}
 
-	public function getShape($x, $z){
+	public function getShape($x, $z) {
 		$totalSize = $this->plotSize + $this->roadWidth;
-
-		if($x >= 0){
+		if($x >= 0) {
 			$X = $x % $totalSize;
-		}else{
+		} else {
 			$X = $totalSize - abs($x % $totalSize);
 		}
-		if($z >= 0){
+		if($z >= 0) {
 			$Z = $z % $totalSize;
-		}else{
+		} else {
 			$Z = $totalSize - abs($z % $totalSize);
 		}
-
 		$startX = $X;
 		$shape = new \SplFixedArray(256);
-
-		for($z = 0; $z < 16; $z++, $Z++){
-			if($Z === $totalSize){
+		for($z = 0; $z < 16; $z++, $Z++) {
+			if($Z === $totalSize) {
 				$Z = 0;
 			}
-			if($Z < $this->plotSize){
+			if($Z < $this->plotSize) {
 				$typeZ = self::PLOT;
-			}elseif($Z === $this->plotSize or $Z === ($totalSize - 1)){
+			} elseif($Z === $this->plotSize or $Z === ($totalSize - 1)) {
 				$typeZ = self::WALL;
-			}else{
+			} else {
 				$typeZ = self::ROAD;
 			}
-
-			for($x = 0, $X = $startX; $x < 16; $x++, $X++){
-				if($X === $totalSize) $X = 0;
-				if($X < $this->plotSize){
+			for($x = 0, $X = $startX; $x < 16; $x++, $X++) {
+				if($X === $totalSize)
+					$X = 0;
+				if($X < $this->plotSize) {
 					$typeX = self::PLOT;
-				}elseif($X === $this->plotSize or $X === ($totalSize - 1)){
+				} elseif($X === $this->plotSize or $X === ($totalSize - 1)) {
 					$typeX = self::WALL;
-				}else{
+				} else {
 					$typeX = self::ROAD;
 				}
-				if($typeX === $typeZ){
+				if($typeX === $typeZ) {
 					$type = $typeX;
-				}elseif($typeX === self::PLOT){
+				} elseif($typeX === self::PLOT) {
 					$type = $typeZ;
-				}elseif($typeZ === self::PLOT){
+				} elseif($typeZ === self::PLOT) {
 					$type = $typeX;
-				}else{
+				} else {
 					$type = self::ROAD;
 				}
 				$shape[($z << 4) | $x] = $type;
@@ -160,36 +153,36 @@ class MyPlotGenerator extends Generator{
 		return $shape;
 	}
 
-	public function populateChunk($chunkX, $chunkZ){
+	public function populateChunk($chunkX, $chunkZ) {
 	}
 
-	public function getSpawn(){
+	public function getSpawn() {
 		return new Vector3(0, $this->groundHeight, 0);
 	}
 
-	private function parseBlock(&$array, $key, $default){
-		if(isset($array[$key])){
+	private function parseBlock(&$array, $key, $default) {
+		if(isset($array[$key])) {
 			$id = $array[$key];
-			if(is_numeric($id)){
+			if(is_numeric($id)) {
 				$block = new Block($id);
-			}else{
+			} else {
 				$split = explode(":", $id);
-				if(count($split) === 2 and is_numeric($split[0]) and is_numeric($split[1])){
+				if(count($split) === 2 and is_numeric($split[0]) and is_numeric($split[1])) {
 					$block = new Block($split[0], $split[1]);
-				}else{
+				} else {
 					$block = $default;
 				}
 			}
-		}else{
+		} else {
 			$block = $default;
 		}
 		return $block;
 	}
 
-	private function parseNumber(&$array, $key, $default){
-		if(isset($array[$key]) and is_numeric($array[$key])){
+	private function parseNumber(&$array, $key, $default) {
+		if(isset($array[$key]) and is_numeric($array[$key])) {
 			return $array[$key];
-		}else{
+		} else {
 			return $default;
 		}
 	}

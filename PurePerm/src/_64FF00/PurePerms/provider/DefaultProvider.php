@@ -7,7 +7,7 @@ use _64FF00\PurePerms\PurePerms;
 use pocketmine\IPlayer;
 use pocketmine\utils\Config;
 
-class DefaultProvider implements ProviderInterface{
+class DefaultProvider implements ProviderInterface {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -21,23 +21,18 @@ class DefaultProvider implements ProviderInterface{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $groups, $players, $plugin;
 
 	/**
 	 * @param PurePerms $plugin
 	 */
-	public function __construct(PurePerms $plugin){
+	public function __construct(PurePerms $plugin) {
 		$this->plugin = $plugin;
-
 		$this->plugin->saveResource("groups.yml");
-
 		$this->groups = new Config($this->plugin->getDataFolder() . "groups.yml", Config::YAML);
-
-		if(empty($this->groups->getAll())) throw new \RuntimeException($this->plugin->getMessage("logger_messages.YAMLProvider_InvalidGroupsSettings"));
-
+		if(empty($this->groups->getAll()))
+			throw new \RuntimeException($this->plugin->getMessage("logger_messages.YAMLProvider_InvalidGroupsSettings"));
 		$this->plugin->saveResource("players.yml");
-
 		$this->players = new Config($this->plugin->getDataFolder() . "players.yml", Config::YAML);
 	}
 
@@ -46,43 +41,40 @@ class DefaultProvider implements ProviderInterface{
 	 *
 	 * @return mixed
 	 */
-	public function getGroupData(PPGroup $group){
+	public function getGroupData(PPGroup $group) {
 		$groupName = $group->getName();
-
-		if(!isset($this->getGroupsData()[$groupName]) || !is_array($this->getGroupsData()[$groupName])) return [];
-
+		if(!isset($this->getGroupsData()[$groupName]) || !is_array($this->getGroupsData()[$groupName]))
+			return [];
 		return $this->getGroupsData()[$groupName];
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getGroupsConfig(){
+	public function getGroupsConfig() {
 		return $this->groups;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getGroupsData(){
+	public function getGroupsData() {
 		return $this->groups->getAll();
 	}
 
-	public function getPlayerData(IPlayer $player){
+	public function getPlayerData(IPlayer $player) {
 		$userName = strtolower($player->getName());
-
-		if(!$this->players->exists($userName)){
+		if(!$this->players->exists($userName)) {
 			return [
 				"group" => $this->plugin->getDefaultGroup()->getName(),
 				"permissions" => [],
 				"worlds" => [],
 			];
 		}
-
 		return $this->players->get($userName);
 	}
 
-	public function getUsers(){
+	public function getUsers() {
 		/*
 		if(empty($this->players->getAll()))
 			return null;
@@ -93,47 +85,41 @@ class DefaultProvider implements ProviderInterface{
 
 	/**
 	 * @param PPGroup $group
-	 * @param array   $tempGroupData
+	 * @param array $tempGroupData
 	 */
-	public function setGroupData(PPGroup $group, array $tempGroupData){
+	public function setGroupData(PPGroup $group, array $tempGroupData) {
 		$groupName = $group->getName();
-
 		$this->groups->set($groupName, $tempGroupData);
-
 		$this->groups->save();
 	}
 
 	/**
 	 * @param array $tempGroupsData
 	 */
-	public function setGroupsData(array $tempGroupsData){
+	public function setGroupsData(array $tempGroupsData) {
 		$this->groups->setAll($tempGroupsData);
-
 		$this->groups->save();
 	}
 
 	/**
 	 * @param IPlayer $player
-	 * @param array   $tempUserData
+	 * @param array $tempUserData
 	 */
-	public function setPlayerData(IPlayer $player, array $tempUserData){
+	public function setPlayerData(IPlayer $player, array $tempUserData) {
 		$userName = strtolower($player->getName());
-
-		if(!$this->players->exists($userName)){
+		if(!$this->players->exists($userName)) {
 			$this->players->set($userName, [
 				"group" => $this->plugin->getDefaultGroup()->getName(),
 				"permissions" => [],
 				"worlds" => [],
 			]);
 		}
-
-		if(isset($tempUserData["userName"])) unset($tempUserData["userName"]);
-
+		if(isset($tempUserData["userName"]))
+			unset($tempUserData["userName"]);
 		$this->players->set($userName, $tempUserData);
-
 		$this->players->save();
 	}
 
-	public function close(){
+	public function close() {
 	}
 }

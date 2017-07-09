@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2015  onebone <jyc00410@gmail.com>
@@ -31,7 +30,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\tile\Sign;
 use pocketmine\utils\Config;
 
-class EconomyShop extends PluginBase implements Listener{
+class EconomyShop extends PluginBase implements Listener {
 
 	/**
 	 * @var EconomyShop
@@ -54,24 +53,21 @@ class EconomyShop extends PluginBase implements Listener{
 	/**
 	 * @return EconomyShop
 	 */
-	public static function getInstance(){
+	public static function getInstance() {
 		return self::$instance;
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder());
-
 		$this->saveDefaultConfig();
-
 		$this->shop = (new Config($this->getDataFolder() . "Shops.yml", Config::YAML))->getAll();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->prepareLangPref();
 		$this->placeQueue = [];
-
 		self::$instance = $this;
 	}
 
-	public function getShops(){
+	public function getShops() {
 		return $this->shop;
 	}
 
@@ -82,25 +78,23 @@ class EconomyShop extends PluginBase implements Listener{
 	 *
 	 * @return bool
 	 */
-	public function editShop($locationIndex, $price = null, $amount = null){
-		if(isset($this->shop[$locationIndex])){
+	public function editShop($locationIndex, $price = null, $amount = null) {
+		if(isset($this->shop[$locationIndex])) {
 			$price = ($price === null) ? $this->shop[$locationIndex]["price"] : $price;
 			$amount = ($amount === null) ? $this->shop[$locationIndex]["amount"] : $amount;
-
 			$location = explode(":", $locationIndex);
 			$tile = $this->getServer()->getLevelByName($location[3]);
-			if($tile instanceof Sign){
+			if($tile instanceof Sign) {
 				$tag = $tile->getText()[0];
 				$data = [];
-				foreach($this->shopSign->getAll() as $value){
-					if($value[0] == $tag){
+				foreach($this->shopSign->getAll() as $value) {
+					if($value[0] == $tag) {
 						$data = $value;
 						break;
 					}
 				}
 				$tile->setText($data[0], str_replace("%1", $price, $data[1]), $tile->getText()[2], str_replace("%3", $amount, $data[3]));
 			}
-
 			save:
 			$this->shop[$locationIndex] = [
 				"x" => (int) $location[0],
@@ -117,30 +111,30 @@ class EconomyShop extends PluginBase implements Listener{
 		return false;
 	}
 
-	public function prepareLangPref(){
+	public function prepareLangPref() {
 		$this->lang = new Config($this->getDataFolder() . "language.properties", Config::PROPERTIES, yaml_parse(stream_get_contents($resource = $this->getResource("language.yml"))));
 		@fclose($resource);
 		$this->shopSign = new Config($this->getDataFolder() . "ShopText.yml", Config::YAML, yaml_parse(stream_get_contents($resource = $this->getResource("ShopText.yml"))));
 		@fclose($resource);
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$config = (new Config($this->getDataFolder() . "Shops.yml", Config::YAML));
 		$config->setAll($this->shop);
 		$config->save();
 	}
 
-	public function tagExists($tag){
-		foreach($this->shopSign->getAll() as $key => $val){
-			if($tag == $key){
+	public function tagExists($tag) {
+		foreach($this->shopSign->getAll() as $key => $val) {
+			if($tag == $key) {
 				return $val;
 			}
 		}
 		return false;
 	}
 
-	public function getMessage($key, $val = ["%1", "%2", "%3"]){
-		if($this->lang->exists($key)){
+	public function getMessage($key, $val = ["%1", "%2", "%3"]) {
+		if($this->lang->exists($key)) {
 			return str_replace(["%MONETARY_UNIT%", "%1", "%2", "%3"], [
 				EconomyAPI::getInstance()->getMonetaryUnit(),
 				$val[0],
@@ -151,25 +145,23 @@ class EconomyShop extends PluginBase implements Listener{
 		return "There are no message which has key \"$key\"";
 	}
 
-	public function onSignChange(SignChangeEvent $event){
+	public function onSignChange(SignChangeEvent $event) {
 		$result = $this->tagExists($event->getLine(0));
-		if($result !== false){
+		if($result !== false) {
 			$player = $event->getPlayer();
-			if(!$player->hasPermission("economyshop.shop.create")){
+			if(!$player->hasPermission("economyshop.shop.create")) {
 				$player->sendMessage($this->getMessage("no-permission-create"));
 				return;
 			}
-			if(!is_numeric($event->getLine(1)) or !is_numeric($event->getLine(3))){
+			if(!is_numeric($event->getLine(1)) or !is_numeric($event->getLine(3))) {
 				$player->sendMessage($this->getMessage("wrong-format"));
 				return;
 			}
-
 			$item = Item::fromString($event->getLine(2));
-			if($item === false){
+			if($item === false) {
 				$player->sendMessage($this->getMessage("item-not-support", [$event->getLine(2), "", ""]));
 				return;
 			}
-
 			$block = $event->getBlock();
 			$this->shop[$block->getX() . ":" . $block->getY() . ":" . $block->getZ() . ":" . $block->getLevel()->getFolderName()] = [
 				"x" => $block->getX(),
@@ -182,13 +174,11 @@ class EconomyShop extends PluginBase implements Listener{
 				"meta" => (int) $item->getDamage(),
 				"amount" => (int) $event->getLine(3),
 			];
-
 			$player->sendMessage($this->getMessage("shop-created", [
 				$item->getID(),
 				$item->getDamage(),
 				$event->getLine(1),
 			]));
-
 			$event->setLine(0, $result[0]); // TAG
 			$event->setLine(1, str_replace("%1", $event->getLine(1), $result[1])); // PRICE
 			$event->setLine(2, str_replace("%2", $item->getName(), $result[2])); // ITEM NAME
@@ -196,57 +186,55 @@ class EconomyShop extends PluginBase implements Listener{
 		}
 	}
 
-	public function onPlayerTouch(PlayerInteractEvent $event){
-		if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK){
+	public function onPlayerTouch(PlayerInteractEvent $event) {
+		if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
 			return;
 		}
 		$block = $event->getBlock();
 		$loc = $block->getX() . ":" . $block->getY() . ":" . $block->getZ() . ":" . $block->getLevel()->getFolderName();
-		if(isset($this->shop[$loc])){
+		if(isset($this->shop[$loc])) {
 			$shop = $this->shop[$loc];
 			$player = $event->getPlayer();
-			if($player->getGamemode() % 2 == 1){
+			if($player->getGamemode() % 2 == 1) {
 				$player->sendMessage($this->getMessage("invalid-gamemode"));
 				$event->setCancelled();
 				return;
 			}
-			if(!$player->hasPermission("economyshop.shop.buy")){
+			if(!$player->hasPermission("economyshop.shop.buy")) {
 				$player->sendMessage($this->getMessage("no-permission-buy"));
 				$event->setCancelled();
 				return;
 			}
-
-			if(!$player->getInventory()->canAddItem(Item::get($shop["item"], $shop["meta"]))){
+			if(!$player->getInventory()->canAddItem(Item::get($shop["item"], $shop["meta"]))) {
 				$player->sendMessage($this->getMessage("full-inventory"));
 				return;
 			}
-
 			$money = EconomyAPI::getInstance()->myMoney($player);
-			if($shop["price"] > $money){
+			if($shop["price"] > $money) {
 				$player->sendMessage($this->getMessage("no-money-buy", [
 					$shop["item"] . ":" . $shop["meta"],
 					$shop["price"],
 					"%3",
 				]));
 				$event->setCancelled(true);
-				if($event->getItem()->canBePlaced()){
+				if($event->getItem()->canBePlaced()) {
 					$this->placeQueue[$player->getName()] = true;
 				}
 				return;
-			}else{
-				if(!isset($shop["itemName"])){
+			} else {
+				if(!isset($shop["itemName"])) {
 					$item = $this->getItem($shop["item"], $shop["meta"], $shop["amount"]);
-					if($item === false){
+					if($item === false) {
 						$item = $shop["item"] . ":" . $shop["meta"];
-					}else{
+					} else {
 						$item = $item[0];
 					}
 					$this->shop[$loc]["itemName"] = $item;
 					$shop["itemName"] = $item;
 				}
 				$now = microtime(true);
-				if($this->getConfig()->get("enable-double-tap")){
-					if(!isset($this->tap[$player->getName()]) or $now - $this->tap[$player->getName()][1] >= 1.5 or $this->tap[$player->getName()][0] !== $loc){
+				if($this->getConfig()->get("enable-double-tap")) {
+					if(!isset($this->tap[$player->getName()]) or $now - $this->tap[$player->getName()][1] >= 1.5 or $this->tap[$player->getName()][0] !== $loc) {
 						$this->tap[$player->getName()] = [$loc, $now];
 						$player->sendMessage($this->getMessage("tap-again", [
 							$shop["itemName"],
@@ -254,11 +242,10 @@ class EconomyShop extends PluginBase implements Listener{
 							$shop["amount"],
 						]));
 						return;
-					}else{
+					} else {
 						unset($this->tap[$player->getName()]);
 					}
 				}
-
 				$player->getInventory()->addItem(new Item($shop["item"], $shop["meta"], $shop["amount"]));
 				EconomyAPI::getInstance()->reduceMoney($player, $shop["price"], true, "EconomyShop");
 				$player->sendMessage($this->getMessage("bought-item", [
@@ -267,18 +254,18 @@ class EconomyShop extends PluginBase implements Listener{
 					$shop["price"],
 				]));
 				$event->setCancelled(true);
-				if($event->getItem()->canBePlaced()){
+				if($event->getItem()->canBePlaced()) {
 					$this->placeQueue[$player->getName()] = true;
 				}
 			}
 		}
 	}
 
-	public function onBreakEvent(BlockBreakEvent $event){
+	public function onBreakEvent(BlockBreakEvent $event) {
 		$block = $event->getBlock();
-		if(isset($this->shop[$block->getX() . ":" . $block->getY() . ":" . $block->getZ() . ":" . $block->getLevel()->getFolderName()])){
+		if(isset($this->shop[$block->getX() . ":" . $block->getY() . ":" . $block->getZ() . ":" . $block->getLevel()->getFolderName()])) {
 			$player = $event->getPlayer();
-			if(!$player->hasPermission("economyshop.shop.remove")){
+			if(!$player->hasPermission("economyshop.shop.remove")) {
 				$player->sendMessage($this->getMessage("no-permission-break"));
 				$event->setCancelled(true);
 				return;
@@ -289,9 +276,9 @@ class EconomyShop extends PluginBase implements Listener{
 		}
 	}
 
-	public function onPlaceEvent(BlockPlaceEvent $event){
+	public function onPlaceEvent(BlockPlaceEvent $event) {
 		$username = $event->getPlayer()->getName();
-		if(isset($this->placeQueue[$username])){
+		if(isset($this->placeQueue[$username])) {
 			$event->setCancelled(true);
 			unset($this->placeQueue[$username]);
 		}

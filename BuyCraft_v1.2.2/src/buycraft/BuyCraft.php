@@ -1,4 +1,5 @@
 <?php
+
 namespace buycraft;
 
 use buycraft\commands\BuyCommand;
@@ -11,7 +12,7 @@ use buycraft\task\PendingPlayerCheckerTask;
 use buycraft\util\BuycraftCommandSender;
 use pocketmine\plugin\PluginBase;
 
-class BuyCraft extends PluginBase{
+class BuyCraft extends PluginBase {
 
 	/*
 	 * If you want to turn debugging on set this to true.
@@ -36,11 +37,10 @@ class BuyCraft extends PluginBase{
 	/** @var array */
 	private $authPayload = [];
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->saveDefaultConfig();
 		$this->saveResource("README.md");
 		$this->getConfig(); //Fetch the config so no blocking later
-
 		$this->commandSender = new BuycraftCommandSender;
 		$this->commandExecuteTask = new CommandExecuteTask($this);
 		$this->pendingPlayerCheckerTask = new PendingPlayerCheckerTask($this);
@@ -48,103 +48,99 @@ class BuyCraft extends PluginBase{
 		$this->commandExecuteTask->call();
 		$this->pendingPlayerCheckerTask->call();
 		$this->commandDeleteTask->call();
-
 		$this->packageManager = new PackageManager($this);
-
 		$this->buyCommand = new BuyCommand($this);
 		$this->buycraftCommand = new BuyCraftCommand($this);
-
 		$this->getServer()->getCommandMap()->register("buycraft", $this->buycraftCommand);
 		$this->getServer()->getCommandMap()->register("buycraft", $this->buyCommand);
-
-		if($this->getConfig()->get('secret') !== ""){
+		if($this->getConfig()->get('secret') !== "") {
 			$auth = new AuthenticateTask($this);
 			$auth->call();
-		}else{
+		} else {
 			$this->getLogger()->info("You still need to configure BuyCraft. Use /buycraft secret or the config.yml to set your secret.");
 		}
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->commandDeleteTask->onRun(0);
 	}
 
 	/**
 	 * @return CommandDeleteTask
 	 */
-	public function getCommandDeleteTask(){
+	public function getCommandDeleteTask() {
 		return $this->commandDeleteTask;
 	}
 
 	/**
 	 * @return CommandExecuteTask
 	 */
-	public function getCommandExecuteTask(){
+	public function getCommandExecuteTask() {
 		return $this->commandExecuteTask;
 	}
 
 	/**
 	 * @return PendingPlayerCheckerTask
 	 */
-	public function getPendingPlayerCheckerTask(){
+	public function getPendingPlayerCheckerTask() {
 		return $this->pendingPlayerCheckerTask;
 	}
 
 	/**
 	 * @return BuyCommand
 	 */
-	public function getBuyCommand(){
+	public function getBuyCommand() {
 		return $this->buyCommand;
 	}
 
 	/**
 	 * @return BuyCraftCommand
 	 */
-	public function getBuycraftCommand(){
+	public function getBuycraftCommand() {
 		return $this->buycraftCommand;
 	}
 
 	/**
 	 * @return BuycraftCommandSender
 	 */
-	public function getCommandSender(){
+	public function getCommandSender() {
 		return $this->commandSender;
 	}
 
 	/**
 	 * @return PackageManager
 	 */
-	public function getPackageManager(){
+	public function getPackageManager() {
 		return $this->packageManager;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isAuthenticated(){
+	public function isAuthenticated() {
 		return $this->isAuthenticated;
 	}
 
-	public function setAuthenticated(){
+	public function setAuthenticated() {
 		$this->isAuthenticated = true;
 	}
 
-	public function setUnAuthenticated(){
+	public function setUnAuthenticated() {
 		$this->isAuthenticated = false;
 	}
 
-	public function setAuthPayload(array $authPayload){
-		if(isset($authPayload["buyCommand"])){
+	public function setAuthPayload(array $authPayload) {
+		if(isset($authPayload["buyCommand"])) {
 			$this->buyCommand->updateCommand($authPayload["buyCommand"]);
 		}
 		$this->authPayload = $authPayload;
 	}
 
-	public function getAuthPayload(){
+	public function getAuthPayload() {
 		return $this->authPayload;
 	}
 
-	public function getAuthPayloadSetting($name){
+	public function getAuthPayloadSetting($name) {
 		return (isset($this->authPayload[$name]) ? $this->authPayload[$name] : false);
 	}
 }

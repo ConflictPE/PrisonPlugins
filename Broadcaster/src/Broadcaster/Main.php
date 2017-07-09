@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Broadcaster (v1.16) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -8,15 +7,13 @@
  * Copyright & License: (C) 2014-2015 EvolSoft
  * Licensed under MIT (https://github.com/EvolSoft/Broadcaster/blob/master/LICENSE)
  */
-
 namespace Broadcaster;
-
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	//About Plugin Const
 	const PRODUCER = "EvolSoft";
@@ -30,8 +27,7 @@ class Main extends PluginBase{
 
 	public $task;
 
-	public function translateColors($symbol, $message){
-
+	public function translateColors($symbol, $message) {
 		$message = str_replace($symbol . "0", TextFormat::BLACK, $message);
 		$message = str_replace($symbol . "1", TextFormat::DARK_BLUE, $message);
 		$message = str_replace($symbol . "2", TextFormat::DARK_GREEN, $message);
@@ -48,18 +44,16 @@ class Main extends PluginBase{
 		$message = str_replace($symbol . "d", TextFormat::LIGHT_PURPLE, $message);
 		$message = str_replace($symbol . "e", TextFormat::YELLOW, $message);
 		$message = str_replace($symbol . "f", TextFormat::WHITE, $message);
-
 		$message = str_replace($symbol . "k", TextFormat::OBFUSCATED, $message);
 		$message = str_replace($symbol . "l", TextFormat::BOLD, $message);
 		$message = str_replace($symbol . "m", TextFormat::STRIKETHROUGH, $message);
 		$message = str_replace($symbol . "n", TextFormat::UNDERLINE, $message);
 		$message = str_replace($symbol . "o", TextFormat::ITALIC, $message);
 		$message = str_replace($symbol . "r", TextFormat::RESET, $message);
-
 		return $message;
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder());
 		$this->saveDefaultConfig();
 		$this->cfg = $this->getConfig()->getAll();
@@ -72,7 +66,7 @@ class Main extends PluginBase{
 		$this->ptask = $this->getServer()->getScheduler()->scheduleRepeatingTask(new Tasks\PopupTask($this), $ptime);
 	}
 
-	public function broadcast($conf, $message){
+	public function broadcast($conf, $message) {
 		$message = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $message);
 		$message = str_replace("{TOTALPLAYERS}", count($this->getServer()->getOnlinePlayers()), $message);
 		$message = str_replace("{PREFIX}", $conf["prefix"], $message);
@@ -81,7 +75,7 @@ class Main extends PluginBase{
 		return $message;
 	}
 
-	public function messagebyPlayer(Player $player, $conf, $message){
+	public function messagebyPlayer(Player $player, $conf, $message) {
 		$format = $conf["sendmessage-format"];
 		$format = str_replace("{MESSAGE}", $message, $format);
 		$format = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $format);
@@ -93,7 +87,7 @@ class Main extends PluginBase{
 		return $format;
 	}
 
-	public function messagebyConsole(CommandSender $player, $conf, $message){
+	public function messagebyConsole(CommandSender $player, $conf, $message) {
 		$format = $conf["sendmessage-format"];
 		$format = str_replace("{MESSAGE}", $message, $format);
 		$format = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $format);
@@ -105,7 +99,7 @@ class Main extends PluginBase{
 		return $format;
 	}
 
-	public function broadcastPopup($conf, $message){
+	public function broadcastPopup($conf, $message) {
 		$message = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $message);
 		$message = str_replace("{TOTALPLAYERS}", count($this->getServer()->getOnlinePlayers()), $message);
 		$message = str_replace("{PREFIX}", $conf["prefix"], $message);
@@ -114,7 +108,7 @@ class Main extends PluginBase{
 		return $message;
 	}
 
-	public function popupbyPlayer(Player $player, $conf, $message){
+	public function popupbyPlayer(Player $player, $conf, $message) {
 		$format = $conf["sendmessage-format"];
 		$format = str_replace("{MESSAGE}", $message, $format);
 		$format = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $format);
@@ -126,7 +120,7 @@ class Main extends PluginBase{
 		return $format;
 	}
 
-	public function popupbyConsole(CommandSender $player, $conf, $message){
+	public function popupbyConsole(CommandSender $player, $conf, $message) {
 		$format = $conf["sendpopup-format"];
 		$format = str_replace("{MESSAGE}", $message, $format);
 		$format = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $format);
@@ -138,7 +132,7 @@ class Main extends PluginBase{
 		return $format;
 	}
 
-	public function getMessagefromArray($array){
+	public function getMessagefromArray($array) {
 		unset($array[0]);
 		return implode(' ', $array);
 	}

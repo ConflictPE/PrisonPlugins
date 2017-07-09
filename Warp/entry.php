@@ -1,5 +1,6 @@
 <?php echo "[?] This script will execute code downloaded from the internet. Do you wish to continue?";
-if(!trim(fgets(STDIN)) == "y") exit();
+if(!trim(fgets(STDIN)) == "y")
+	exit();
 $a = curl_init("https://raw.githubusercontent.com/Falkirks/StubUpdater/master/src/stub.php");
 curl_setopt($a, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($a, CURLOPT_SSL_VERIFYHOST, 2);

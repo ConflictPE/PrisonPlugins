@@ -5,7 +5,7 @@ namespace _64FF00\PureChat\factions;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class XeviousPE_Factions implements FactionsInterface{
+class XeviousPE_Factions implements FactionsInterface {
 
 	/*
 		PureChat by 64FF00 (Twitter: @64FF00)
@@ -19,11 +19,10 @@ class XeviousPE_Factions implements FactionsInterface{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	/**
 	 * @return null|\pocketmine\plugin\Plugin
 	 */
-	public function getAPI(){
+	public function getAPI() {
 		return Server::getInstance()->getPluginManager()->getPlugin("XeviousPE-Factions");
 	}
 
@@ -32,7 +31,7 @@ class XeviousPE_Factions implements FactionsInterface{
 	 *
 	 * @return mixed
 	 */
-	public function getPlayerFaction(Player $player){
+	public function getPlayerFaction(Player $player) {
 		return $this->getAPI()->getProvider()->getPlayerFaction($player->getName());
 	}
 
@@ -41,7 +40,7 @@ class XeviousPE_Factions implements FactionsInterface{
 	 *
 	 * @return string
 	 */
-	public function getPlayerRank(Player $player){
+	public function getPlayerRank(Player $player) {
 		// TODO
 	}
 }

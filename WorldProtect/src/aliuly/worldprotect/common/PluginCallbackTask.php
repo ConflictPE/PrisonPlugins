@@ -1,4 +1,5 @@
 <?php
+
 namespace aliuly\worldprotect\common;
 
 use pocketmine\plugin\Plugin;
@@ -16,7 +17,7 @@ use pocketmine\scheduler\PluginTask;
  *
  * Pass it to the scheduler and off you go...
  */
-class PluginCallbackTask extends PluginTask{
+class PluginCallbackTask extends PluginTask {
 
 	/** @var callable */
 	protected $callable;
@@ -25,11 +26,11 @@ class PluginCallbackTask extends PluginTask{
 	protected $args;
 
 	/**
-	 * @param Plugin   $owner
+	 * @param Plugin $owner
 	 * @param callable $callable
-	 * @param array    $args
+	 * @param array $args
 	 */
-	public function __construct(Plugin $owner, callable $callable, array $args = []){
+	public function __construct(Plugin $owner, callable $callable, array $args = []) {
 		parent::__construct($owner);
 		$this->callable = $callable;
 		$this->args = $args;
@@ -39,11 +40,11 @@ class PluginCallbackTask extends PluginTask{
 	/**
 	 * @return callable
 	 */
-	public function getCallable(){
+	public function getCallable() {
 		return $this->callable;
 	}
 
-	public function onRun($currentTicks){
+	public function onRun($currentTicks) {
 		$c = $this->callable;
 		$args = $this->args;
 		$args[] = $currentTicks;

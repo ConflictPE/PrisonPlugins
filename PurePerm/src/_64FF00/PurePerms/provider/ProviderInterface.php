@@ -5,7 +5,7 @@ namespace _64FF00\PurePerms\provider;
 use _64FF00\PurePerms\PPGroup;
 use pocketmine\IPlayer;
 
-interface ProviderInterface{
+interface ProviderInterface {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -19,7 +19,6 @@ interface ProviderInterface{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	public function getGroupData(PPGroup $group);
 
 	public function getGroupsData();

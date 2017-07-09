@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Crate.php class
  *
@@ -13,7 +12,7 @@ namespace crates\crate;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
 
-class Crate{
+class Crate {
 
 	/** @var string */
 	private $name = "";
@@ -36,13 +35,13 @@ class Crate{
 	/**
 	 * Crate constructor
 	 *
-	 * @param string    $name
-	 * @param string    $description
+	 * @param string $name
+	 * @param string $description
 	 * @param Vector3[] $locations
-	 * @param Item[]    $items
-	 * @param int[]     $money
+	 * @param Item[] $items
+	 * @param int[] $money
 	 */
-	public function __construct($name, $description, array $locations, $id, array $items, array $money){
+	public function __construct($name, $description, array $locations, $id, array $items, array $money) {
 		$this->name = $name;
 		$this->description = $description;
 		$this->locations = $locations;
@@ -54,56 +53,56 @@ class Crate{
 	/**
 	 * @return string
 	 */
-	public function getName(){
+	public function getName() {
 		return $this->name;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getDescription(){
+	public function getDescription() {
 		return $this->description;
 	}
 
 	/**
 	 * @return Vector3[]
 	 */
-	public function getLocations(){
+	public function getLocations() {
 		return $this->locations;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getId(){
+	public function getId() {
 		return $this->id;
 	}
 
 	/**
 	 * @return Item[]
 	 */
-	public function getItems(){
+	public function getItems() {
 		return $this->items;
 	}
 
 	/**
 	 * @return Item
 	 */
-	public function getRandomItem(){
+	public function getRandomItem() {
 		return $this->items[array_rand($this->items)];
 	}
 
 	/**
 	 * @return \int[]
 	 */
-	public function getMoney(){
+	public function getMoney() {
 		return $this->money;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getRandomMoney(){
+	public function getRandomMoney() {
 		return $this->money[array_rand($this->money)];
 	}
 

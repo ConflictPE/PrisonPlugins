@@ -1,7 +1,8 @@
 <?php
+
 namespace buycraft\packages;
 
-class Category{
+class Category {
 
 	/** @var  Package[] */
 	private $packages;
@@ -11,7 +12,7 @@ class Category{
 	private $item;
 	private $niceId;
 
-	public function __construct($id, $name, $desc, $item, $niceId){
+	public function __construct($id, $name, $desc, $item, $niceId) {
 		$this->desc = $desc;
 		$this->id = $id;
 		$this->item = $item;
@@ -22,53 +23,53 @@ class Category{
 	/**
 	 * @param mixed $niceId
 	 */
-	public function setNiceId($niceId){
+	public function setNiceId($niceId) {
 		$this->niceId = $niceId;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getNiceId(){
+	public function getNiceId() {
 		return $this->niceId;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getDescription(){
+	public function getDescription() {
 		return $this->desc;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getId(){
+	public function getId() {
 		return $this->id;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getItem(){
+	public function getItem() {
 		return $this->item;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getName(){
+	public function getName() {
 		return $this->name;
 	}
 
 	/**
 	 * @return Package[]
 	 */
-	public function getPackages(){
+	public function getPackages() {
 		return $this->packages;
 	}
 
-	public function addPackage(Package $p){
+	public function addPackage(Package $p) {
 		$this->packages[] = $p;
 	}
 }

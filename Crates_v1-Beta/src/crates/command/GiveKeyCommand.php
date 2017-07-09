@@ -1,5 +1,4 @@
 <?php
-
 /**
  * GiveKeyCommand class
  *
@@ -16,24 +15,24 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat as TF;
 
-class GiveKeyCommand implements CommandExecutor{
+class GiveKeyCommand implements CommandExecutor {
 
 	private $plugin;
 
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		$this->plugin = $plugin;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
-		if($sender->hasPermission("crates.command.givekey")){
-			if(isset($args[1])){
-				if(isset($this->plugin->settings["keys"][$args[1]])){
+	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+		if($sender->hasPermission("crates.command.givekey")) {
+			if(isset($args[1])) {
+				if(isset($this->plugin->settings["keys"][$args[1]])) {
 					$amount = 1;
-					if(isset($args[2])){
+					if(isset($args[2])) {
 						$amount = (int) $args[2];
 					}
 					$name = strtolower((string) $args[0]);
@@ -43,15 +42,15 @@ class GiveKeyCommand implements CommandExecutor{
 					$sender->sendMessage(TF::GREEN . "Key given.");
 					//					$this->plugin->giveKey($args[0], $args[1], $amount);
 					return true;
-				}else{
+				} else {
 					$sender->sendMessage(TF::RED . "Couldn't find a crate key with ID " . $args[1] . "!");
 					return true;
 				}
-			}else{
+			} else {
 				$sender->sendMessage(TF::RED . "Please specify a player and a crate key ID!");
 				return true;
 			}
-		}else{
+		} else {
 			$sender->sendMessage(TF::RED . "You do not have permission to use this command!");
 			return true;
 		}

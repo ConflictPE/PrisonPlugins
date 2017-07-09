@@ -8,7 +8,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\utils\TextFormat;
 
-class AddGroup extends Command implements PluginIdentifiableCommand{
+class AddGroup extends Command implements PluginIdentifiableCommand {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -22,7 +22,6 @@ class AddGroup extends Command implements PluginIdentifiableCommand{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $plugin;
 
 	/**
@@ -30,44 +29,38 @@ class AddGroup extends Command implements PluginIdentifiableCommand{
 	 * @param           $name
 	 * @param           $description
 	 */
-	public function __construct(PurePerms $plugin, $name, $description){
+	public function __construct(PurePerms $plugin, $name, $description) {
 		$this->plugin = $plugin;
-
 		parent::__construct($name, $description);
-
 		$this->setPermission("pperms.command.addgroup");
 	}
 
 	/**
 	 * @param CommandSender $sender
 	 * @param               $label
-	 * @param array         $args
+	 * @param array $args
 	 *
 	 * @return bool
 	 */
-	public function execute(CommandSender $sender, $label, array $args){
-		if(!$this->testPermission($sender)) return false;
-
-		if(!isset($args[0]) || count($args) > 1){
+	public function execute(CommandSender $sender, $label, array $args) {
+		if(!$this->testPermission($sender))
+			return false;
+		if(!isset($args[0]) || count($args) > 1) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addgroup.usage"));
-
 			return true;
 		}
-
 		$result = $this->plugin->addGroup($args[0]);
-
-		if($result === PurePerms::SUCCESS){
+		if($result === PurePerms::SUCCESS) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addgroup.messages.group_added_successfully", $args[0]));
-		}elseif($result === PurePerms::ALREADY_EXISTS){
+		} elseif($result === PurePerms::ALREADY_EXISTS) {
 			$sender->sendMessage(TextFormat::RED . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addgroup.messages.group_already_exists", $args[0]));
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::RED . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.addgroup.messages.invalid_group_name", $args[0]));
 		}
-
 		return true;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 }

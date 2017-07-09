@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -15,7 +14,7 @@ use pocketmine\event\plugin\PluginEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class CustomAlertsWorldChangeEvent extends PluginEvent{
+class CustomAlertsWorldChangeEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -30,10 +29,10 @@ class CustomAlertsWorldChangeEvent extends PluginEvent{
 
 	/**
 	 * @param Player $player
-	 * @param Level  $origin
-	 * @param Level  $target
+	 * @param Level $origin
+	 * @param Level $target
 	 */
-	public function __construct(Player $player, Level $origin, Level $target){
+	public function __construct(Player $player, Level $origin, Level $target) {
 		$this->player = $player;
 		$this->origin = $origin;
 		$this->target = $target;
@@ -44,7 +43,7 @@ class CustomAlertsWorldChangeEvent extends PluginEvent{
 	 *
 	 * @return Player
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -53,7 +52,7 @@ class CustomAlertsWorldChangeEvent extends PluginEvent{
 	 *
 	 * @return Level
 	 */
-	public function getOrigin(){
+	public function getOrigin() {
 		return $this->origin;
 	}
 
@@ -62,7 +61,7 @@ class CustomAlertsWorldChangeEvent extends PluginEvent{
 	 *
 	 * @return Level
 	 */
-	public function getTarget(){
+	public function getTarget() {
 		return $this->target;
 	}
 

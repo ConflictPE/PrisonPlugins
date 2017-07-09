@@ -1,4 +1,5 @@
 <?php
+
 namespace SLottery;
 
 use onebone\economyapi\EconomyAPI;
@@ -11,9 +12,9 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
-class SLottery extends PluginBase implements Listener{
+class SLottery extends PluginBase implements Listener {
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->getLogger()->info('§aCPELottery Loading...');
 		@mkdir($this->getDataFolder());
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -52,7 +53,7 @@ class SLottery extends PluginBase implements Listener{
 		]);
 		$list = $this->getConf()->get('reward');
 		$num = 0;
-		foreach($list as $i){
+		foreach($list as $i) {
 			$this->itemdata[$num] = ['id' => $i['id'], "meta" => 0, "amount" => $i['amount']];
 			$this->chance[$num] = ['id' => $i['id'], 'chance' => $i['chance'], 'name' => $i['name']];
 			$num++;
@@ -60,14 +61,14 @@ class SLottery extends PluginBase implements Listener{
 		$this->getLogger()->info('§6CPELottery Loaded');
 	}
 
-	public function onTouch(PlayerInteractEvent $event){
+	public function onTouch(PlayerInteractEvent $event) {
 		$player = $event->getPlayer();
 		$id = $event->getBlock()->getId();
 		$han = $event->getItem()->getId();
-		if($han == 378 && $id == 25){
+		if($han == 378 && $id == 25) {
 			$money = EconomyAPI::getInstance()->myMoney($player);
 			$cost = $this->getConf()->get('cost');
-			if($money >= $cost){
+			if($money >= $cost) {
 				$player->sendTip("§6SUPER §eLottery Start!");
 				EconomyAPI::getInstance()->reduceMoney($player, $cost);
 				$num = mt_rand(0, (count($this->itemdata) - 1));
@@ -75,34 +76,33 @@ class SLottery extends PluginBase implements Listener{
 				$chance = $this->chance[$num]['chance'] * 1000;
 				$name = $this->chance[$num]['name'];
 				$p = mt_rand(0, 1000);
-				if($p <= $chance){
+				if($p <= $chance) {
 					$this->give($player, $data);
 					$player->getInventory()->removeItem(Item::get(Item::MAGMA_CREAM, 0, 1));
 					$this->getServer()->broadcastMessage("§l");
 					$this->getServer()->broadcastMessage("§c§l»§r §b" . $player->getName() . "§7 got §e" . $data['amount'] . " " . $name . " §7from §6Super Lottery§7!");
 					$this->getServer()->broadcastMessage("§l");
 					$particle = new LavaParticle($event->getBlock());
-					for($i = 10; $i < 50; $i++){
+					for($i = 10; $i < 50; $i++) {
 						$event->getBlock()->getLevel()->addParticle($particle);
 						$player->getLevel()->addSound(new ExplodeSound($player));
 					}
-
-				}else{
+				} else {
 					$player->sendMessage("§6- §7Got nothing. Try Again next time.");
 					$player->getInventory()->removeItem(Item::get(Item::MAGMA_CREAM, 0, 1));
 				}
-			}else{
+			} else {
 				$player->sendPopup("§cNeed 1000 Coins to Lottery!");
 			}
 		}
 	}
 
-	public function give(Player $player, $data){
+	public function give(Player $player, $data) {
 		$item = new Item($data['id'], $data['meta'], $data['amount']);
 		$player->getInventory()->addItem($item);
 	}
 
-	public function getConf(){
+	public function getConf() {
 		return new Config($this->getDataFolder() . 'Config.yml', Config::YAML, []);
 	}
 }

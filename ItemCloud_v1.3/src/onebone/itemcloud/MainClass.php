@@ -10,7 +10,7 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class MainClass extends PluginBase implements Listener{
+class MainClass extends PluginBase implements Listener {
 
 	/**
 	 * @var MainClass
@@ -25,7 +25,7 @@ class MainClass extends PluginBase implements Listener{
 	/**
 	 * @return MainClass
 	 */
-	public static function getInstance(){
+	public static function getInstance() {
 		return self::$instance;
 	}
 
@@ -34,59 +34,55 @@ class MainClass extends PluginBase implements Listener{
 	 *
 	 * @return ItemCloud|bool
 	 */
-	public function getCloudForPlayer($player){
-		if($player instanceof Player){
+	public function getCloudForPlayer($player) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
-
-		if(isset($this->clouds[$player])){
+		if(isset($this->clouds[$player])) {
 			return $this->clouds[$player];
 		}
 		return false;
 	}
 
 	/**************************   Non-API part   ***********************************/
-
-	public function onLoad(){
-		if(!self::$instance instanceof MainClass){
+	public function onLoad() {
+		if(!self::$instance instanceof MainClass) {
 			self::$instance = $this;
 		}
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder());
-		if(!is_file($this->getDataFolder() . "ItemCloud.dat")){
+		if(!is_file($this->getDataFolder() . "ItemCloud.dat")) {
 			file_put_contents($this->getDataFolder() . "ItemCloud.dat", serialize([]));
 		}
 		$data = unserialize(file_get_contents($this->getDataFolder() . "ItemCloud.dat"));
-
 		$this->saveDefaultConfig();
-		if(is_numeric($interval = $this->getConfig()->get("auto-save-interval"))){
+		if(is_numeric($interval = $this->getConfig()->get("auto-save-interval"))) {
 			$this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new SaveTask($this), $interval * 1200, $interval * 1200);
 		}
-
 		$this->clouds = [];
-		foreach($data as $datam){
+		foreach($data as $datam) {
 			$this->clouds[$datam[1]] = new ItemCloud($datam[0], $datam[1]);
 		}
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $params){
-		switch($command->getName()){
+	public function onCommand(CommandSender $sender, Command $command, $label, array $params) {
+		switch($command->getName()) {
 			case "itemcloud":
-				if(!$sender instanceof Player){
+				if(!$sender instanceof Player) {
 					$sender->sendMessage("Please run this command in-game");
 					return true;
 				}
 				$sub = array_shift($params);
-				switch($sub){
+				switch($sub) {
 					case "register":
-						if(!$sender->hasPermission("itemcloud.command.register")){
+						if(!$sender->hasPermission("itemcloud.command.register")) {
 							$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 							return true;
 						}
-						if(isset($this->clouds[strtolower($sender->getName())])){
+						if(isset($this->clouds[strtolower($sender->getName())])) {
 							$sender->sendMessage("§6- §aYou already have your ItemCloud account");
 							break;
 						}
@@ -94,17 +90,17 @@ class MainClass extends PluginBase implements Listener{
 						$sender->sendMessage("§6- §aRegistered to the ItemCloud account");
 						break;
 					case "upload":
-						if(!$sender->hasPermission("itemcloud.command.upload")){
+						if(!$sender->hasPermission("itemcloud.command.upload")) {
 							$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 							return true;
 						}
-						if(!isset($this->clouds[strtolower($sender->getName())])){
+						if(!isset($this->clouds[strtolower($sender->getName())])) {
 							$sender->sendMessage("§6- §cPlease register to the ItemCloud service first.");
 							break;
 						}
 						$item = array_shift($params);
 						$amount = array_shift($params);
-						if(trim($item) === "" or !is_numeric($amount)){
+						if(trim($item) === "" or !is_numeric($amount)) {
 							usage:
 							$sender->sendMessage("Usage: /itemcloud upload <item ID[:item damage]> <count>");
 							break;
@@ -112,33 +108,32 @@ class MainClass extends PluginBase implements Listener{
 						$amount = (int) $amount;
 						$item = Item::fromString($item);
 						$item->setCount($amount);
-
 						$count = 0;
-						foreach($sender->getInventory()->getContents() as $i){
-							if($i->getID() == $item->getID() and $i->getDamage() == $item->getDamage()){
+						foreach($sender->getInventory()->getContents() as $i) {
+							if($i->getID() == $item->getID() and $i->getDamage() == $item->getDamage()) {
 								$count += $i->getCount();
 							}
 						}
-						if($amount <= $count){
+						if($amount <= $count) {
 							$this->clouds[strtolower($sender->getName())]->addItem($item->getID(), $item->getDamage(), $amount, true);
 							$sender->sendMessage("§6- §aUploaded your item to ItemCloud account.");
-						}else{
+						} else {
 							$sender->sendMessage("§6- §cYou don't have enough item to upload.");
 						}
 						break;
 					case "download":
-						if(!$sender->hasPermission("itemcloud.command.download")){
+						if(!$sender->hasPermission("itemcloud.command.download")) {
 							$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 							return true;
 						}
 						$name = strtolower($sender->getName());
-						if(!isset($this->clouds[$name])){
+						if(!isset($this->clouds[$name])) {
 							$sender->sendMessage("[ItemCloud] Please register to the ItemCloud first.");
 							break;
 						}
 						$item = array_shift($params);
 						$amount = array_shift($params);
-						if(trim($item) === "" or !is_numeric($amount)){
+						if(trim($item) === "" or !is_numeric($amount)) {
 							usage2:
 							$sender->sendMessage("Usage: /itemcloud download <item ID[:item damage]> <count>");
 							break;
@@ -146,58 +141,54 @@ class MainClass extends PluginBase implements Listener{
 						$amount = (int) $amount;
 						$item = Item::fromString($item);
 						$item->setCount($amount);
-
-						if(!$this->clouds[$name]->itemExists($item->getID(), $item->getDamage(), $amount)){
+						if(!$this->clouds[$name]->itemExists($item->getID(), $item->getDamage(), $amount)) {
 							$sender->sendMessage("§6- §cYou don't have enough item in your account.");
 							break;
 						}
-
-						if($sender->getInventory()->canAddItem($item)){
+						if($sender->getInventory()->canAddItem($item)) {
 							$this->clouds[$name]->removeItem($item->getID(), $item->getDamage(), $amount);
 							$sender->getInventory()->addItem($item);
 							$sender->sendMessage("§6- §aYou have downloaded items from the ItemCloud account.");
-						}else{
+						} else {
 							$sender->sendMessage("§6- §cYou have no space to download items.");
 						}
 						break;
 					case "list":
-						if(!$sender->hasPermission("itemcloud.command.list")){
+						if(!$sender->hasPermission("itemcloud.command.list")) {
 							$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 							return true;
 						}
 						$name = strtolower($sender->getName());
-						if(!isset($this->clouds[$name])){
+						if(!isset($this->clouds[$name])) {
 							$sender->sendMessage("§6Please register to the ItemCloud first.");
 							break;
 						}
 						$output = "§6Item list : \n§e";
-						foreach($this->clouds[$name]->getItems() as $item => $count){
+						foreach($this->clouds[$name]->getItems() as $item => $count) {
 							$output .= "$item : $count\n";
 						}
 						$sender->sendMessage($output);
 						break;
 					case "count":
-						if(!$sender->hasPermission("itemcloud.command.count")){
+						if(!$sender->hasPermission("itemcloud.command.count")) {
 							$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 							return true;
 						}
 						$name = strtolower($sender->getName());
-						if(!isset($this->clouds[$name])){
+						if(!isset($this->clouds[$name])) {
 							$sender->sendMessage("§6- §cPlease register to the ItemCloud first.");
 							return true;
 						}
 						$item = array_shift($params);
-						if(trim($item) === ""){
+						if(trim($item) === "") {
 							$sender->sendMessage("Usage: /itemcloud count <item>");
 							return true;
 						}
-
 						$item = Item::fromString($item);
-
-						if(($count = $this->clouds[$name]->getCount($item->getID(), $item->getDamage())) === false){
+						if(($count = $this->clouds[$name]->getCount($item->getID(), $item->getDamage())) === false) {
 							$sender->sendMessage("There are no " . $item->getName() . " in your account.");
 							break;
-						}else{
+						} else {
 							$sender->sendMessage("Count of " . $item->getName() . " = " . $count);
 						}
 						break;
@@ -209,15 +200,15 @@ class MainClass extends PluginBase implements Listener{
 		return false;
 	}
 
-	public function save(){
+	public function save() {
 		$save = [];
-		foreach($this->clouds as $cloud){
+		foreach($this->clouds as $cloud) {
 			$save[] = $cloud->getAll();
 		}
 		file_put_contents($this->getDataFolder() . "ItemCloud.dat", serialize($save));
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->save();
 		$this->clouds = [];
 	}

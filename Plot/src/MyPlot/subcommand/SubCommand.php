@@ -1,10 +1,11 @@
 <?php
+
 namespace MyPlot\subcommand;
 
 use MyPlot\MyPlot;
 use pocketmine\command\CommandSender;
 
-abstract class SubCommand{
+abstract class SubCommand {
 
 	/** @var MyPlot */
 	private $plugin;
@@ -14,7 +15,7 @@ abstract class SubCommand{
 	 * @param MyPlot $plugin
 	 * @param string $name
 	 */
-	public function __construct(MyPlot $plugin, $name){
+	public function __construct(MyPlot $plugin, $name) {
 		$this->plugin = $plugin;
 		$this->name = $name;
 	}
@@ -22,7 +23,7 @@ abstract class SubCommand{
 	/**
 	 * @return MyPlot
 	 */
-	public final function getPlugin(){
+	public final function getPlugin() {
 		return $this->plugin;
 	}
 
@@ -36,7 +37,7 @@ abstract class SubCommand{
 	/**
 	 * @return string
 	 */
-	public final function getUsage(){
+	public final function getUsage() {
 		$usage = $this->getPlugin()->getLanguage()->get($this->name . ".usage");
 		return ($usage == $this->name . ".usage") ? "" : $usage;
 	}
@@ -44,7 +45,7 @@ abstract class SubCommand{
 	/**
 	 * @return string
 	 */
-	public final function getName(){
+	public final function getName() {
 		$name = $this->getPlugin()->getLanguage()->get($this->name . ".name");
 		return ($name == $this->name . ".name") ? "" : $name;
 	}
@@ -52,7 +53,7 @@ abstract class SubCommand{
 	/**
 	 * @return string
 	 */
-	public final function getDescription(){
+	public final function getDescription() {
 		$desc = $this->getPlugin()->getLanguage()->get($this->name . ".desc");
 		return ($desc == $this->name . ".desc") ? "" : $desc;
 	}
@@ -60,26 +61,26 @@ abstract class SubCommand{
 	/**
 	 * @return string
 	 */
-	public final function getAlias(){
+	public final function getAlias() {
 		$alias = $this->getPlugin()->getLanguage()->get($this->name . ".alias");
 		return ($alias == $this->name . ".alias") ? "" : $alias;
 	}
 
 	/**
 	 * @param CommandSender $sender
-	 * @param string[]      $args
+	 * @param string[] $args
 	 *
 	 * @return bool
 	 */
 	public abstract function execute(CommandSender $sender, array $args);
 
 	/**
-	 * @param string   $str
+	 * @param string $str
 	 * @param string[] $params
 	 *
 	 * @return string
 	 */
-	protected function translateString($str, array $params = [], $onlyPrefix = null){
+	protected function translateString($str, array $params = [], $onlyPrefix = null) {
 		return $this->plugin->getLanguage()->translateString($str, $params, $onlyPrefix);
 	}
 }

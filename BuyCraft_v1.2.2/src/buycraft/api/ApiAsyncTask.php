@@ -1,4 +1,5 @@
 <?php
+
 namespace buycraft\api;
 
 use buycraft\BuyCraft;
@@ -14,7 +15,7 @@ use pocketmine\Server;
  * Class ApiAsyncTask
  * @package buycraft\api
  */
-abstract class ApiAsyncTask extends AsyncTask{
+abstract class ApiAsyncTask extends AsyncTask {
 
 	/**
 	 * @var
@@ -23,14 +24,14 @@ abstract class ApiAsyncTask extends AsyncTask{
 
 	/**
 	 * @param BuyCraft $main
-	 * @param array    $data
-	 * @param bool     $player
+	 * @param array $data
+	 * @param bool $player
 	 */
-	public function __construct(BuyCraft $main, $data = [], $player = false){
+	public function __construct(BuyCraft $main, $data = [], $player = false) {
 		DebugUtils::construct($this);
-		if($main->getConfig()->get("https")){
+		if($main->getConfig()->get("https")) {
 			$this->apiUrl = "https://api.buycraft.net/v4";
-		}else{
+		} else {
 			$this->apiUrl = "http://api.buycraft.net/v4";
 		}
 		$data["secret"] = $main->getConfig()->get("secret");
@@ -45,34 +46,34 @@ abstract class ApiAsyncTask extends AsyncTask{
 	/**
 	 * @return array
 	 */
-	public function getData(){
+	public function getData() {
 		return unserialize($this->data);
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getOutput(){
+	public function getOutput() {
 		return unserialize($this->output);
 	}
 
 	/**
 	 * @param array $data
 	 */
-	public function setData(array $data){
+	public function setData(array $data) {
 		$this->data = serialize($data);
 	}
 
 	/*
 	 * This function is called from a task and can't interact with the API.
 	 */
-	public function send(){
+	public function send() {
 		$data = $this->getData();
-		if($this->isAuthenticated || $data["action"] === Actions::AUTHENTICATE){
+		if($this->isAuthenticated || $data["action"] === Actions::AUTHENTICATE) {
 			$url = $this->apiUrl . "?" . http_build_query($data);
 			DebugUtils::requestOut($this, $url);
 			$this->output = serialize(json_decode(HTTPUtils::getURL($url), true));
-		}else{
+		} else {
 			$this->output = false;
 		}
 	}
@@ -80,21 +81,21 @@ abstract class ApiAsyncTask extends AsyncTask{
 	/**
 	 * @return \pocketmine\scheduler\ServerScheduler
 	 */
-	public function getScheduler(){
+	public function getScheduler() {
 		return Server::getInstance()->getScheduler();
 	}
 
 	/**
 	 *
 	 */
-	public function call(){
+	public function call() {
 		DebugUtils::taskRegistered($this);
 		$this->getScheduler()->scheduleAsyncTask($this);
 	}
 
 	/**
 	 * @param BuyCraft $main
-	 * @param Player   $p
+	 * @param Player $p
 	 *
 	 * @return mixed
 	 */
@@ -109,7 +110,7 @@ abstract class ApiAsyncTask extends AsyncTask{
 
 	abstract public function onProcess();
 
-	public function onRun(){
+	public function onRun() {
 		DebugUtils::taskCalled($this);
 		$this->autoloader->register(true);
 		$this->send();
@@ -119,19 +120,18 @@ abstract class ApiAsyncTask extends AsyncTask{
 	/**
 	 * @param Server $server
 	 */
-	public function onCompletion(Server $server){
+	public function onCompletion(Server $server) {
 		DebugUtils::taskComplete($this);
 		$plugin = $server->getPluginManager()->getPlugin("BuyCraft");
-		if($plugin instanceof BuyCraft && $plugin->isEnabled()){
-			if($this->player !== false){
+		if($plugin instanceof BuyCraft && $plugin->isEnabled()) {
+			if($this->player !== false) {
 				$player = $server->getPlayerExact($this->player);
-				if($player !== null && $player->isOnline()){
+				if($player !== null && $player->isOnline()) {
 					$this->onOutput($plugin, $player);
 				}
-			}else{
+			} else {
 				$this->onOutput($plugin, new ConsoleCommandSender());
 			}
 		}
-
 	}
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2016  onebone <jyc00410@gmail.com>
@@ -20,7 +19,7 @@
 
 namespace onebone\economyapi\provider;
 
-interface Provider{
+interface Provider {
 
 	public function __construct($file);
 
@@ -33,7 +32,7 @@ interface Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $defaultMoney
+	 * @param float $defaultMoney
 	 *
 	 * @return bool
 	 */
@@ -55,7 +54,7 @@ interface Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */
@@ -63,7 +62,7 @@ interface Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */
@@ -71,7 +70,7 @@ interface Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */

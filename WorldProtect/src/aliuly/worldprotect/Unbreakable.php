@@ -21,9 +21,9 @@ use pocketmine\event\Listener;
 use pocketmine\item\Item;
 use pocketmine\plugin\PluginBase as Plugin;
 
-class Unbreakable extends BaseWp implements Listener{
+class Unbreakable extends BaseWp implements Listener {
 
-	public function __construct(Plugin $plugin){
+	public function __construct(Plugin $plugin) {
 		parent::__construct($plugin);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->enableSCmd("unbreakable", [
@@ -40,16 +40,17 @@ class Unbreakable extends BaseWp implements Listener{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args){
-		if($scmd != "breakable" && $scmd != "unbreakable") return false;
-		if(count($args) == 0){
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args) {
+		if($scmd != "breakable" && $scmd != "unbreakable")
+			return false;
+		if(count($args) == 0) {
 			$ids = $this->owner->getCfg($world, "unbreakable", []);
-			if(count($ids) == 0){
+			if(count($ids) == 0) {
 				$c->sendMessage(mc::_("[WP] No unbreakable blocks in %1%", $world));
-			}else{
+			} else {
 				$ln = mc::_("[WP] Blocks(%1%):", count($ids));
 				$q = "";
-				foreach($ids as $id => $n){
+				foreach($ids as $id => $n) {
 					$ln .= "$q $n($id)";
 					$q = ",";
 				}
@@ -59,43 +60,47 @@ class Unbreakable extends BaseWp implements Listener{
 		}
 		$cc = 0;
 		$ids = $this->owner->getCfg($world, "unbreakable", []);
-		if($scmd == "breakable"){
-			foreach($args as $i){
+		if($scmd == "breakable") {
+			foreach($args as $i) {
 				$item = Item::fromString($i);
-				if(isset($ids[$item->getId()])){
+				if(isset($ids[$item->getId()])) {
 					unset($ids[$item->getId()]);
 					++$cc;
 				}
 			}
-		}elseif($scmd == "unbreakable"){
-			foreach($args as $i){
+		} elseif($scmd == "unbreakable") {
+			foreach($args as $i) {
 				$item = Item::fromString($i);
-				if(isset($ids[$item->getId()])) continue;
+				if(isset($ids[$item->getId()]))
+					continue;
 				$ids[$item->getId()] = ItemName::str($item);
 				++$cc;
 			}
-		}else{
+		} else {
 			return false;
 		}
-		if(!$cc){
+		if(!$cc) {
 			$c->sendMessage(mc::_("No blocks updated"));
 			return true;
 		}
-		if(count($ids)){
+		if(count($ids)) {
 			$this->owner->setCfg($world, "unbreakable", $ids);
-		}else{
+		} else {
 			$this->owner->unsetCfg($world, "unbreakable");
 		}
 		$c->sendMessage(mc::_("Blocks changed: %1%", $cc));
 		return true;
 	}
 
-	public function onBlockBreak(BlockBreakEvent $ev){
-		if($ev->isCancelled()) return;
+	public function onBlockBreak(BlockBreakEvent $ev) {
+		if($ev->isCancelled())
+			return;
 		$bl = $ev->getBlock();
 		$world = $bl->getLevel()->getName();
-		if(!isset($this->wcfg[$world])) return;
-		if(!isset($this->wcfg[$world][$bl->getId()])) return;
+		if(!isset($this->wcfg[$world]))
+			return;
+		if(!isset($this->wcfg[$world][$bl->getId()]))
+			return;
 		$pl = $ev->getPlayer();
 		$pl->sendMessage(mc::_("It can not be broken!"));
 		$ev->setCancelled();

@@ -10,6 +10,7 @@
  **   Teleports you to another world.  If _player_ is specified, that
  **   player will be teleported.
  **/
+
 namespace aliuly\manyworlds;
 
 use aliuly\manyworlds\common\BasicCli;
@@ -18,9 +19,9 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
-class MwDefault extends BasicCli{
+class MwDefault extends BasicCli {
 
-	public function __construct($owner){
+	public function __construct($owner) {
 		parent::__construct($owner);
 		$this->enableSCmd("default", [
 			"usage" => mc::_("<world>"),
@@ -29,21 +30,22 @@ class MwDefault extends BasicCli{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $data, array $args){
-		if(count($args) == 0) return false;
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $data, array $args) {
+		if(count($args) == 0)
+			return false;
 		$wname = implode(" ", $args);
 		$old = $this->owner->getServer()->getConfigString("level-name");
-		if($old == $wname){
+		if($old == $wname) {
 			$c->sendMessage(TextFormat::RED . mc::_("No change"));
 			return true;
 		}
-		if(!$this->owner->autoLoad($c, $wname)){
+		if(!$this->owner->autoLoad($c, $wname)) {
 			$c->sendMessage(TextFormat::RED . mc::_("[MW] Unable to load %1%", $wname));
 			$c->sendMessage(TextFormat::RED . mc::_("Change failed!"));
 			return true;
 		}
 		$level = $this->owner->getServer()->getLevelByName($wname);
-		if($level === null){
+		if($level === null) {
 			$c->sendMessage(TextFormat::RED . mc::_("Error GetLevelByName %1%"));
 			return true;
 		}

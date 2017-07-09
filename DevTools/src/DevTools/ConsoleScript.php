@@ -1,5 +1,4 @@
 <?php
-
 /*
  * DevTools plugin for PocketMine-MP
  * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
@@ -14,46 +13,38 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
-
 $opts = getopt("", ["make:", "relative:", "out:", "entry:", "compress"]);
-
-if(!isset($opts["make"])){
+if(!isset($opts["make"])) {
 	echo "== PocketMine-MP DevTools CLI interface ==\n\n";
 	echo "Usage: " . PHP_BINARY . " -dphar.readonly=0 " . $argv[0] . " --make <sourceFolder> --relative <relativePath> --entry \"relativeSourcePath.php\" --out <pharName.phar>\n";
 	exit(0);
 }
-
-if(ini_get("phar.readonly") == 1){
+if(ini_get("phar.readonly") == 1) {
 	echo "Set phar.readonly to 0 with -dphar.readonly=0\n";
 	exit(1);
 }
-
 $folderPath = rtrim(str_replace("\\", "/", realpath($opts["make"])), "/") . "/";
 $relativePath = isset($opts["relative"]) ? rtrim(str_replace("\\", "/", realpath($opts["relative"])), "/") . "/" : $folderPath;
 $pharName = isset($opts["out"]) ? $opts["out"] : "output.phar";
-
-if(!is_dir($folderPath)){
+if(!is_dir($folderPath)) {
 	echo $folderPath . " is not a folder\n";
 	exit(1);
 }
-
 echo "\nCreating " . $pharName . "...\n";
 $phar = new \Phar($pharName);
-
-if(file_exists($relativePath . "plugin.yml")){
+if(file_exists($relativePath . "plugin.yml")) {
 	$metadata = yaml_parse_file($relativePath . "plugin.yml");
-}else{
+} else {
 	echo "No plugin.yml found in relative path!\n";
 	$metadata = [];
 }
-
-if($metadata["name"] === "Genisys-DevTools"){
+if($metadata["name"] === "Genisys-DevTools") {
 	$phar->setStub('<?php require("phar://". __FILE__ ."/src/DevTools/ConsoleScript.php"); __HALT_COMPILER();');
-}elseif(isset($opts["entry"]) and $opts["entry"] != null){
+} elseif(isset($opts["entry"]) and $opts["entry"] != null) {
 	$entry = addslashes(str_replace("\\", "/", $opts["entry"]));
 	echo "Setting entry point to " . $entry . "\n";
 	$phar->setStub('<?php require("phar://". __FILE__ ."/' . $entry . '"); __HALT_COMPILER();');
-}else{
+} else {
 	$phar->setMetadata([
 		"name" => $metadata["name"],
 		"version" => $metadata["version"],
@@ -72,17 +63,15 @@ $phar->startBuffering();
 echo "Adding files...\n";
 $maxLen = 0;
 $count = 0;
-foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folderPath)) as $file){
+foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folderPath)) as $file) {
 	$path = rtrim(str_replace(["\\", $relativePath], ["/", ""], $file), "/");
-	if($path{0} === "." or strpos($path, "/.") !== false or strpos($path, "tests") !== false){
+	if($path{0} === "." or strpos($path, "/.") !== false or strpos($path, "tests") !== false) {
 		continue;
 	}
 	$phar->addFile($file, $path);
 	$maxLen = max($maxLen, strlen($path));
 	echo "\r[" . (++$count) . "] " . str_pad($path, $maxLen, " ");
 }
-
 $phar->stopBuffering();
-
 echo "\nDone!\n";
 exit(0);

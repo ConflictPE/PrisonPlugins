@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -21,7 +20,7 @@ use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
-class CustomAlerts extends PluginBase{
+class CustomAlerts extends PluginBase {
 
 	//About Plugin Const
 
@@ -68,12 +67,12 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return CustomAlerts CustomAlerts API
 	 */
-	public static function getAPI(){
+	public static function getAPI() {
 		return self::$instance;
 	}
 
-	public function onLoad(){
-		if(!self::$instance instanceof CustomAlerts){
+	public function onLoad() {
+		if(!self::$instance instanceof CustomAlerts) {
 			self::$instance = $this;
 		}
 	}
@@ -81,13 +80,12 @@ class CustomAlerts extends PluginBase{
 	/**
 	 * Translate Minecraft colors
 	 *
-	 * @param char   $symbol  Color symbol
+	 * @param char $symbol Color symbol
 	 * @param string $message The message to be translated
 	 *
 	 * @return string The translated message
 	 */
-	public function translateColors($symbol, $message){
-
+	public function translateColors($symbol, $message) {
 		$message = str_replace($symbol . "0", TextFormat::BLACK, $message);
 		$message = str_replace($symbol . "1", TextFormat::DARK_BLUE, $message);
 		$message = str_replace($symbol . "2", TextFormat::DARK_GREEN, $message);
@@ -104,20 +102,17 @@ class CustomAlerts extends PluginBase{
 		$message = str_replace($symbol . "d", TextFormat::LIGHT_PURPLE, $message);
 		$message = str_replace($symbol . "e", TextFormat::YELLOW, $message);
 		$message = str_replace($symbol . "f", TextFormat::WHITE, $message);
-
 		$message = str_replace($symbol . "k", TextFormat::OBFUSCATED, $message);
 		$message = str_replace($symbol . "l", TextFormat::BOLD, $message);
 		$message = str_replace($symbol . "m", TextFormat::STRIKETHROUGH, $message);
 		$message = str_replace($symbol . "n", TextFormat::UNDERLINE, $message);
 		$message = str_replace($symbol . "o", TextFormat::ITALIC, $message);
 		$message = str_replace($symbol . "r", TextFormat::RESET, $message);
-
 		return $message;
 	}
 
 	//API Functions
-
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder());
 		@mkdir($this->getDataFolder() . "data/");
 		$this->saveDefaultConfig();
@@ -132,7 +127,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string CustomAlerts version
 	 */
-	public function getVersion(){
+	public function getVersion() {
 		return CustomAlerts::VERSION;
 	}
 
@@ -141,7 +136,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string CustomAlerts API version
 	 */
-	public function getAPIVersion(){
+	public function getAPIVersion() {
 		return CustomAlerts::API_VERSION;
 	}
 
@@ -150,9 +145,9 @@ class CustomAlerts extends PluginBase{
 	 * Register Plugin as CustomAlerts Extension
 	 *
 	 * @param PluginBase $extension The Plugin to register as extension
-	 * @param int        $priority  (optional)
+	 * @param int $priority (optional)
 	 */
-	public function registerExtension(PluginBase $extension, $priority = null){
+	public function registerExtension(PluginBase $extension, $priority = null) {
 		Server::getInstance()->getLogger()->warning("This function has been deprecated since CustomAlerts API v1.1");
 	}
 
@@ -164,7 +159,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return array All CustomAlerts loaded extensions if no priority specified, otherwise returns all extesions with the specified priority
 	 */
-	public function getAllExtensions($priority = null){
+	public function getAllExtensions($priority = null) {
 		Server::getInstance()->getLogger()->warning("This function has been deprecated since CustomAlerts API v1.1");
 	}
 
@@ -173,7 +168,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isMotdCustom(){
+	public function isMotdCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["Motd"]["custom"];
 	}
@@ -183,7 +178,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default motd message
 	 */
-	public function getDefaultMotdMessage(){
+	public function getDefaultMotdMessage() {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["Motd"]["message"];
 		$message = str_replace("{MAXPLAYERS}", $this->getServer()->getMaxPlayers(), $message);
@@ -197,7 +192,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current motd message
 	 */
-	public function getMotdMessage(){
+	public function getMotdMessage() {
 		return $this->message_motd;
 	}
 
@@ -206,7 +201,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setMotdMessage($message){
+	public function setMotdMessage($message) {
 		$this->message_motd = $message;
 		$this->getServer()->getNetwork()->setName($this->message_motd);
 	}
@@ -216,7 +211,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isOutdatedClientMessageCustom(){
+	public function isOutdatedClientMessageCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["OutdatedClient"]["custom"];
 	}
@@ -226,7 +221,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default outdated client message
 	 */
-	public function getDefaultOutdatedClientMessage(Player $player){
+	public function getDefaultOutdatedClientMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["OutdatedClient"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -241,7 +236,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current outdated client message
 	 */
-	public function getOutdatedClientMessage(){
+	public function getOutdatedClientMessage() {
 		return $this->message_outdated_client;
 	}
 
@@ -250,7 +245,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setOutdatedClientMessage($message){
+	public function setOutdatedClientMessage($message) {
 		$this->message_outdated_client = $message;
 	}
 
@@ -259,7 +254,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isOutdatedServerMessageCustom(){
+	public function isOutdatedServerMessageCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["OutdatedServer"]["custom"];
 	}
@@ -269,7 +264,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default outdated server message
 	 */
-	public function getDefaultOutdatedServerMessage(Player $player){
+	public function getDefaultOutdatedServerMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["OutdatedServer"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -284,7 +279,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current outdated server message
 	 */
-	public function getOutdatedServerMessage(){
+	public function getOutdatedServerMessage() {
 		return $this->message_outdated_server;
 	}
 
@@ -293,7 +288,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setOutdatedServerMessage($message){
+	public function setOutdatedServerMessage($message) {
 		$this->message_outdated_server = $message;
 	}
 
@@ -302,7 +297,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isWhitelistMessageCustom(){
+	public function isWhitelistMessageCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["WhitelistedServer"]["custom"];
 	}
@@ -312,7 +307,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default whitelist message
 	 */
-	public function getDefaultWhitelistMessage(Player $player){
+	public function getDefaultWhitelistMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["WhitelistedServer"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -327,7 +322,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current whitelist message
 	 */
-	public function getWhitelistMessage(){
+	public function getWhitelistMessage() {
 		return $this->message_whitelist;
 	}
 
@@ -336,7 +331,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setWhitelistMessage($message){
+	public function setWhitelistMessage($message) {
 		$this->message_whitelist = $message;
 	}
 
@@ -345,7 +340,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isFullServerMessageCustom(){
+	public function isFullServerMessageCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["FullServer"]["custom"];
 	}
@@ -355,7 +350,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default full server message
 	 */
-	public function getDefaultFullServerMessage(Player $player){
+	public function getDefaultFullServerMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["FullServer"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -370,7 +365,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current full server message
 	 */
-	public function getFullServerMessage(){
+	public function getFullServerMessage() {
 		return $this->message_fullserver;
 	}
 
@@ -379,7 +374,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setFullServerMessage($message){
+	public function setFullServerMessage($message) {
 		$this->message_fullserver = $message;
 	}
 
@@ -388,7 +383,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDefaultFirstJoinMessageEnabled(){
+	public function isDefaultFirstJoinMessageEnabled() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["FirstJoin"]["enable"];
 	}
@@ -400,7 +395,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default first join message
 	 */
-	public function getDefaultFirstJoinMessage(Player $player){
+	public function getDefaultFirstJoinMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["FirstJoin"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -415,7 +410,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param Player $player
 	 */
-	public function registerFirstJoin(Player $player){
+	public function registerFirstJoin(Player $player) {
 		$cfg = new Config($this->getDataFolder() . "data/" . strtolower($player->getName() . ".dat"));
 		$cfg->save();
 	}
@@ -427,10 +422,10 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function hasJoinedFirstTime(Player $player){
-		if(file_exists($this->getDataFolder() . "data/" . strtolower($player->getName() . ".dat"))){
+	public function hasJoinedFirstTime(Player $player) {
+		if(file_exists($this->getDataFolder() . "data/" . strtolower($player->getName() . ".dat"))) {
 			return false;
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -440,7 +435,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDefaultJoinMessageCustom(){
+	public function isDefaultJoinMessageCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["Join"]["custom"];
 	}
@@ -450,7 +445,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDefaultJoinMessageHidden(){
+	public function isDefaultJoinMessageHidden() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["Join"]["hide"];
 	}
@@ -462,7 +457,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default join message
 	 */
-	public function getDefaultJoinMessage(Player $player){
+	public function getDefaultJoinMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["Join"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -477,7 +472,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current join message
 	 */
-	public function getJoinMessage(){
+	public function getJoinMessage() {
 		return $this->message_join;
 	}
 
@@ -486,7 +481,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setJoinMessage($message){
+	public function setJoinMessage($message) {
 		$this->message_join = $message;
 	}
 
@@ -495,7 +490,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isQuitCustom(){
+	public function isQuitCustom() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["Quit"]["custom"];
 	}
@@ -505,7 +500,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isQuitHidden(){
+	public function isQuitHidden() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["Quit"]["hide"];
 	}
@@ -517,7 +512,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The default quit message
 	 */
-	public function getDefaultQuitMessage(Player $player){
+	public function getDefaultQuitMessage(Player $player) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["Quit"]["message"];
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -532,7 +527,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current quit message
 	 */
-	public function getQuitMessage(){
+	public function getQuitMessage() {
 		return $this->message_quit;
 	}
 
@@ -541,7 +536,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setQuitMessage($message){
+	public function setQuitMessage($message) {
 		$this->message_quit = $message;
 	}
 
@@ -550,7 +545,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDefaultWorldChangeMessageEnabled(){
+	public function isDefaultWorldChangeMessageEnabled() {
 		$cfg = $this->getConfig()->getAll();
 		return $cfg["WorldChange"]["enable"];
 	}
@@ -559,12 +554,12 @@ class CustomAlerts extends PluginBase{
 	 * Get default quit message
 	 *
 	 * @param Player $player
-	 * @param Level  $origin
-	 * @param Level  $target
+	 * @param Level $origin
+	 * @param Level $target
 	 *
 	 * @return string The default world change message
 	 */
-	public function getDefaultWorldChangeMessage(Player $player, Level $origin, Level $target){
+	public function getDefaultWorldChangeMessage(Player $player, Level $origin, Level $target) {
 		$cfg = $this->getConfig()->getAll();
 		$message = $cfg["WorldChange"]["message"];
 		$message = str_replace("{ORIGIN}", $origin->getName(), $message);
@@ -581,7 +576,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current world change message
 	 */
-	public function getWorldChangeMessage(){
+	public function getWorldChangeMessage() {
 		return $this->message_world_change;
 	}
 
@@ -590,7 +585,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setWorldChangeMessage($message){
+	public function setWorldChangeMessage($message) {
 		$this->message_world_change = $message;
 	}
 
@@ -601,39 +596,39 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDeathCustom($cause = null){
+	public function isDeathCustom($cause = null) {
 		$cfg = $this->getConfig()->getAll();
-		if($cause instanceof EntityDamageEvent){
-			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT){
+		if($cause instanceof EntityDamageEvent) {
+			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT) {
 				return $cfg["Death"]["death-contact-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
 				return $cfg["Death"]["kill-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE) {
 				return $cfg["Death"]["death-projectile-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION) {
 				return $cfg["Death"]["death-suffocation-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL) {
 				return $cfg["Death"]["death-fall-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE) {
 				return $cfg["Death"]["death-fire-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK) {
 				return $cfg["Death"]["death-on-fire-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA) {
 				return $cfg["Death"]["death-lava-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING) {
 				return $cfg["Death"]["death-drowning-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION) {
 				return $cfg["Death"]["death-explosion-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID) {
 				return $cfg["Death"]["death-void-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE) {
 				return $cfg["Death"]["death-suicide-message"]["custom"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC) {
 				return $cfg["Death"]["death-magic-message"]["custom"];
-			}else{
+			} else {
 				return $cfg["Death"]["custom"];
 			}
-		}else{
+		} else {
 			return $cfg["Death"]["custom"];
 		}
 	}
@@ -645,39 +640,39 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return boolean
 	 */
-	public function isDeathHidden($cause = null){
+	public function isDeathHidden($cause = null) {
 		$cfg = $this->getConfig()->getAll();
-		if($cause instanceof EntityDamageEvent){
-			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT){
+		if($cause instanceof EntityDamageEvent) {
+			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT) {
 				return $cfg["Death"]["death-contact-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
 				return $cfg["Death"]["kill-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE) {
 				return $cfg["Death"]["death-projectile-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION) {
 				return $cfg["Death"]["death-suffocation-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL) {
 				return $cfg["Death"]["death-fall-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE) {
 				return $cfg["Death"]["death-fire-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK) {
 				return $cfg["Death"]["death-on-fire-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA) {
 				return $cfg["Death"]["death-lava-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING) {
 				return $cfg["Death"]["death-drowning-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION) {
 				return $cfg["Death"]["death-explosion-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID) {
 				return $cfg["Death"]["death-void-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE) {
 				return $cfg["Death"]["death-suicide-message"]["hide"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC) {
 				return $cfg["Death"]["death-magic-message"]["hide"];
-			}else{
+			} else {
 				return $cfg["Death"]["hide"];
 			}
-		}else{
+		} else {
 			return $cfg["Death"]["hide"];
 		}
 	}
@@ -685,61 +680,61 @@ class CustomAlerts extends PluginBase{
 	/**
 	 * Get default death message related to the specified cause
 	 *
-	 * @param Player            $player
+	 * @param Player $player
 	 * @param EntityDamageEvent $cause Get message related to the specified cause
 	 *
 	 * @return string The default death message related to the specified cause
 	 */
-	public function getDefaultDeathMessage(Player $player, $cause = null){
+	public function getDefaultDeathMessage(Player $player, $cause = null) {
 		$cfg = $this->getConfig()->getAll();
-		if($cause instanceof EntityDamageEvent){
-			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT){
+		if($cause instanceof EntityDamageEvent) {
+			if($cause->getCause() == EntityDamageEvent::CAUSE_CONTACT) {
 				$message = $cfg["Death"]["death-contact-message"]["message"];
-				if($cause instanceof EntityDamageByBlockEvent){
+				if($cause instanceof EntityDamageByBlockEvent) {
 					$message = str_replace("{BLOCK}", $cause->getDamager()->getName(), $message);
-				}else{
+				} else {
 					$message = str_replace("{BLOCK}", "Unknown", $message);
 				}
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
 				$message = $cfg["Death"]["kill-message"]["message"];
 				$killer = $cause->getDamager();
-				if($killer instanceof Living){
+				if($killer instanceof Living) {
 					$message = str_replace("{KILLER}", $killer->getName(), $message);
-				}else{
+				} else {
 					$message = str_replace("{KILLER}", "Unknown", $message);
 				}
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_PROJECTILE) {
 				$message = $cfg["Death"]["death-projectile-message"]["message"];
 				$killer = $cause->getDamager();
-				if($killer instanceof Living){
+				if($killer instanceof Living) {
 					$message = str_replace("{KILLER}", $killer->getName(), $message);
-				}else{
+				} else {
 					$message = str_replace("{KILLER}", "Unknown", $message);
 				}
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUFFOCATION) {
 				$message = $cfg["Death"]["death-suffocation-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FALL) {
 				$message = $cfg["Death"]["death-fall-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE) {
 				$message = $cfg["Death"]["death-fire-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_FIRE_TICK) {
 				$message = $cfg["Death"]["death-on-fire-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_LAVA) {
 				$message = $cfg["Death"]["death-lava-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_DROWNING) {
 				$message = $cfg["Death"]["death-drowning-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_ENTITY_EXPLOSION || $cause->getCause() == EntityDamageEvent::CAUSE_BLOCK_EXPLOSION) {
 				$message = $cfg["Death"]["death-explosion-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_VOID) {
 				$message = $cfg["Death"]["death-void-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_SUICIDE) {
 				$message = $cfg["Death"]["death-suicide-message"]["message"];
-			}elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC){
+			} elseif($cause->getCause() == EntityDamageEvent::CAUSE_MAGIC) {
 				$message = $cfg["Death"]["death-magic-message"]["message"];
-			}else{
+			} else {
 				$message = $cfg["Death"]["message"];
 			}
-		}else{
+		} else {
 			$message = $cfg["Death"]["message"];
 		}
 		$message = str_replace("{PLAYER}", $player->getName(), $message);
@@ -754,7 +749,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @return string The current death message
 	 */
-	public function getDeathMessage(){
+	public function getDeathMessage() {
 		return $this->message_death;
 	}
 
@@ -763,7 +758,7 @@ class CustomAlerts extends PluginBase{
 	 *
 	 * @param string $message The message
 	 */
-	public function setDeathMessage($message){
+	public function setDeathMessage($message) {
 		$this->message_death = $message;
 	}
 

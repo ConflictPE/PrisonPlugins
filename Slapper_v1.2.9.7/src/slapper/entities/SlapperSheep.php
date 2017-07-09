@@ -1,7 +1,8 @@
 <?php
+
 namespace slapper\entities;
 
-class SlapperSheep extends SlapperEntity{
+class SlapperSheep extends SlapperEntity {
 
 	public $entityId = 13;
 

@@ -1,10 +1,11 @@
 <?php
+
 namespace MyPlot\provider;
 
 use MyPlot\MyPlot;
 use MyPlot\Plot;
 
-abstract class DataProvider{
+abstract class DataProvider {
 
 	/** @var MyPlot */
 	protected $plugin;
@@ -13,7 +14,7 @@ abstract class DataProvider{
 	/** @var int */
 	private $cacheSize;
 
-	public function __construct(MyPlot $plugin, $cacheSize = 0){
+	public function __construct(MyPlot $plugin, $cacheSize = 0) {
 		$this->plugin = $plugin;
 		$this->cacheSize = $cacheSize;
 	}
@@ -34,8 +35,8 @@ abstract class DataProvider{
 
 	/**
 	 * @param string $levelName
-	 * @param int    $X
-	 * @param int    $Z
+	 * @param int $X
+	 * @param int $Z
 	 *
 	 * @return Plot
 	 */
@@ -51,7 +52,7 @@ abstract class DataProvider{
 
 	/**
 	 * @param string $levelName
-	 * @param int    $limitXZ
+	 * @param int $limitXZ
 	 *
 	 * @return Plot|null
 	 */
@@ -59,22 +60,22 @@ abstract class DataProvider{
 
 	public abstract function close();
 
-	protected final function cachePlot(Plot $plot){
-		if($this->cacheSize > 0){
+	protected final function cachePlot(Plot $plot) {
+		if($this->cacheSize > 0) {
 			$key = $plot->levelName . ';' . $plot->X . ';' . $plot->Z;
-			if(isset($this->cache[$key])){
+			if(isset($this->cache[$key])) {
 				unset($this->cache[$key]);
-			}elseif($this->cacheSize <= count($this->cache)){
+			} elseif($this->cacheSize <= count($this->cache)) {
 				array_pop($this->cache);
 			}
 			$this->cache = array_merge([$key => clone $plot], $this->cache);
 		}
 	}
 
-	protected final function getPlotFromCache($levelName, $X, $Z){
-		if($this->cacheSize > 0){
+	protected final function getPlotFromCache($levelName, $X, $Z) {
+		if($this->cacheSize > 0) {
 			$key = $levelName . ';' . $X . ';' . $Z;
-			if(isset($this->cache[$key])){
+			if(isset($this->cache[$key])) {
 				return $this->cache[$key];
 			}
 		}

@@ -17,7 +17,6 @@
 //: To prevent this type of griefing, you can use the **banitem**
 //: feature.
 //:
-
 namespace aliuly\worldprotect;
 
 use aliuly\worldprotect\common\ItemName;
@@ -30,9 +29,9 @@ use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\item\Item;
 use pocketmine\plugin\PluginBase as Plugin;
 
-class BanItem extends BaseWp implements Listener{
+class BanItem extends BaseWp implements Listener {
 
-	public function __construct(Plugin $plugin){
+	public function __construct(Plugin $plugin) {
 		parent::__construct($plugin);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->enableSCmd("banitem", [
@@ -47,16 +46,17 @@ class BanItem extends BaseWp implements Listener{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args){
-		if($scmd != "banitem" && $scmd != "unbanitem") return false;
-		if(count($args) == 0){
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args) {
+		if($scmd != "banitem" && $scmd != "unbanitem")
+			return false;
+		if(count($args) == 0) {
 			$ids = $this->owner->getCfg($world, "banitem", []);
-			if(count($ids) == 0){
+			if(count($ids) == 0) {
 				$c->sendMessage(mc::_("[WP] No banned items in %1%", $world));
-			}else{
+			} else {
 				$ln = mc::_("[WP] Items(%1%):", count($ids));
 				$q = "";
-				foreach($ids as $id => $n){
+				foreach($ids as $id => $n) {
 					$ln .= "$q $n($id)";
 					$q = ",";
 				}
@@ -65,57 +65,63 @@ class BanItem extends BaseWp implements Listener{
 			return true;
 		}
 		$cc = 0;
-
 		$ids = $this->owner->getCfg($world, "banitem", []);
-		if($scmd == "unbanitem"){
-			foreach($args as $i){
+		if($scmd == "unbanitem") {
+			foreach($args as $i) {
 				$item = Item::fromString($i);
-				if(isset($ids[$item->getId()])){
+				if(isset($ids[$item->getId()])) {
 					unset($ids[$item->getId()]);
 					++$cc;
 				}
 			}
-		}elseif($scmd == "banitem"){
-			foreach($args as $i){
+		} elseif($scmd == "banitem") {
+			foreach($args as $i) {
 				$item = Item::fromString($i);
-				if(isset($ids[$item->getId()])) continue;
+				if(isset($ids[$item->getId()]))
+					continue;
 				$ids[$item->getId()] = ItemName::str($item);
 				++$cc;
 			}
-		}else{
+		} else {
 			return false;
 		}
-		if(!$cc){
+		if(!$cc) {
 			$c->sendMessage(mc::_("No items updated"));
 			return true;
 		}
-		if(count($ids)){
+		if(count($ids)) {
 			$this->owner->setCfg($world, "banitem", $ids);
-		}else{
+		} else {
 			$this->owner->unsetCfg($world, "banitem");
 		}
 		$c->sendMessage(mc::_("Items changed: %1%", $cc));
 		return true;
 	}
 
-	public function onInteract(PlayerInteractEvent $ev){
-		if($ev->isCancelled()) return;
+	public function onInteract(PlayerInteractEvent $ev) {
+		if($ev->isCancelled())
+			return;
 		$pl = $ev->getPlayer();
 		$world = $pl->getLevel()->getName();
-		if(!isset($this->wcfg[$world])) return;
+		if(!isset($this->wcfg[$world]))
+			return;
 		$item = $ev->getItem();
-		if(!isset($this->wcfg[$world][$item->getId()])) return;
+		if(!isset($this->wcfg[$world][$item->getId()]))
+			return;
 		$pl->kick("§cPlease do not use that item next time. Thanks");
 		$ev->setCancelled();
 	}
 
-	public function onConsume(PlayerItemConsumeEvent $ev){
-		if($ev->isCancelled()) return;
+	public function onConsume(PlayerItemConsumeEvent $ev) {
+		if($ev->isCancelled())
+			return;
 		$pl = $ev->getPlayer();
 		$world = $pl->getLevel()->getName();
-		if(!isset($this->wcfg[$world])) return;
+		if(!isset($this->wcfg[$world]))
+			return;
 		$item = $ev->getItem();
-		if(!isset($this->wcfg[$world][$item->getId()])) return;
+		if(!isset($this->wcfg[$world][$item->getId()]))
+			return;
 		$pl->kick("§cPlease do not use that item next time. Thanks");
 		$ev->setCancelled();
 	}

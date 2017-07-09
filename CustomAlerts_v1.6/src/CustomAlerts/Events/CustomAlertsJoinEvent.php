@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -14,7 +13,7 @@ namespace CustomAlerts\Events;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\Player;
 
-class CustomAlertsJoinEvent extends PluginEvent{
+class CustomAlertsJoinEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -28,7 +27,7 @@ class CustomAlertsJoinEvent extends PluginEvent{
 	 * @param Player $player
 	 * @param string $pocketminemessage The default PocketMine join message
 	 */
-	public function __construct(Player $player, $pocketminemessage){
+	public function __construct(Player $player, $pocketminemessage) {
 		$this->player = $player;
 		$this->pocketminemessage = $pocketminemessage;
 	}
@@ -38,7 +37,7 @@ class CustomAlertsJoinEvent extends PluginEvent{
 	 *
 	 * @return Player
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -47,7 +46,7 @@ class CustomAlertsJoinEvent extends PluginEvent{
 	 *
 	 * @return string
 	 */
-	public function getPocketMineJoinMessage(){
+	public function getPocketMineJoinMessage() {
 		return $this->pocketminemessage;
 	}
 }

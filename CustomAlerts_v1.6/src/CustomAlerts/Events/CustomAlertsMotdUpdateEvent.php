@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -13,7 +12,7 @@ namespace CustomAlerts\Events;
 
 use pocketmine\event\plugin\PluginEvent;
 
-class CustomAlertsMotdUpdateEvent extends PluginEvent{
+class CustomAlertsMotdUpdateEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -23,7 +22,7 @@ class CustomAlertsMotdUpdateEvent extends PluginEvent{
 	/**
 	 * @param string $pocketminemessage The default PocketMine motd message
 	 */
-	public function __construct($pocketminemessage){
+	public function __construct($pocketminemessage) {
 		$this->pocketminemessage = $pocketminemessage;
 	}
 
@@ -32,7 +31,7 @@ class CustomAlertsMotdUpdateEvent extends PluginEvent{
 	 *
 	 * @return string
 	 */
-	public function getPocketMineMotd(){
+	public function getPocketMineMotd() {
 		return $this->pocketminemessage;
 	}
 }

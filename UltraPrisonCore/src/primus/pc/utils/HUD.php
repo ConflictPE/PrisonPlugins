@@ -1,4 +1,5 @@
 <?php
+
 namespace primus\pc\utils;
 
 use pocketmine\item\Item;
@@ -12,7 +13,7 @@ use primus\pc\PrisonCore;
  * Date: 7/31/16
  * Time: 8:24 AM
  */
-class HUD extends Task{
+class HUD extends Task {
 
 	/**
 	 * @var HUD
@@ -46,53 +47,56 @@ class HUD extends Task{
 		"{health}",
 	];
 
-	public function __construct(PrisonCore $core, string $text = "", string $sub_title = ""){
+	public function __construct(PrisonCore $core, string $text = "", string $sub_title = "") {
 		self::$instance = $this;
 		$this->viewers = new \SplObjectStorage();
 		$this->plugin = $core;
 		$this->text = $text;
 		$this->sub_text = $sub_title;
-
 		$this->active = true;
 	}
 
-	public static function get(){
+	public static function get() {
 		return self::$instance;
 	}
 
-	public function getPlugin() : PrisonCore{
+	public function getPlugin() : PrisonCore {
 		return $this->plugin;
 	}
 
-	public function getViewers(){
+	public function getViewers() {
 		return $this->viewers;
 	}
 
-	public function onRun($currentTick){
-		if(!$this->active) return;
+	public function onRun($currentTick) {
+		if(!$this->active)
+			return;
 		$this->render();
 	}
 
 	/**
 	 * Draws the HUD for each viewer. To show constant HUD call this function every 15 ticks.
 	 */
-	public function render(){
-		foreach($this->viewers as $viewer){
-			if(isset($this->plugin->exemptHud[$viewer->getName()])) continue;
-			if(!$viewer instanceof Player) $this->viewers->detach($viewer);
-			if(!$viewer->isOnline()) $this->viewers->detach($viewer);
+	public function render() {
+		foreach($this->viewers as $viewer) {
+			if(isset($this->plugin->exemptHud[$viewer->getName()]))
+				continue;
+			if(!$viewer instanceof Player)
+				$this->viewers->detach($viewer);
+			if(!$viewer->isOnline())
+				$this->viewers->detach($viewer);
 			$viewer->sendTip($this->parseVariables($viewer, $this->text));
 			$viewer->sendPopup($this->parseVariables($viewer, $this->sub_text));
 		}
 	}
 
-	public function parseVariables(Player $player, string $text) : STRING{
+	public function parseVariables(Player $player, string $text) : STRING {
 		$group = $this->plugin->getPurePerms()->getUserDataMgr()->getGroup($player, \null);
 		$nextGroup = $this->plugin->getGroupManager()->getNextGroup($group);
-		if(!$nextGroup){
+		if(!$nextGroup) {
 			$nextGroupPrice = 0;
 			$nextGroup = "";
-		}else{
+		} else {
 			$nextGroupPrice = $this->plugin->getGroupManager()->getPrice($nextGroup);
 			$nextGroup = $nextGroup->getName();
 		}
@@ -102,7 +106,6 @@ class HUD extends Task{
 		$maxplayer = $this->plugin->getServer()->getMaxPlayers();
 		$inv = $player->getInventory();
 		$item = $inv ? $inv->getItemInHand() : Item::get(0);
-
 		return str_replace($this->variables, [
 			$money,
 			$left,
@@ -122,48 +125,49 @@ class HUD extends Task{
 	/**
 	 * @return string
 	 */
-	public function getSubText(){
+	public function getSubText() {
 		return $this->sub_text;
 	}
 
 	/**
 	 * @param string $sub_text
 	 */
-	public function setSubText($sub_text){
+	public function setSubText($sub_text) {
 		$this->sub_text = $sub_text;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getText(){
+	public function getText() {
 		return $this->text;
 	}
 
 	/**
 	 * @param string $text
 	 */
-	public function setText($text){
+	public function setText($text) {
 		$this->text = $text;
 	}
 
-	public function isActive() : BOOL{
+	public function isActive() : BOOL {
 		return $this->active === true;
 	}
 
-	public function setActive(bool $value){
+	public function setActive(bool $value) {
 		$this->active = $value;
 	}
 
-	public function addViewer(Player $player){
-		if(!$this->isViewer($player)) $this->viewers->attach($player);
+	public function addViewer(Player $player) {
+		if(!$this->isViewer($player))
+			$this->viewers->attach($player);
 	}
 
-	public function isViewer(Player $player){
+	public function isViewer(Player $player) {
 		return $this->viewers->contains($player);
 	}
 
-	public function removeViewer(Player $player){
+	public function removeViewer(Player $player) {
 		$this->viewers->detach($player);
 	}
 

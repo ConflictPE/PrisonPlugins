@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is the main class of LaunchPad.
  * Copyright (C) 2015 CyberCube-HK
@@ -17,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with LaunchPad. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace hoyinm14mc\launchpad;
 
 use pocketmine\level\sound\BlazeShootSound;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class LaunchPad extends PluginBase{
+class LaunchPad extends PluginBase {
 
 	public $protect = [];
 
@@ -31,8 +31,8 @@ class LaunchPad extends PluginBase{
 
 	public $destroy_mode = [];
 
-	public function onEnable(){
-		if(!is_dir($this->getDataFolder())){
+	public function onEnable() {
+		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
 		$this->saveDefaultConfig();
@@ -43,16 +43,17 @@ class LaunchPad extends PluginBase{
 		$this->getLogger()->info($this->colourMessage("&aLoaded Successfully!"));
 	}
 
-	public function colourMessage($msg){
+	public function colourMessage($msg) {
 		return str_replace("&", "§", $msg);
 	}
 
-	public function launch(Player $player, $base = 1){
-		if($this->getConfig()->get("SOUND") !== false){
+	public function launch(Player $player, $base = 1) {
+		if($this->getConfig()->get("SOUND") !== false) {
 			$player->getLevel()->addSound(new BlazeShootSound($player));
 		}
-		if($player instanceof Player) $this->protect[$player->getName()] = $player->getName();
-		switch($player->getDirection()){
+		if($player instanceof Player)
+			$this->protect[$player->getName()] = $player->getName();
+		switch($player->getDirection()) {
 			case 0:
 				$player->knockback($player, 0, 1, 0, $base);
 				break;

@@ -21,9 +21,9 @@ use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase as Plugin;
 use pocketmine\utils\TextFormat;
 
-class NoExplodeMgr extends BaseWp implements Listener{
+class NoExplodeMgr extends BaseWp implements Listener {
 
-	public function __construct(Plugin $plugin){
+	public function __construct(Plugin $plugin) {
 		parent::__construct($plugin);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->enableSCmd("noexplode", [
@@ -34,21 +34,23 @@ class NoExplodeMgr extends BaseWp implements Listener{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args){
-		if($scmd != "noexplode") return false;
-		if(count($args) == 0){
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args) {
+		if($scmd != "noexplode")
+			return false;
+		if(count($args) == 0) {
 			$notnt = $this->owner->getCfg($world, "no-explode", false);
-			if($notnt == "world"){
+			if($notnt == "world") {
 				$c->sendMessage(TextFormat::GREEN . mc::_("[WP] Explosions stopped in %1%", $world));
-			}elseif($notnt == "spawn"){
+			} elseif($notnt == "spawn") {
 				$c->sendMessage(TextFormat::YELLOW . mc::_("[WP] Explosions off in %1%'s spawn", $world));
-			}else{
+			} else {
 				$c->sendMessage(TextFormat::RED . mc::_("[WP] Explosions allowed in %1%", $world));
 			}
 			return true;
 		}
-		if(count($args) != 1) return false;
-		switch(substr(strtolower($args[0]), 0, 2)){
+		if(count($args) != 1)
+			return false;
+		switch(substr(strtolower($args[0]), 0, 2)) {
 			case "sp":
 				$this->owner->setCfg($world, "no-explode", "spawn");
 				$this->owner->getServer()->broadcastMessage(TextFormat::YELLOW . mc::_("[WP] NO Explosions in %1%'s spawn", $world));
@@ -67,16 +69,19 @@ class NoExplodeMgr extends BaseWp implements Listener{
 		return true;
 	}
 
-	public function onExplode(EntityExplodeEvent $ev){
+	public function onExplode(EntityExplodeEvent $ev) {
 		//echo __METHOD__.",".__LINE__."\n";
-		if($ev->isCancelled()) return;
+		if($ev->isCancelled())
+			return;
 		$et = $ev->getEntity();
 		$world = $et->getLevel()->getName();
-		if(!isset($this->wcfg[$world])) return;
-		if($this->wcfg[$world] == "spawn"){
+		if(!isset($this->wcfg[$world]))
+			return;
+		if($this->wcfg[$world] == "spawn") {
 			$sp = $et->getLevel()->getSpawnLocation();
 			$dist = $sp->distance($et);
-			if($dist > $this->owner->getServer()->getSpawnRadius()) return;
+			if($dist > $this->owner->getServer()->getSpawnRadius())
+				return;
 		}
 		$ev->setCancelled();
 		$this->owner->getLogger()->notice(TextFormat::RED . mc::_("Explosion was stopped in %1%", $world));

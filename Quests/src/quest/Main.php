@@ -14,15 +14,14 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use SQLite3;
 
-class DB extends SQLite3{
+class DB extends SQLite3 {
 
-	public function __construct($filepath){
-
+	public function __construct($filepath) {
 		$this->open($filepath);
 	}
 }
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener {
 
 	public $queue = [];
 
@@ -32,19 +31,14 @@ class Main extends PluginBase implements Listener{
 
 	public $kills;
 
-	public function onEnable(){
-
-		if(!is_dir($this->getDataFolder())){
+	public function onEnable() {
+		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
-
 		}
-
-		if(!is_dir($this->getDataFolder() . "players")){
+		if(!is_dir($this->getDataFolder() . "players")) {
 			mkdir($this->getDataFolder() . "players");
 		}
-
 		$this->cfg = new Config($this->getDataFolder() . "quests.yml", Config::YAML, [
-
 			"no-access" => "§cYou do not have access to this Quest",
 			"1" => [
 				"type" => "kill",
@@ -55,10 +49,8 @@ class Main extends PluginBase implements Listener{
 				"reward" => [
 					"givemoney {player} 200",
 				],
-
 				"finish-message" => "§aThanks for doing this",
 			],
-
 			"2" => [
 				"type" => "item",
 				"name" => "45_Stone_Block",
@@ -73,56 +65,37 @@ class Main extends PluginBase implements Listener{
 				"finish-message" => "§aThanks, nice to work with you!",
 			],
 		]);
-
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
 
-	public function onCommand(CommandSender $s, Command $cmd, $label, array $args){
-
-		if($cmd->getName() == "quest"){
-
-			if(isset($args[0])){
-
-				switch($args[0]){
-
+	public function onCommand(CommandSender $s, Command $cmd, $label, array $args) {
+		if($cmd->getName() == "quest") {
+			if(isset($args[0])) {
+				switch($args[0]) {
 					case "see":
-
-						if(isset($args[1])){
-
-							if($this->cfg->exists($args[1])){
-
-								if($this->dataExists($s->getName(), $args[1])){
+						if(isset($args[1])) {
+							if($this->cfg->exists($args[1])) {
+								if($this->dataExists($s->getName(), $args[1])) {
 									$s->sendMessage("§6- §cYou are already taken this quest");
 									return true;
 								}
-
-								if(!$s->hasPermission("quest.access." . $args[1])){
+								if(!$s->hasPermission("quest.access." . $args[1])) {
 									$s->sendMessage("§6- " . $this->cfg->get("no-access"));
 									return false;
 								}
-
 								$conf = $this->cfg->get($args[1]);
-
-								if(!(isset($this->queue[strtolower($s->getName())][$args[1]]))){
-
+								if(!(isset($this->queue[strtolower($s->getName())][$args[1]]))) {
 									$s->sendMessage("" . $conf["message"]);
 									$this->queue[strtolower($s->getName())][$args[1]] = time();
-
-								}else{
-
+								} else {
 									$s->sendMessage("" . $conf["receive-message"]);
 									unset($this->queue[$s->getName()][$args[1]]);
-
-									if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")){
-
+									if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")) {
 										$playerDat = $this->getUserData($s->getName());
-
 										$stmt = $playerDat->prepare("INSERT OR REPLACE INTO database (quest) VALUES (:quest);");
 										$stmt->bindValue(":quest", $args[1]);
 										$stmt->execute();
-
-									}else{
-
+									} else {
 										$db = new \SQLite3($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3");
 										$db->exec("CREATE TABLE IF NOT EXISTS database (quest);");
 										$stmt = $db->prepare("INSERT OR REPLACE INTO database (quest) VALUES (:quest);");
@@ -130,164 +103,128 @@ class Main extends PluginBase implements Listener{
 										$stmt->execute();
 									}
 								}
-
-							}else{
+							} else {
 								$s->sendMessage("§6- §cThis quest coming soon!");
 							}
-						}else{
+						} else {
 							$s->sendMessage("§6- §cUsage: /quest see <quest_id>");
 						}
 						break;
-
 					case "done":
-						if(isset($args[1])){
-
-							if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")){
-
+						if(isset($args[1])) {
+							if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")) {
 								$playerDat = $this->getUserData($s->getName());
-
-								if($this->dataExists($s->getName(), $args[1])){
-
+								if($this->dataExists($s->getName(), $args[1])) {
 									$conf = $this->cfg->get($args[1]);
 									$type = $conf["type"];
-									switch($type){
+									switch($type) {
 										case "kill":
-
-											if($this->kills[$s->getName()] >= $conf["required"]){
-
+											if($this->kills[$s->getName()] >= $conf["required"]) {
 												$this->kills[$s->getName()] = $this->kills[$s->getName()] - $conf["required"];
-
 												$playerDat = $this->getUserData($s->getName());
-
 												$playerDat->query("DELETE FROM database WHERE quest='$args[1]';");
-
-												foreach($conf["reward"] as $command){
-
+												foreach($conf["reward"] as $command) {
 													$this->getServer()->dispatchCommand(new ConsoleCommandSender(), $this->translate($command, $s));
 													$s->sendMessage($conf["finish-message"]);
 												}
-											}else{
+											} else {
 												$s->sendMessage("§6- §cNot enough Lifes, cancel");
 											}
 											break;
-
 										case "item":
-
-											foreach($conf["required"] as $item){
+											foreach($conf["required"] as $item) {
 												$is = explode(":", $item);
 												$item = Item::get($is[0], $is[1], $is[2]);
 											}
-
-											if($s->getInventory()->contains($item)){
+											if($s->getInventory()->contains($item)) {
 												$s->getInventory()->removeItem($item);
-
 												$tempData = $this->getUserData($s->getName());
 												$tempData->query("DELETE FROM database WHERE quest='$args[1]';");
-
 												$s->sendMessage($conf["finish-message"]);
-
-												foreach($conf["reward"] as $command){
+												foreach($conf["reward"] as $command) {
 													$this->getServer()->dispatchCommand(new ConsoleCommandSender(), $this->translate($command, $s));
 												}
-
-											}else{
+											} else {
 												$s->sendMessage("§6- §cYou haven't reached the requirement.");
 											}
 											break;
-
 									}
-								}else{
+								} else {
 									$s->sendMessage("§6- §cNo quest name " . $args[1] . " found in your quests list");
 								}
 							}
-						}else{
+						} else {
 							$s->sendMessage("§6- §cUsage: /quest done <quest_id>");
 						}
 						break;
-
 					case "list":
-						if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")){
-
+						if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")) {
 							$playerDat = $this->getUserData($s->getName());
 							$query = $playerDat->query("SELECT quest FROM database");
-							while($res = $query->fetchArray(SQLITE3_ASSOC)){
+							while($res = $query->fetchArray(SQLITE3_ASSOC)) {
 								$s->sendMessage("§6- §a" . $res["quest"]);
 							}
-						}else{
+						} else {
 							$s->sendMessage("§6- §cCannot find for you a data file, use /quest see <id> to get a quest and register that file");
 						}
-
 						break;
-
 					case "cancel":
-						if(isset($args[1])){
-
-							if(file_exists($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3")){
-
-								if($this->dataExists($s->getName(), $args[1])){
-
+						if(isset($args[1])) {
+							if(file_exists($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3")) {
+								if($this->dataExists($s->getName(), $args[1])) {
 									$playerDat = $this->getUserData($s->getName());
 									$playerDat->query("DELETE FROM database WHERE quest='$args[1]';");
 									$s->sendMessage("§6- §aSucceed Cancel Quest!");
-								}else{
+								} else {
 									$s->sendMessage("§cYou do not have that quest on your list");
 								}
-							}else{
+							} else {
 								$s->sendMessage("§cYou do not have any database");
 							}
-						}else{
+						} else {
 							$s->sendMessage("§cusage: /quest cancel <id>");
 						}
 						break;
-
 					default:
 						$s->sendMessage("Usage: /quest <see|done|cancel|list>");
-
 						break;
 				}
-			}else{
+			} else {
 				$s->sendMessage("§6- §cUsage /quest <see|done|cancel|list>");
 			}
 		}
 	}
 
-	public function getUserData($playern){
-
+	public function getUserData($playern) {
 		return new DB($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3");
 	}
 
-	public function dataExists($playern, $quest){
-
+	public function dataExists($playern, $quest) {
 		$name = strtolower($playern);
-
-		if(file_exists($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3")){
+		if(file_exists($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3")) {
 			$data = $this->getUserData($name);
 			$data->exec("CREATE TABLE IF NOT EXISTS database (quest);");
 			$res = $data->query("SELECT * FROM database WHERE quest='$quest';");
 			$ar = $res->fetchArray(SQLITE3_ASSOC);
-
-			if(empty($ar) == false){
+			if(empty($ar) == false) {
 				return true;
 			}
 		}
 	}
 
-	public function translate($chat, Player $player){
+	public function translate($chat, Player $player) {
 		$msg = str_replace("{player}", $player->getName(), $chat);
 		return $msg;
 	}
 
-	public function onKill(PlayerDeathEvent $ev){
+	public function onKill(PlayerDeathEvent $ev) {
 		$lastdmg = $ev->getEntity()->getLastDamageCause();
 		$p = $ev->getPlayer();
-
-		if($lastdmg instanceof EntityDamageByEntityEvent){
-
+		if($lastdmg instanceof EntityDamageByEntityEvent) {
 			$dmgr = $lastdmg->getDamager();
-
-			if(isset($this->kills[strtolower($dmgr->getName())])){
+			if(isset($this->kills[strtolower($dmgr->getName())])) {
 				$this->kills[strtolower($dmgr->getName())]++;
-			}else{
+			} else {
 				$this->kills[strtolower($dmgr->getName())] = 1;
 			}
 		}

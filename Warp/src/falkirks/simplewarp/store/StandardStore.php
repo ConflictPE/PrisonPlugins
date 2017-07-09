@@ -2,21 +2,21 @@
 
 namespace falkirks\simplewarp\store;
 
-abstract class StandardStore implements DataStore{
+abstract class StandardStore implements DataStore {
 
-	public function addAll($warps){
-		foreach($warps as $name => $warp){
+	public function addAll($warps) {
+		foreach($warps as $name => $warp) {
 			$this->add($name, $warp);
 		}
 	}
 
-	public function removeAll($warps){
-		foreach($warps as $warp){
+	public function removeAll($warps) {
+		foreach($warps as $warp) {
 			$this->remove($warp);
 		}
 	}
 
-	public function exists($name){
+	public function exists($name) {
 		return $this->get($name) !== null;
 	}
 

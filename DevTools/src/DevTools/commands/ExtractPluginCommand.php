@@ -1,5 +1,4 @@
 <?php
-
 /*
  * DevTools plugin for PocketMine-MP
  * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
@@ -25,48 +24,42 @@ use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-class ExtractPluginCommand extends DevToolsCommand{
+class ExtractPluginCommand extends DevToolsCommand {
 
-	public function __construct(DevTools $plugin, $name){
+	public function __construct(DevTools $plugin, $name) {
 		parent::__construct($plugin, $name, "Extract source code from a plugin", "/extract <pluginName>", ["ep"]);
 		$this->setPermission("devtools.command.extractplugin");
 	}
 
-	public function execute(CommandSender $sender, $currentAlias, array $args){
-		if(!$this->testPermission($sender)){
+	public function execute(CommandSender $sender, $currentAlias, array $args) {
+		if(!$this->testPermission($sender)) {
 			return true;
 		}
-
-		if(count($args) === 0){
+		if(count($args) === 0) {
 			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
 			return false;
 		}
-
 		$pluginName = trim(implode(" ", $args));
-		if($pluginName === "" or !(($plugin = Server::getInstance()->getPluginManager()->getPlugin($pluginName)) instanceof Plugin)){
+		if($pluginName === "" or !(($plugin = Server::getInstance()->getPluginManager()->getPlugin($pluginName)) instanceof Plugin)) {
 			$sender->sendMessage(TextFormat::RED . "Invalid plugin name, check the name case.");
 			return true;
 		}
 		$description = $plugin->getDescription();
-
-		if(!($plugin->getPluginLoader() instanceof PharPluginLoader)){
+		if(!($plugin->getPluginLoader() instanceof PharPluginLoader)) {
 			$sender->sendMessage(TextFormat::RED . "Plugin " . $description->getName() . " is not in Phar structure.");
 			return true;
 		}
-
 		$folderPath = $this->getPlugin()->getWorkingDirectory() . $description->getName() . "_v" . $description->getVersion() . "/";
-		if(file_exists($folderPath)){
+		if(file_exists($folderPath)) {
 			$sender->sendMessage("Plugin files already exist, overwriting...");
-		}else{
+		} else {
 			@mkdir($folderPath);
 		}
-
 		$reflection = new \ReflectionClass("pocketmine\\plugin\\PluginBase");
 		$file = $reflection->getProperty("file");
 		$file->setAccessible(true);
 		$pharPath = str_replace("\\", "/", rtrim($file->getValue($plugin), "\\/"));
-
-		foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pharPath)) as $fInfo){
+		foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pharPath)) as $fInfo) {
 			$path = $fInfo->getPathname();
 			@mkdir(dirname($folderPath . str_replace($pharPath, "", $path)), 0755, true);
 			file_put_contents($folderPath . str_replace($pharPath, "", $path), file_get_contents($path));

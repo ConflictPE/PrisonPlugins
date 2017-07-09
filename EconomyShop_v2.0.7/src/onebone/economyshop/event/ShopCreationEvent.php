@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2015  onebone <jyc00410@gmail.com>
@@ -22,6 +21,6 @@ namespace onebone\economyshop\event;
 
 use pocketmine\event\plugin\PluginEvent;
 
-class ShopCreationEvent extends PluginEvent{
+class ShopCreationEvent extends PluginEvent {
 
 }

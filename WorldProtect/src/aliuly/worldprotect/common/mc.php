@@ -1,4 +1,5 @@
 <?php
+
 namespace aliuly\worldprotect\common;
 
 /**
@@ -20,7 +21,7 @@ namespace aliuly\worldprotect\common;
  * * mc::_("string to translate %1% %2%\n",$arg1,$arg2)
  * * mc::n(mc::\_("singular form"),mc::\_("Plural form"),$count)
  */
-abstract class mc{
+abstract class mc {
 
 	/** @var str[] $txt Message translations */
 	public static $txt = [];
@@ -36,13 +37,14 @@ abstract class mc{
 	 *
 	 * @return str translated string
 	 */
-	public static function _(...$args){
+	public static function _(...$args) {
 		$fmt = array_shift($args);
-		if(isset(self::$txt[$fmt])) $fmt = self::$txt[$fmt];
-		if(count($args)){
+		if(isset(self::$txt[$fmt]))
+			$fmt = self::$txt[$fmt];
+		if(count($args)) {
 			$vars = ["%%" => "%"];
 			$i = 1;
-			foreach($args as $j){
+			foreach($args as $j) {
 				$vars["%$i%"] = $j;
 				++$i;
 			}
@@ -60,7 +62,7 @@ abstract class mc{
 	 *
 	 * @return str - Either plural or singular forms depending on the value of $c
 	 */
-	public static function n($a, $b, $c){
+	public static function n($a, $b, $c) {
 		return $c == 1 ? $a : $b;
 	}
 
@@ -68,16 +70,17 @@ abstract class mc{
 	 * Load a message file for a PocketMine plugin.  Only uses .ini files.
 	 *
 	 * @param Plugin $plugin - owning plugin
-	 * @param str    $path   - output of $plugin->getFile()
+	 * @param str $path - output of $plugin->getFile()
 	 *
 	 * @return int|false - false on error or the number of messages loaded
 	 */
-	public static function plugin_init($plugin, $path){
-		if(file_exists($plugin->getDataFolder() . "messages.ini")){
+	public static function plugin_init($plugin, $path) {
+		if(file_exists($plugin->getDataFolder() . "messages.ini")) {
 			return self::load($plugin->getDataFolder() . "messages.ini");
 		}
 		$msgs = $path . "resources/messages/" . $plugin->getServer()->getProperty("settings.language") . ".ini";
-		if(!file_exists($msgs)) return false;
+		if(!file_exists($msgs))
+			return false;
 		return self::load($msgs);
 	}
 
@@ -89,19 +92,20 @@ abstract class mc{
 	 *
 	 * @return int|false - returns the number of strings loaded or false on error
 	 */
-	public static function load($f){
+	public static function load($f) {
 		$potxt = "\n" . file_get_contents($f) . "\n";
-		if(preg_match('/\nmsgid\s/', $potxt)){
+		if(preg_match('/\nmsgid\s/', $potxt)) {
 			$potxt = preg_replace('/\\\\n"\n"/', "\\n", preg_replace('/\s+""\s*\n\s*"/', " \"", $potxt));
 		}
 		foreach([
 			        '/\nmsgid "(.+)"\nmsgstr "(.+)"\n/',
 			        '/^\s*"(.+)"\s*=\s*"(.+)"\s*$/m',
-		        ] as $re){
+		        ] as $re) {
 			$c = preg_match_all($re, $potxt, $mm);
-			if($c){
-				for($i = 0; $i < $c; ++$i){
-					if($mm[2][$i] == "") continue;
+			if($c) {
+				for($i = 0; $i < $c; ++$i) {
+					if($mm[2][$i] == "")
+						continue;
 					eval('$a = "' . $mm[1][$i] . '";');
 					eval('$b = "' . $mm[2][$i] . '";');
 					self::$txt[$a] = $b;

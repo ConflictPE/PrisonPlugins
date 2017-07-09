@@ -4,7 +4,7 @@ namespace _64FF00\PureChat\factions;
 
 use pocketmine\Player;
 
-interface FactionsInterface{
+interface FactionsInterface {
 
 	/*
 		PureChat by 64FF00 (Twitter: @64FF00)
@@ -18,7 +18,6 @@ interface FactionsInterface{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	public function getAPI();
 
 	public function getPlayerFaction(Player $player);

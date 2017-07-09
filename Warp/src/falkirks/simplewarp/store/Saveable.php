@@ -8,7 +8,7 @@
 
 namespace falkirks\simplewarp\store;
 
-interface Saveable extends DataStore{
+interface Saveable extends DataStore {
 
 	public function save();
 }

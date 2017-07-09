@@ -1,4 +1,5 @@
 <?php
+
 namespace falkirks\simplewarp\command;
 
 use falkirks\simplewarp\api\SimpleWarpAPI;
@@ -11,31 +12,31 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class ListWarpsCommand extends Command implements PluginIdentifiableCommand{
+class ListWarpsCommand extends Command implements PluginIdentifiableCommand {
 
 	private $api;
 
-	public function __construct(SimpleWarpAPI $api){
+	public function __construct(SimpleWarpAPI $api) {
 		parent::__construct($api->executeTranslationItem("listwarps-cmd"), $api->executeTranslationItem("listwarps-desc"), $api->executeTranslationItem("listwarps-usage"));
 		$this->api = $api;
 	}
 
 	/**
 	 * @param CommandSender $sender
-	 * @param string        $commandLabel
-	 * @param string[]      $args
+	 * @param string $commandLabel
+	 * @param string[] $args
 	 *
 	 * @return mixed
 	 */
-	public function execute(CommandSender $sender, $commandLabel, array $args){
-		if($sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND)){
+	public function execute(CommandSender $sender, $commandLabel, array $args) {
+		if($sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND)) {
 			$ret = $this->api->executeTranslationItem("listwarps-list-title");
 			/** @var Warp[] $iterator */
 			$iterator = $this->api->getWarpManager()->getIterator();
-			foreach($iterator as $w){
-				if($w->canUse($sender)){
+			foreach($iterator as $w) {
+				if($w->canUse($sender)) {
 					$ret .= " * " . $w->getName() . " ";
-					if($sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND_XYZ)){
+					if($sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND_XYZ)) {
 						$dest = $w->getDestination();
 						$ret .= $dest->toString();
 					}
@@ -45,16 +46,16 @@ class ListWarpsCommand extends Command implements PluginIdentifiableCommand{
 			/**
 			 * EASTER EGG!
 			 */
-			if($sender instanceof Player && $sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND_VISUAL) && isset($args[0]) && $args[0] === "v"){
-				foreach($iterator as $warp){
-					if($warp->getDestination()->isInternal() && $warp->getDestination()->getPosition()->getLevel() === $sender->getLevel()){
+			if($sender instanceof Player && $sender->hasPermission(SimpleWarpPermissions::LIST_WARPS_COMMAND_VISUAL) && isset($args[0]) && $args[0] === "v") {
+				foreach($iterator as $warp) {
+					if($warp->getDestination()->isInternal() && $warp->getDestination()->getPosition()->getLevel() === $sender->getLevel()) {
 						$particle = new FloatingTextParticle($warp->getDestination()->getPosition(), "(X: {$warp->getDestination()->getPosition()->getFloorX()}}, Y: {$warp->getDestination()->getPosition()->getFloorY()}, Z: {$warp->getDestination()->getPosition()->getFloorZ()}, LEVEL: {$warp->getDestination()->getPosition()->getLevel()->getName()})", "WARP: " . TextFormat::AQUA . $warp->getName() . TextFormat::RESET);
 						$sender->getLevel()->addParticle($particle, [$sender]);
 					}
 				}
 			}
 			$sender->sendMessage(($ret !== $this->api->executeTranslationItem("listwarps-list-title") ? $ret : $this->api->executeTranslationItem("listwarps-no-warps")));
-		}else{
+		} else {
 			$sender->sendMessage($this->api->executeTranslationItem("listwarps-noperm"));
 		}
 	}
@@ -62,7 +63,7 @@ class ListWarpsCommand extends Command implements PluginIdentifiableCommand{
 	/**
 	 * @return \pocketmine\plugin\Plugin
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->api->getSimpleWarp();
 	}
 }

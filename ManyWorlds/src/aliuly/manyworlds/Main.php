@@ -2,6 +2,7 @@
 /**
  **
  **/
+
 namespace aliuly\manyworlds;
 
 use aliuly\manyworlds\common\BasicHelp;
@@ -17,21 +18,19 @@ use pocketmine\level\Position;
 //use pocketmine\event\level\LevelLoadEvent;
 //use pocketmine\event\level\LevelUnloadEvent;
 //use pocketmine\Player;
-
-class Main extends BasicPlugin implements CommandExecutor{
+class Main extends BasicPlugin implements CommandExecutor {
 
 	public $canUnload = false;
 	private $tpMgr = null;
 
-	public function onEnable(){
+	public function onEnable() {
 		// We don't really need this...
 		//if (!is_dir($this->getDataFolder())) mkdir($this->getDataFolder());
 		mc::plugin_init($this, $this->getFile());
-
-		if(MPMU::apiVersion("1.12.0")){
+		if(MPMU::apiVersion("1.12.0")) {
 			$this->canUnload = true;
 			$this->tpMgr = null;
-		}else{
+		} else {
 			$this->canUnload = false;
 			$this->tpMgr = new TeleportManager($this);
 		}
@@ -44,18 +43,20 @@ class Main extends BasicPlugin implements CommandExecutor{
 			        "MwLoader",
 			        "MwLvDat",
 			        "MwDefault",
-		        ] as $mod){
+		        ] as $mod) {
 			$mod = __NAMESPACE__ . "\\" . $mod;
 			$this->modules[] = new $mod($this);
 		}
 		$this->modules[] = new BasicHelp($this);
 	}
 
-	public function autoLoad(CommandSender $c, $world){
-		if($this->getServer()->isLevelLoaded($world)) return true;
-		if($c !== null && !MPMU::access($c, "mw.cmd.world.load")) return false;
-		if(!$this->getServer()->isLevelGenerated($world)){
-			if($c !== null){
+	public function autoLoad(CommandSender $c, $world) {
+		if($this->getServer()->isLevelLoaded($world))
+			return true;
+		if($c !== null && !MPMU::access($c, "mw.cmd.world.load"))
+			return false;
+		if(!$this->getServer()->isLevelGenerated($world)) {
+			if($c !== null) {
 				$c->sendMessage(mc::_("[MW] No world with the name %1% exists!", $world));
 			}
 			return false;
@@ -69,15 +70,16 @@ class Main extends BasicPlugin implements CommandExecutor{
 	// Command dispatcher
 	//
 	//////////////////////////////////////////////////////////////////////
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
-		if($cmd->getName() != "manyworlds") return false;
+	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+		if($cmd->getName() != "manyworlds")
+			return false;
 		return $this->dispatchSCmd($sender, $cmd, $args);
 	}
 	//
 	// Deprecated Public API
 	//
-	public function mwtp($pl, $pos){
-		if($this->tpMgr && ($pos instanceof Position)){
+	public function mwtp($pl, $pos) {
+		if($this->tpMgr && ($pos instanceof Position)) {
 			// Using ManyWorlds for teleporting...
 			return $this->teleport($pl, $pos->getLevel()->getName(), new Vector3($pos->getX(), $pos->getY(), $pos->getZ()));
 		}
@@ -85,13 +87,15 @@ class Main extends BasicPlugin implements CommandExecutor{
 		return true;
 	}
 
-	public function teleport($player, $world, $spawn = null){
-		if($this->tpMgr){
+	public function teleport($player, $world, $spawn = null) {
+		if($this->tpMgr) {
 			return $this->tpMgr->teleport($player, $world, $spawn);
 		}
-		if(!$this->getServer()->isLevelLoaded($world)) return false;
+		if(!$this->getServer()->isLevelLoaded($world))
+			return false;
 		$level = $this->owner->getServer()->getLevelByName($world);
-		if(!$level) return false;
+		if(!$level)
+			return false;
 		// Try to find a reasonable spawn location
 		$location = $level->getSafeSpawn($spawn);
 		$player->teleport($location);

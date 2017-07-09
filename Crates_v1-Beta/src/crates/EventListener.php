@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EventListener class
  *
@@ -28,53 +27,53 @@ use pocketmine\network\protocol\SetEntityDataPacket;
 use pocketmine\tile\Chest;
 use pocketmine\utils\TextFormat as TF;
 
-class EventListener implements Listener{
+class EventListener implements Listener {
 
 	private $plugin;
 
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function onJoin(PlayerJoinEvent $event){
+	public function onJoin(PlayerJoinEvent $event) {
 		$player = $event->getPlayer();
-		foreach($this->plugin->text as $particle){
-			foreach($particle->encode() as $pk){
+		foreach($this->plugin->text as $particle) {
+			foreach($particle->encode() as $pk) {
 				$player->dataPacket($pk);
 			}
 		}
 	}
 
-	public function onInteract(PlayerInteractEvent $event){
+	public function onInteract(PlayerInteractEvent $event) {
 		$player = $event->getPlayer();
 		$tile = $player->getLevel()->getTile($event->getBlock());
-		if($tile instanceof Chest){
+		if($tile instanceof Chest) {
 			$block = new Vector3($tile->x, $tile->y, $tile->z);
 			$crate = $this->plugin->getCrate($block);
-			if($crate instanceof Crate){
+			if($crate instanceof Crate) {
 				$event->setCancelled(true);
 				$id = $crate->getId();
-				if(((isset($this->plugin->getKeyData($player->getName())[$id]) ? $this->plugin->getKeyData($player->getName())[$id] : 0)) >= 1){
+				if(((isset($this->plugin->getKeyData($player->getName())[$id]) ? $this->plugin->getKeyData($player->getName())[$id] : 0)) >= 1) {
 					$this->plugin->saveKeyData($player->getName(), [$id => $this->plugin->getKeyData($player->getName())[$id] - 1,]);
-					if(mt_rand(1, 3) <= 2){
+					if(mt_rand(1, 3) <= 2) {
 						$prize = $crate->getRandomItem();
-					}else{
-						if((bool) $this->plugin->settings["economy"]["enabled"]){
+					} else {
+						if((bool) $this->plugin->settings["economy"]["enabled"]) {
 							$prize = $crate->getRandomMoney();
-						}else{
+						} else {
 							$prize = $crate->getRandomItem();
 						}
 					}
 					$name = "";
-					if($prize instanceof Item){
+					if($prize instanceof Item) {
 						$player->getInventory()->addItem($prize);
 						$name = TF::YELLOW . "{$prize->getCount()}x " . ($prize->hasCustomName() ? $prize->getCustomName() : $prize->getName());
-					}elseif(is_int($prize)){
+					} elseif(is_int($prize)) {
 						$this->plugin->getEconomy()->addMoney($player, $prize, true);
 						$amount = $prize;
 						$prize = Item::get(Item::PAPER);
@@ -122,17 +121,17 @@ class EventListener implements Listener{
 						(isset($this->plugin->getKeyData($player->getName())[$id]) ? $this->plugin->getKeyData($player->getName())[$id] : 0),
 						Main::applyColors($this->plugin->settings["keys"][$id]),
 					], $this->plugin->settings["messages"]["keys-remaining"])));
-				}else{
+				} else {
 					$player->sendMessage(Main::applyColors($this->plugin->settings["messages"]["no-crate-key"]));
 				}
 			}
 		}
 	}
 
-	public function onHold(PlayerItemHeldEvent $event){
+	public function onHold(PlayerItemHeldEvent $event) {
 		$player = $event->getPlayer();
 		$item = $event->getItem();
-		if($item->getId() === Item::TRIPWIRE_HOOK){
+		if($item->getId() === Item::TRIPWIRE_HOOK) {
 			$player->getInventory()->remove($item);
 		}
 	}
@@ -140,13 +139,13 @@ class EventListener implements Listener{
 	/**
 	 * @priority HIGHEST
 	 */
-	public function onBreak(BlockBreakEvent $event){
-		if($event->isCancelled()){
+	public function onBreak(BlockBreakEvent $event) {
+		if($event->isCancelled()) {
 			return;
 		}
 		$player = $event->getPlayer();
 		$chance = mt_rand(1, 10000);
-		if($chance === 1){
+		if($chance === 1) {
 			$this->plugin->giveKey($player, 1);
 			$player->sendMessage(TF::GREEN . "You found a " . Main::applyColors($this->plugin->settings["keys"][1]) . TF::RESET . TF::GREEN . "!");
 		}

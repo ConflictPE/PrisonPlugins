@@ -1,5 +1,4 @@
 <?php
-
 /**
  * DespawnItemTask.php class
  *
@@ -17,7 +16,7 @@ use pocketmine\network\protocol\RemoveEntityPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 
-class DespawnItemTask extends PluginTask{
+class DespawnItemTask extends PluginTask {
 
 	/** @var Main */
 	private $plugin;
@@ -30,7 +29,7 @@ class DespawnItemTask extends PluginTask{
 
 	private $pos;
 
-	public function __construct(Main $plugin, Player $player, int $eid, Vector3 $pos){
+	public function __construct(Main $plugin, Player $player, int $eid, Vector3 $pos) {
 		parent::__construct($plugin);
 		$this->plugin = $plugin;
 		$this->player = $player;
@@ -42,11 +41,11 @@ class DespawnItemTask extends PluginTask{
 	/**
 	 * @return Main
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
-	public function onRun($currentTick){
+	public function onRun($currentTick) {
 		$pk = new RemoveEntityPacket();
 		$pk->eid = $this->eid;
 		$this->player->dataPacket($pk);

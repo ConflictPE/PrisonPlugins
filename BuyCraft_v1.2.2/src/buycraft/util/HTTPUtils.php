@@ -1,15 +1,15 @@
 <?php
+
 namespace buycraft\util;
 
 use pocketmine\utils\Utils;
 
-class HTTPUtils{
+class HTTPUtils {
 
-	public static function getURL($page, $timeout = 10){
-		if(Utils::$online === false){
+	public static function getURL($page, $timeout = 10) {
+		if(Utils::$online === false) {
 			return false;
 		}
-
 		$ch = curl_init($page);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			"User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0 PocketMine-MP",
@@ -29,7 +29,6 @@ class HTTPUtils{
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, (int) $timeout);
 		$ret = curl_exec($ch);
 		curl_close($ch);
-
 		return $ret;
 	}
 }

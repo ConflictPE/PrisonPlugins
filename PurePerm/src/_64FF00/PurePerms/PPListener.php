@@ -12,7 +12,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\TranslationContainer;
 use pocketmine\utils\TextFormat;
 
-class PPListener implements Listener{
+class PPListener implements Listener {
 
 	/*
 		PurePerms by 64FF00 (Twitter: @64FF00)
@@ -26,13 +26,12 @@ class PPListener implements Listener{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $plugin;
 
 	/**
 	 * @param PurePerms $plugin
 	 */
-	public function __construct(PurePerms $plugin){
+	public function __construct(PurePerms $plugin) {
 		$this->plugin = $plugin;
 	}
 
@@ -41,9 +40,8 @@ class PPListener implements Listener{
 	 *
 	 * @priority LOWEST
 	 */
-	public function onGroupChanged(PPGroupChangedEvent $event){
+	public function onGroupChanged(PPGroupChangedEvent $event) {
 		$player = $event->getPlayer();
-
 		$this->plugin->updatePermissions($player);
 	}
 
@@ -52,34 +50,28 @@ class PPListener implements Listener{
 	 *
 	 * @priority LOWEST
 	 */
-	public function onLevelChange(EntityLevelChangeEvent $event){
+	public function onLevelChange(EntityLevelChangeEvent $event) {
 		$player = $event->getEntity();
-
 		$this->plugin->updatePermissions($player);
 	}
 
-	public function onPlayerCommand(PlayerCommandPreprocessEvent $event){
+	public function onPlayerCommand(PlayerCommandPreprocessEvent $event) {
 		$message = $event->getMessage();
 		$player = $event->getPlayer();
-
-		if($message{0} === "/"){
+		if($message{0} === "/") {
 			$command = substr($message, 1);
 			$args = explode(" ", $command);
-
-			if(!$this->plugin->getNoeulAPI()->isAuthed($event->getPlayer())){
+			if(!$this->plugin->getNoeulAPI()->isAuthed($event->getPlayer())) {
 				$event->setCancelled(true);
-
-				if($args[0] === "ppsudo" or $args[0] === "help"){
+				if($args[0] === "ppsudo" or $args[0] === "help") {
 					$this->plugin->getServer()->dispatchCommand($player, $command);
-				}else{
+				} else {
 					$this->plugin->getNoeulAPI()->sendAuthMsg($player);
 				}
-			}else{
+			} else {
 				$disableOp = $this->plugin->getConfigValue("disable-op");
-
-				if($disableOp and $args[0] === "op"){
+				if($disableOp and $args[0] === "op") {
 					$event->setCancelled(true);
-
 					$player->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.generic.permission"));
 				}
 			}
@@ -91,18 +83,16 @@ class PPListener implements Listener{
 	 *
 	 * @priority LOWEST
 	 */
-	public function onPlayerLogin(PlayerLoginEvent $event){
+	public function onPlayerLogin(PlayerLoginEvent $event) {
 		$player = $event->getPlayer();
-
 		$this->plugin->registerPlayer($player);
-
-		if($this->plugin->getNoeulAPI()->isNoeulEnabled()) $this->plugin->getNoeulAPI()->deAuth($player);
+		if($this->plugin->getNoeulAPI()->isNoeulEnabled())
+			$this->plugin->getNoeulAPI()->deAuth($player);
 	}
 
-	public function onPlayerMove(PlayerMoveEvent $event){
-		if(!$this->plugin->getNoeulAPI()->isAuthed($event->getPlayer())){
+	public function onPlayerMove(PlayerMoveEvent $event) {
+		if(!$this->plugin->getNoeulAPI()->isAuthed($event->getPlayer())) {
 			$this->plugin->getNoeulAPI()->sendAuthMsg($event->getPlayer());
-
 			$event->setCancelled(true);
 			$event->getPlayer()->onGround = true;
 		}
@@ -113,9 +103,8 @@ class PPListener implements Listener{
 	 *
 	 * @priority HIGHEST
 	 */
-	public function onPlayerQuit(PlayerQuitEvent $event){
+	public function onPlayerQuit(PlayerQuitEvent $event) {
 		$player = $event->getPlayer();
-
 		$this->plugin->unregisterPlayer($player);
 	}
 }

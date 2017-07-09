@@ -8,26 +8,24 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class MyMoneyCommand extends Command{
+class MyMoneyCommand extends Command {
 
 	private $plugin;
 
-	public function __construct(EconomyAPI $plugin){
+	public function __construct(EconomyAPI $plugin) {
 		$desc = $plugin->getCommandMessage("mymoney");
 		parent::__construct("mymoney", $desc["description"], $desc["usage"]);
-
 		$this->setPermission("economyapi.command.mymoney");
-
 		$this->plugin = $plugin;
 	}
 
-	public function execute(CommandSender $sender, $label, array $params){
-		if(!$this->plugin->isEnabled()) return false;
-		if(!$this->testPermission($sender)){
+	public function execute(CommandSender $sender, $label, array $params) {
+		if(!$this->plugin->isEnabled())
+			return false;
+		if(!$this->testPermission($sender)) {
 			return false;
 		}
-
-		if($sender instanceof Player){
+		if($sender instanceof Player) {
 			$money = $this->plugin->myMoney($sender);
 			$sender->sendMessage($this->plugin->getMessage("mymoney-mymoney", [$money]));
 			return true;

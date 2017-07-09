@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AutoInv EventListener class
  *
@@ -18,7 +17,7 @@ use pocketmine\event\entity\EntityExplodeEvent;
 use pocketmine\event\Listener;
 use pocketmine\inventory\InventoryHolder;
 
-class EventListener implements Listener{
+class EventListener implements Listener {
 
 	/** @var $plugin Main */
 	private $plugin;
@@ -28,7 +27,7 @@ class EventListener implements Listener{
 	 *
 	 * @param Main $plugin
 	 */
-	public function __construct(Main $plugin){
+	public function __construct(Main $plugin) {
 		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
@@ -38,7 +37,7 @@ class EventListener implements Listener{
 	 *
 	 * @return Main
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 
@@ -51,8 +50,8 @@ class EventListener implements Listener{
 	 *
 	 * @ignoreCancelled true
 	 */
-	public function onBreak(BlockBreakEvent $event){
-		foreach($event->getDrops() as $drop){
+	public function onBreak(BlockBreakEvent $event) {
+		foreach($event->getDrops() as $drop) {
 			$event->getPlayer()->getInventory()->addItem($drop);
 		}
 		$event->setDrops([]);
@@ -69,13 +68,13 @@ class EventListener implements Listener{
 	 *
 	 * @ignoreCancelled true
 	 */
-	public function onDeath(EntityDeathEvent $event){
+	public function onDeath(EntityDeathEvent $event) {
 		$victim = $event->getEntity();
 		$cause = $victim->getLastDamageCause();
-		if($cause instanceof EntityDamageByEntityEvent){
+		if($cause instanceof EntityDamageByEntityEvent) {
 			$killer = $cause->getDamager();
-			if($killer instanceof InventoryHolder){
-				foreach($event->getDrops() as $drop){
+			if($killer instanceof InventoryHolder) {
+				foreach($event->getDrops() as $drop) {
 					$killer->getInventory()->addItem($drop);
 				}
 				$event->setDrops([]);
@@ -92,15 +91,15 @@ class EventListener implements Listener{
 	 *
 	 * @priority HIGHEST
 	 */
-	public function onExplode(EntityExplodeEvent $event){
-		if($event->isCancelled()){
+	public function onExplode(EntityExplodeEvent $event) {
+		if($event->isCancelled()) {
 			return;
-		}else{
+		} else {
 			$explosive = $event->getEntity();
 			$closest = PHP_INT_MAX;
 			$entity = null;
-			foreach($explosive->getLevel()->getNearbyEntities($explosive->getBoundingBox()->grow(24, 24, 24)) as $nearby){
-				if($explosive->distance($nearby) <= $closest){
+			foreach($explosive->getLevel()->getNearbyEntities($explosive->getBoundingBox()->grow(24, 24, 24)) as $nearby) {
+				if($explosive->distance($nearby) <= $closest) {
 					$entity = $nearby;
 				}
 			}
@@ -113,9 +112,9 @@ class EventListener implements Listener{
 				Block::STILL_WATER,
 			];
 			$blocks = $event->getBlockList();
-			if($entity instanceof InventoryHolder){
-				foreach($blocks as $key => $block){
-					if(isset($disallowed[$block->getId()])){
+			if($entity instanceof InventoryHolder) {
+				foreach($blocks as $key => $block) {
+					if(isset($disallowed[$block->getId()])) {
 						continue;
 					}
 					$entity->getInventory()->addItem($block);

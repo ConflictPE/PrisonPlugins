@@ -1,4 +1,5 @@
 <?php
+
 namespace MyPlot;
 
 use MyPlot\subcommand\AddHelperSubCommand;
@@ -22,7 +23,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\TextFormat;
 
-class Commands extends PluginCommand{
+class Commands extends PluginCommand {
 
 	/** @var SubCommand[] */
 	private $subCommands = [];
@@ -30,12 +31,11 @@ class Commands extends PluginCommand{
 	/** @var SubCommand[] */
 	private $aliasSubCommands = [];
 
-	public function __construct(MyPlot $plugin){
+	public function __construct(MyPlot $plugin) {
 		parent::__construct($plugin->getLanguage()->get("command.name"), $plugin);
 		$this->setPermission("myplot.command");
 		$this->setAliases([$plugin->getLanguage()->get("command.alias")]);
 		$this->setDescription($plugin->getLanguage()->get("command.desc"));
-
 		$this->loadSubCommand(new HelpSubCommand($plugin, "help"));
 		$this->loadSubCommand(new ClaimSubCommand($plugin, "claim"));
 		$this->loadSubCommand(new GenerateSubCommand($plugin, "generate"));
@@ -57,40 +57,38 @@ class Commands extends PluginCommand{
 	/**
 	 * @return SubCommand[]
 	 */
-	public function getCommands(){
+	public function getCommands() {
 		return $this->subCommands;
 	}
 
-	public function execute(CommandSender $sender, $alias, array $args){
-		if(!isset($args[0])){
+	public function execute(CommandSender $sender, $alias, array $args) {
+		if(!isset($args[0])) {
 			$sender->sendMessage(MyPlot::getInstance()->getLanguage()->get("command.usage"));
 			return true;
 		}
-
 		$subCommand = strtolower(array_shift($args));
-		if(isset($this->subCommands[$subCommand])){
+		if(isset($this->subCommands[$subCommand])) {
 			$command = $this->subCommands[$subCommand];
-		}elseif(isset($this->aliasSubCommands[$subCommand])){
+		} elseif(isset($this->aliasSubCommands[$subCommand])) {
 			$command = $this->aliasSubCommands[$subCommand];
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::RED . MyPlot::getInstance()->getLanguage()->get("command.unknown"));
 			return true;
 		}
-
-		if($command->canUse($sender)){
-			if(!$command->execute($sender, $args)){
+		if($command->canUse($sender)) {
+			if(!$command->execute($sender, $args)) {
 				$usage = MyPlot::getInstance()->getLanguage()->translateString("subcommand.usage", [$command->getUsage()]);
 				$sender->sendMessage($usage);
 			}
-		}else{
+		} else {
 			$sender->sendMessage(TextFormat::RED . MyPlot::getInstance()->getLanguage()->get("command.unknown"));
 		}
 		return true;
 	}
 
-	private function loadSubCommand(Subcommand $command){
+	private function loadSubCommand(Subcommand $command) {
 		$this->subCommands[$command->getName()] = $command;
-		if($command->getAlias() != ""){
+		if($command->getAlias() != "") {
 			$this->aliasSubCommands[$command->getAlias()] = $command;
 		}
 	}

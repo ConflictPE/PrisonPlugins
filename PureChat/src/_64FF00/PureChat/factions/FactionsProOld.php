@@ -5,7 +5,7 @@ namespace _64FF00\PureChat\factions;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class FactionsProOld implements FactionsInterface{
+class FactionsProOld implements FactionsInterface {
 
 	/*
 		PureChat by 64FF00 (Twitter: @64FF00)
@@ -19,11 +19,10 @@ class FactionsProOld implements FactionsInterface{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	/**
 	 * @return null|\pocketmine\plugin\Plugin
 	 */
-	public function getAPI(){
+	public function getAPI() {
 		return Server::getInstance()->getPluginManager()->getPlugin("FactionsPro");
 	}
 
@@ -32,7 +31,7 @@ class FactionsProOld implements FactionsInterface{
 	 *
 	 * @return string
 	 */
-	public function getPlayerFaction(Player $player){
+	public function getPlayerFaction(Player $player) {
 		return $this->getAPI()->getPlayerFaction($player->getName());
 	}
 
@@ -41,17 +40,16 @@ class FactionsProOld implements FactionsInterface{
 	 *
 	 * @return string
 	 */
-	public function getPlayerRank(Player $player){
-		if($this->getAPI()->isInFaction($player->getName())){
-			if($this->getAPI()->isOfficer($player->getName())){
+	public function getPlayerRank(Player $player) {
+		if($this->getAPI()->isInFaction($player->getName())) {
+			if($this->getAPI()->isOfficer($player->getName())) {
 				return '*';
-			}elseif($this->getAPI()->isLeader($player->getName())){
+			} elseif($this->getAPI()->isLeader($player->getName())) {
 				return '**';
-			}else{
+			} else {
 				return '';
 			}
 		}
-
 		// TODO
 		return '';
 	}

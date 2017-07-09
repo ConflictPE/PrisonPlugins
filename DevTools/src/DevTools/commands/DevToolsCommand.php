@@ -1,5 +1,4 @@
 <?php
-
 /*
  * DevTools plugin for PocketMine-MP
  * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
@@ -21,17 +20,17 @@ use DevTools\DevTools;
 use pocketmine\command\Command;
 use pocketmine\command\PluginIdentifiableCommand;
 
-abstract class DevToolsCommand extends Command implements PluginIdentifiableCommand{
+abstract class DevToolsCommand extends Command implements PluginIdentifiableCommand {
 
 	/** @var \pocketmine\plugin\Plugin */
 	private $owningPlugin;
 
-	public function __construct(DevTools $plugin, $name, $description = "", $usageMessage = null, array $aliases = []){
+	public function __construct(DevTools $plugin, $name, $description = "", $usageMessage = null, array $aliases = []) {
 		parent::__construct($name, $description, $usageMessage, $aliases);
 		$this->owningPlugin = $plugin;
 	}
 
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->owningPlugin;
 	}
 }

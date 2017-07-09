@@ -4,6 +4,6 @@ namespace PrisonCells;
 
 use pocketmine\tile\Sign;
 
-class CellSign extends Sign{
+class CellSign extends Sign {
 
 }

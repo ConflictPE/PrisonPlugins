@@ -1,4 +1,5 @@
 <?php
+
 namespace primus\pc;
 
 use _64FF00\PurePerms\PPGroup;
@@ -11,7 +12,7 @@ use primus\pc\economy\Economy;
 use primus\pc\handlers\EventListener;
 use primus\pc\utils\HUD;
 
-class PrisonCore extends PluginBase{
+class PrisonCore extends PluginBase {
 
 	public $prefix;
 
@@ -20,11 +21,11 @@ class PrisonCore extends PluginBase{
 	public $exemptHud = [];
 	protected $groupManager, $economy, $pp;
 
-	public function onLoad(){
+	public function onLoad() {
 		$this->getServer()->getLogger()->info('[' . $this->getDescription()->getName() . '] Loading...');
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		@mkdir($this->getDataFolder());
 		$this->saveDefaultConfig();
 		$this->prefix = $this->getConfig()->get('prefix');
@@ -32,27 +33,23 @@ class PrisonCore extends PluginBase{
 		$this->signs = new Config($this->getDataFolder() . 'signs.yml', Config::YAML);
 		@fclose($resource);
 		$this->economy = new Economy($this);
-		if($this->economy->isLoaded() !== \true){
+		if($this->economy->isLoaded() !== \true) {
 			$this->getLogger()->info('Economy - ' . TextFormat::RED . 'You must have one of these plugins: EconomyAPI, PocketMoney, MassiveEconomy, GoldStd');
 			$this->setEnabled(\false);
-
 			return;
 		}
 		$this->pp = $this->getServer()->getPluginManager()->getPlugin('PurePerms');
-		if($this->pp instanceof PluginBase){
-			if($this->pp->isEnabled() !== \true){
+		if($this->pp instanceof PluginBase) {
+			if($this->pp->isEnabled() !== \true) {
 				$this->getLogger()->info('Permission Manager - ' . TextFormat::RED . 'Cant load PurePerms due to it\'s disabled');
 				$this->setEnabled(\false);
-
 				return;
-			}else{
-
+			} else {
 			}
 			$this->getLogger()->info('Permission Manager - ' . TextFormat::GREEN . 'PurePerms API Loaded');
-		}else{
+		} else {
 			$this->getLogger()->info('Permission Manager - ' . TextFormat::RED . 'You must have installed newest version of PurePerms');
 			$this->setEnabled(\false);
-
 			return;
 		}
 		$this->groupManager = new GroupManager($this);
@@ -64,15 +61,15 @@ class PrisonCore extends PluginBase{
 		$this->getLogger()->info('Enabled.');
 	}
 
-	public function registerCommands(){
+	public function registerCommands() {
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register("rankup", new RankUp($this, "rankup", "Rankup to next rank"));
 		$commandMap->register("hud", new \primus\pc\commands\Hud($this));
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->getLogger()->info('Disabling...');
-		if($this->signs->save()){
+		if($this->signs->save()) {
 			$this->getLogger()->info('Signs saved.');
 		}
 		$this->getLogger()->info('Disabled.');
@@ -82,24 +79,23 @@ class PrisonCore extends PluginBase{
 	 *
 	 * @return array
 	 */
-	public function getSigns(){
+	public function getSigns() {
 		return $this->signs;
 	}
 
 	/**
 	 *
-	 * @param IPlayer     $player
-	 * @param PPGroup     $group
+	 * @param IPlayer $player
+	 * @param PPGroup $group
 	 * @param string|null $levelName
 	 */
-	public function setGroup(IPlayer $player, PPGroup $group, $levelName = \null){
+	public function setGroup(IPlayer $player, PPGroup $group, $levelName = \null) {
 		$lastGroup = $this->getPurePerms()->getUserDataMgr()->getGroup($player);
 		$this->getPurePerms()->getUserDataMgr()->setGroup($player, $group, $levelName);
-
 		return $lastGroup->getName() !== $this->getPurePerms()->getUserDataMgr()->getGroup($player)->getName();
 	}
 
-	public function getPurePerms(){
+	public function getPurePerms() {
 		return $this->pp;
 	}
 
@@ -107,19 +103,19 @@ class PrisonCore extends PluginBase{
 	 *
 	 * @param PPUser $prisoner
 	 */
-	public function rankUp(IPlayer $p){
+	public function rankUp(IPlayer $p) {
 		$nextGroup = $this->getGroupManager()->getNextGroup($this->getPurePerms()->getUserDataMgr()->getGroup($p, \null));
-		if($nextGroup === \false) return $nextGroup;
+		if($nextGroup === \false)
+			return $nextGroup;
 		$this->getEconomy()->takeMoney($p, $this->getGroupManager()->getPrice($nextGroup));
 		$this->getPurePerms()->getUserDataMgr()->setGroup($p, $nextGroup, \null);
-
 		return $nextGroup;
 	}
 
 	/**
 	 * @return GroupManager
 	 */
-	public function getGroupManager(){
+	public function getGroupManager() {
 		return $this->groupManager;
 	}
 
@@ -127,7 +123,7 @@ class PrisonCore extends PluginBase{
 	 *
 	 * @return Economy
 	 */
-	public function getEconomy(){
+	public function getEconomy() {
 		return $this->economy;
 	}
 
@@ -137,7 +133,7 @@ class PrisonCore extends PluginBase{
 	 *
 	 * @return PPGroup|null
 	 */
-	public function getGroup(IPlayer $player){
+	public function getGroup(IPlayer $player) {
 		return $this->getPurePerms()->getUserDataMgr()->getGroup($player);
 	}
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AutoInv Main class
  *
@@ -12,12 +11,12 @@ namespace autoinv;
 
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	/** $listener EventListener */
 	public $listener;
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->setListener();
 	}
 
@@ -26,8 +25,8 @@ class Main extends PluginBase{
 	 *
 	 * @return null
 	 */
-	public function setListener(){
-		if(!$this->listener instanceof EventListener){
+	public function setListener() {
+		if(!$this->listener instanceof EventListener) {
 			$this->listener = new EventListener($this);
 		}
 		return;
@@ -38,7 +37,7 @@ class Main extends PluginBase{
 	 *
 	 * @return null|EventListener
 	 */
-	public function getListener(){
+	public function getListener() {
 		return $this->listener;
 	}
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -14,7 +13,7 @@ namespace CustomAlerts\Events;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\Player;
 
-class CustomAlertsWhitelistKickEvent extends PluginEvent{
+class CustomAlertsWhitelistKickEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -24,7 +23,7 @@ class CustomAlertsWhitelistKickEvent extends PluginEvent{
 	/**
 	 * @param Player $player
 	 */
-	public function __construct(Player $player){
+	public function __construct(Player $player) {
 		$this->player = $player;
 	}
 
@@ -33,7 +32,7 @@ class CustomAlertsWhitelistKickEvent extends PluginEvent{
 	 *
 	 * @return Player
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 }

@@ -9,6 +9,7 @@
  **
  **   List registered world generators.
  **/
+
 namespace aliuly\manyworlds;
 
 use aliuly\manyworlds\common\BasicCli;
@@ -19,9 +20,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\level\generator\Generator;
 use pocketmine\utils\TextFormat;
 
-class MwGenLst extends BasicCli{
+class MwGenLst extends BasicCli {
 
-	public function __construct($owner){
+	public function __construct($owner) {
 		parent::__construct($owner);
 		$this->enableSCmd("generators", [
 			"usage" => "",
@@ -31,12 +32,12 @@ class MwGenLst extends BasicCli{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $data, array $args){
-		if(count($args) != 0) return false;
-
-		if(MPMU::apiVersion("1.12.0")){
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $data, array $args) {
+		if(count($args) != 0)
+			return false;
+		if(MPMU::apiVersion("1.12.0")) {
 			$c->sendMessage(implode(", ", Generator::getGeneratorList()));
-		}else{
+		} else {
 			$c->sendMessage("normal, flat");
 			$c->sendMessage(TextFormat::RED . mc::_("[MW] Plugin provided world generators\n are not included in\n this list."));
 		}

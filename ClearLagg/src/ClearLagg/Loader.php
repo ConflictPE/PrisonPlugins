@@ -8,22 +8,22 @@ use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\plugin\PluginBase;
 
-class Loader extends PluginBase{
+class Loader extends PluginBase {
 
 	protected $exemptedEntities = [];
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->getServer()->getCommandMap()->register("clearlagg", new ClearLaggCommand($this));
 	}
 
 	/**
 	 * @return int
 	 */
-	public function removeEntities(){
+	public function removeEntities() {
 		$i = 0;
-		foreach($this->getServer()->getLevels() as $level){
-			foreach($level->getEntities() as $entity){
-				if(!$this->isEntityExempted($entity) && !($entity instanceof Creature)){
+		foreach($this->getServer()->getLevels() as $level) {
+			foreach($level->getEntities() as $entity) {
+				if(!$this->isEntityExempted($entity) && !($entity instanceof Creature)) {
 					$entity->close();
 					$i++;
 				}
@@ -35,11 +35,11 @@ class Loader extends PluginBase{
 	/**
 	 * @return int
 	 */
-	public function removeMobs(){
+	public function removeMobs() {
 		$i = 0;
-		foreach($this->getServer()->getLevels() as $level){
-			foreach($level->getEntities() as $entity){
-				if(!$this->isEntityExempted($entity) && $entity instanceof Creature && !($entity instanceof Human)){
+		foreach($this->getServer()->getLevels() as $level) {
+			foreach($level->getEntities() as $entity) {
+				if(!$this->isEntityExempted($entity) && $entity instanceof Creature && !($entity instanceof Human)) {
 					$entity->close();
 					$i++;
 				}
@@ -51,15 +51,15 @@ class Loader extends PluginBase{
 	/**
 	 * @return array
 	 */
-	public function getEntityCount(){
+	public function getEntityCount() {
 		$ret = [0, 0, 0];
-		foreach($this->getServer()->getLevels() as $level){
-			foreach($level->getEntities() as $entity){
-				if($entity instanceof Human){
+		foreach($this->getServer()->getLevels() as $level) {
+			foreach($level->getEntities() as $entity) {
+				if($entity instanceof Human) {
 					$ret[0]++;
-				}else if($entity instanceof Creature){
+				} else if($entity instanceof Creature) {
 					$ret[1]++;
-				}else{
+				} else {
 					$ret[2]++;
 				}
 			}
@@ -70,7 +70,7 @@ class Loader extends PluginBase{
 	/**
 	 * @param Entity $entity
 	 */
-	public function exemptEntity(Entity $entity){
+	public function exemptEntity(Entity $entity) {
 		$this->exemptedEntities[$entity->getID()] = $entity;
 	}
 
@@ -79,8 +79,8 @@ class Loader extends PluginBase{
 	 *
 	 * @return bool
 	 */
-	public function isEntityExempted(Entity $entity){
+	public function isEntityExempted(Entity $entity) {
 		return isset($this->exemptedEntities[$entity->getID()]);
 	}
 
-} 
+}

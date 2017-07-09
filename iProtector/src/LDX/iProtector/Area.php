@@ -4,7 +4,7 @@ namespace LDX\iProtector;
 
 use pocketmine\math\Vector3;
 
-class Area{
+class Area {
 
 	public $flags;
 	private $name;
@@ -14,7 +14,7 @@ class Area{
 	private $whitelist;
 	private $plugin;
 
-	public function __construct($name, $flags, $pos1, $pos2, $level, $whitelist, $plugin){
+	public function __construct($name, $flags, $pos1, $pos2, $level, $whitelist, $plugin) {
 		$this->name = strtolower($name);
 		$this->flags = $flags;
 		$this->pos1 = new Vector3($pos1[0], $pos1[1], $pos1[2]);
@@ -25,31 +25,31 @@ class Area{
 		$this->save();
 	}
 
-	public function getName(){
+	public function getName() {
 		return $this->name;
 	}
 
-	public function getPos1(){
+	public function getPos1() {
 		return [$this->pos1->getX(), $this->pos1->getY(), $this->pos1->getZ()];
 	}
 
-	public function getPos2(){
+	public function getPos2() {
 		return [$this->pos2->getX(), $this->pos2->getY(), $this->pos2->getZ()];
 	}
 
-	public function getFlags(){
+	public function getFlags() {
 		return $this->flags;
 	}
 
-	public function getFlag($flag){
-		if(isset($this->flags[$flag])){
+	public function getFlag($flag) {
+		if(isset($this->flags[$flag])) {
 			return $this->flags[$flag];
 		}
 		return false;
 	}
 
-	public function setFlag($flag, $value){
-		if(isset($this->flags[$flag])){
+	public function setFlag($flag, $value) {
+		if(isset($this->flags[$flag])) {
 			$this->flags[$flag] = $value;
 			$this->plugin->saveAreas();
 			return true;
@@ -57,15 +57,15 @@ class Area{
 		return false;
 	}
 
-	public function contains($pos, $level){
-		if((min($this->pos1->getX(), $this->pos2->getX()) <= $pos->getX()) && (max($this->pos1->getX(), $this->pos2->getX()) >= $pos->getX()) && (min($this->pos1->getY(), $this->pos2->getY()) <= $pos->getY()) && (max($this->pos1->getY(), $this->pos2->getY()) >= $pos->getY()) && (min($this->pos1->getZ(), $this->pos2->getZ()) <= $pos->getZ()) && (max($this->pos1->getZ(), $this->pos2->getZ()) >= $pos->getZ()) && ($this->level == $level)){
+	public function contains($pos, $level) {
+		if((min($this->pos1->getX(), $this->pos2->getX()) <= $pos->getX()) && (max($this->pos1->getX(), $this->pos2->getX()) >= $pos->getX()) && (min($this->pos1->getY(), $this->pos2->getY()) <= $pos->getY()) && (max($this->pos1->getY(), $this->pos2->getY()) >= $pos->getY()) && (min($this->pos1->getZ(), $this->pos2->getZ()) <= $pos->getZ()) && (max($this->pos1->getZ(), $this->pos2->getZ()) >= $pos->getZ()) && ($this->level == $level)) {
 			return true;
 		}
 		return false;
 	}
 
-	public function toggleFlag($flag){
-		if(isset($this->flags[$flag])){
+	public function toggleFlag($flag) {
+		if(isset($this->flags[$flag])) {
 			$this->flags[$flag] = !$this->flags[$flag];
 			$this->plugin->saveAreas();
 			return $this->flags[$flag];
@@ -73,26 +73,26 @@ class Area{
 		return false;
 	}
 
-	public function getLevel(){
+	public function getLevel() {
 		return $this->level;
 	}
 
-	public function isWhitelisted($n){
-		if(in_array($n, $this->whitelist)){
+	public function isWhitelisted($n) {
+		if(in_array($n, $this->whitelist)) {
 			return true;
 		}
 		return false;
 	}
 
-	public function setWhitelisted($n, $v = true){
-		if($v){
-			if(!in_array($n, $this->whitelist)){
+	public function setWhitelisted($n, $v = true) {
+		if($v) {
+			if(!in_array($n, $this->whitelist)) {
 				array_push($this->whitelist, $n);
 				$this->plugin->saveAreas();
 				return true;
 			}
-		}else{
-			if(in_array($n, $this->whitelist)){
+		} else {
+			if(in_array($n, $this->whitelist)) {
 				$key = array_search($n, $this->whitelist);
 				array_splice($this->whitelist, $key, 1);
 				$this->plugin->saveAreas();
@@ -102,16 +102,16 @@ class Area{
 		return false;
 	}
 
-	public function getWhitelist(){
+	public function getWhitelist() {
 		return $this->whitelist;
 	}
 
-	public function save(){
+	public function save() {
 		$this->plugin->areas[$this->name] = $this;
 		return true;
 	}
 
-	public function delete(){
+	public function delete() {
 		unset($this->plugin->areas[$this->getName()]);
 		$this->plugin->saveAreas();
 		return true;

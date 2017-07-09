@@ -1,4 +1,5 @@
 <?php
+
 namespace buycraft\task;
 
 use buycraft\util\DebugUtils;
@@ -11,28 +12,28 @@ use pocketmine\scheduler\TaskHandler;
  * Does NOT perform any API communication, uses another task.
  */
 
-class PendingPlayerCheckerTask extends PluginTask implements Listener{
+class PendingPlayerCheckerTask extends PluginTask implements Listener {
 
 	private $pendingPlayers = [];
 	/** @var  TaskHandler */
 	private $handler;
 
-	public function onRun($tick, $manual = false){
+	public function onRun($tick, $manual = false) {
 		DebugUtils::taskCalled($this);
-		if($this->getOwner()->getConfig()->get('commandChecker') || $manual){
+		if($this->getOwner()->getConfig()->get('commandChecker') || $manual) {
 			$task = new PendingUsersTask($this->getOwner());
 			$task->call();
 		}
 	}
 
-	public function call(){
+	public function call() {
 		DebugUtils::taskRegistered($this);
 		$this->getOwner()->getServer()->getPluginManager()->registerEvents($this, $this->getOwner());
 		$this->handler = $this->getOwner()->getServer()->getScheduler()->scheduleRepeatingTask($this, 40);
 	}
 
-	public function onPlayerJoin(PlayerJoinEvent $event){
-		if(isset($this->pendingPlayers[$event->getPlayer()->getName()])){
+	public function onPlayerJoin(PlayerJoinEvent $event) {
+		if(isset($this->pendingPlayers[$event->getPlayer()->getName()])) {
 			$fetch = new CommandFetchTask($this->getOwner(), [
 				"users" => [$event->getPlayer()->getName()],
 				"offlineCommands" => false,
@@ -42,15 +43,15 @@ class PendingPlayerCheckerTask extends PluginTask implements Listener{
 		}
 	}
 
-	public function resetPendingPlayers(){
+	public function resetPendingPlayers() {
 		$this->pendingPlayers = [];
 	}
 
-	public function addPendingPlayer($name){
+	public function addPendingPlayer($name) {
 		$this->pendingPlayers[] = $name;
 	}
 
-	public function setUpdateInterval($interval){
+	public function setUpdateInterval($interval) {
 		$this->handler->cancel();
 		$this->handler = $this->getOwner()->getServer()->getScheduler()->scheduleRepeatingTask($this, $interval);
 	}

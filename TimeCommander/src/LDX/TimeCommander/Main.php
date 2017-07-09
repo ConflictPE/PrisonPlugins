@@ -4,17 +4,17 @@ use pocketmine\command\CommandExecuter;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->saveDefaultConfig();
 		$c = $this->getConfig()->getAll();
-		foreach($c["Commands"] as $i){
+		foreach($c["Commands"] as $i) {
 			$this->getServer()->getScheduler()->scheduleRepeatingTask(new TimeCommand($this, $i["Command"]), $i["Time"] * 1200);
 		}
 	}
 
-	public function runCommand($cmd){
+	public function runCommand($cmd) {
 		$this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
 	}
 }

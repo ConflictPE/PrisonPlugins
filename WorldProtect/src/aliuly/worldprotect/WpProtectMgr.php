@@ -1,4 +1,5 @@
 <?php
+
 namespace aliuly\worldprotect;
 
 //= cmd:add,Sub_Commands
@@ -34,7 +35,6 @@ namespace aliuly\worldprotect;
 //:   blocks.
 //: * lock - nobody (even *ops*) is allowed to place/break blocks.
 //:
-
 use aliuly\worldprotect\common\mc;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -44,9 +44,9 @@ use pocketmine\event\Listener;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase as Plugin;
 
-class WpProtectMgr extends BaseWp implements Listener{
+class WpProtectMgr extends BaseWp implements Listener {
 
-	public function __construct(Plugin $plugin){
+	public function __construct(Plugin $plugin) {
 		parent::__construct($plugin);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->enableSCmd("add", [
@@ -77,15 +77,16 @@ class WpProtectMgr extends BaseWp implements Listener{
 		]);
 	}
 
-	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args){
-		switch($scmd){
+	public function onSCommand(CommandSender $c, Command $cc, $scmd, $world, array $args) {
+		switch($scmd) {
 			case "add":
-				if(!count($args)) return false;
-				foreach($args as $i){
+				if(!count($args))
+					return false;
+				foreach($args as $i) {
 					$player = $this->owner->getServer()->getPlayer($i);
-					if(!$player){
+					if(!$player) {
 						$player = $this->owner->getServer()->getOfflinePlayer($i);
-						if($player == null || !$player->hasPlayedBefore()){
+						if($player == null || !$player->hasPlayedBefore()) {
 							$c->sendMessage(mc::_("[WP] %1%: not found", $i));
 							continue;
 						}
@@ -93,38 +94,42 @@ class WpProtectMgr extends BaseWp implements Listener{
 					$iusr = strtolower($player->getName());
 					$this->owner->authAdd($world, $iusr);
 					$c->sendMessage(mc::_("[WP] %1% added to %2%'s auth list", $i, $world));
-					if($player instanceof Player) $player->sendMessage(mc::_("[WP] You have been added to\n[WP] %1%'s auth list", $world));
+					if($player instanceof Player)
+						$player->sendMessage(mc::_("[WP] You have been added to\n[WP] %1%'s auth list", $world));
 				}
 				return true;
 			case "rm":
-				if(!count($args)) return false;
-
-				foreach($args as $i){
+				if(!count($args))
+					return false;
+				foreach($args as $i) {
 					$iusr = strtolower($i);
-					if($this->owner->authCheck($world, $iusr)){
+					if($this->owner->authCheck($world, $iusr)) {
 						$this->owner->authRm($world, $iusr);
 						$c->sendMessage(mc::_("[WP] %1% removed from %2%'s auth list", $i, $world));
 						$player = $this->owner->getServer()->getPlayer($i);
-						if($player){
+						if($player) {
 							$player->sendMessage(mc::_("[WP] You have been removed from\n[WP] %1%'s auth list", $world));
 						}
-					}else{
+					} else {
 						$c->sendMessage(mc::_("[WP] %1% not known", $i));
 					}
 				}
 				return true;
 			case "unlock":
-				if(count($args)) return false;
+				if(count($args))
+					return false;
 				$this->owner->unsetCfg($world, "protect");
 				$this->owner->getServer()->broadcastMessage(mc::_("[WP] %1% is now OPEN", $world));
 				return true;
 			case "lock":
-				if(count($args)) return false;
+				if(count($args))
+					return false;
 				$this->owner->setCfg($world, "protect", $scmd);
 				$this->owner->getServer()->broadcastMessage(mc::_("[WP] %1% is now LOCKED", $world));
 				return true;
 			case "protect":
-				if(count($args)) return false;
+				if(count($args))
+					return false;
 				$this->owner->setCfg($world, "protect", $scmd);
 				$this->owner->getServer()->broadcastMessage(mc::_("[WP] %1% is now PROTECTED", $world));
 				return true;
@@ -132,24 +137,30 @@ class WpProtectMgr extends BaseWp implements Listener{
 		return false;
 	}
 
-	public function onBlockBreak(BlockBreakEvent $ev){
-		if($ev->isCancelled()) return;
+	public function onBlockBreak(BlockBreakEvent $ev) {
+		if($ev->isCancelled())
+			return;
 		$pl = $ev->getPlayer();
-		if($this->checkBlockPlaceBreak($pl)) return;
+		if($this->checkBlockPlaceBreak($pl))
+			return;
 		$ev->setCancelled();
 	}
 
-	public function onBlockPlace(BlockPlaceEvent $ev){
-		if($ev->isCancelled()) return;
+	public function onBlockPlace(BlockPlaceEvent $ev) {
+		if($ev->isCancelled())
+			return;
 		$pl = $ev->getPlayer();
-		if($this->checkBlockPlaceBreak($pl)) return;
+		if($this->checkBlockPlaceBreak($pl))
+			return;
 		$ev->setCancelled();
 	}
 
-	protected function checkBlockPlaceBreak(Player $p){
+	protected function checkBlockPlaceBreak(Player $p) {
 		$world = $p->getLevel()->getName();
-		if(!isset($this->wcfg[$world])) return true;
-		if($this->wcfg[$world] != "protect") return false; // LOCKED!
+		if(!isset($this->wcfg[$world]))
+			return true;
+		if($this->wcfg[$world] != "protect")
+			return false; // LOCKED!
 		return $this->owner->canPlaceBreakBlock($p, $world);
 	}
 }

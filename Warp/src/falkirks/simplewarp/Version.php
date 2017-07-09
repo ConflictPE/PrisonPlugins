@@ -1,9 +1,10 @@
 <?php
+
 namespace falkirks\simplewarp;
 
 use pocketmine\command\CommandSender;
 
-class Version{
+class Version {
 
 	const ENABLE_VERBOSE = false;
 	const VERSION_STRING = "v2.0.4";
@@ -12,8 +13,8 @@ class Version{
 		"\"But here, upon this bank and shoal of time,\n We’d jump the life to come.\"\n - William Shakespeare",
 	];
 
-	public static function sendVersionMessage(CommandSender $sender){
-		if(self::ENABLE_VERBOSE){
+	public static function sendVersionMessage(CommandSender $sender) {
+		if(self::ENABLE_VERBOSE) {
 			//$sender->sendMessage(Version::$quotes[array_rand(Version::$quotes)]);
 		}
 		//$sender->sendMessage("SimpleWarp " . self::VERSION_STRING);

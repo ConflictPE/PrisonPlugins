@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Main class
  *
@@ -22,7 +21,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	/**
 	 * Folder in which the player data is stored
@@ -40,7 +39,7 @@ class Main extends PluginBase{
 	public $text = [];
 	private $crateManager;
 
-	public static function applyColors($string, $symbol = "&"){
+	public static function applyColors($string, $symbol = "&") {
 		$string = str_replace($symbol . "0", TF::BLACK, $string);
 		$string = str_replace($symbol . "1", TF::DARK_BLUE, $string);
 		$string = str_replace($symbol . "2", TF::DARK_GREEN, $string);
@@ -57,35 +56,33 @@ class Main extends PluginBase{
 		$string = str_replace($symbol . "d", TF::LIGHT_PURPLE, $string);
 		$string = str_replace($symbol . "e", TF::YELLOW, $string);
 		$string = str_replace($symbol . "f", TF::WHITE, $string);
-
 		$string = str_replace($symbol . "k", TF::OBFUSCATED, $string);
 		$string = str_replace($symbol . "l", TF::BOLD, $string);
 		$string = str_replace($symbol . "m", TF::STRIKETHROUGH, $string);
 		$string = str_replace($symbol . "n", TF::UNDERLINE, $string);
 		$string = str_replace($symbol . "o", TF::ITALIC, $string);
 		$string = str_replace($symbol . "r", TF::RESET, $string);
-
 		return $string;
 	}
 
-	public static function itemArray2StringTags(array $array){
+	public static function itemArray2StringTags(array $array) {
 		$stringTags = [];
-		foreach($array as $data){
+		foreach($array as $data) {
 			$stringTags[count($stringTags)] = NBT::putItemHelper($data);
 		}
 		return $stringTags;
 	}
 
-	public static function intArray2ShortTags(array $array){
+	public static function intArray2ShortTags(array $array) {
 		$shortTags = [];
-		foreach($array as $data){
+		foreach($array as $data) {
 			$shortTags[] = new ShortTag(count($shortTags), $data);
 		}
 		return $shortTags;
 	}
 
-	public function onEnable(){
-		if(!is_dir($this->getDataFolder() . self::DATA_FOLDER)){
+	public function onEnable() {
+		if(!is_dir($this->getDataFolder() . self::DATA_FOLDER)) {
 			@mkdir($this->getDataFolder() . self::DATA_FOLDER);
 		}
 		$this->loadConfigs();
@@ -95,40 +92,40 @@ class Main extends PluginBase{
 		$this->loadEconomy();
 	}
 
-	public function loadConfigs(){
+	public function loadConfigs() {
 		$this->saveResource("Settings.yml");
 		$this->settings = (new Config($this->getDataFolder() . "Settings.yml", Config::YAML))->getAll();
 		$this->saveResource("Crates.json");
 		$this->crateData = (new Config($this->getDataFolder() . "Crates.json", Config::JSON))->getAll();
 	}
 
-	public function loadEconomy(){
-		if(($plugin = $this->getServer()->getPluginManager()->getPlugin("EconomyAPI")) instanceof Plugin){
+	public function loadEconomy() {
+		if(($plugin = $this->getServer()->getPluginManager()->getPlugin("EconomyAPI")) instanceof Plugin) {
 			$this->economy = $plugin;
 		}
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->crateManager->close();
 		unset($this->crateManager);
 	}
 
-	public function getEconomy(){
+	public function getEconomy() {
 		return $this->economy;
 	}
 
-	public function getCrateManager(){
+	public function getCrateManager() {
 		return $this->crateManager;
 	}
 
-	public function setCrateManager(){
-		if(!$this->crateManager instanceof CrateManager){
+	public function setCrateManager() {
+		if(!$this->crateManager instanceof CrateManager) {
 			$this->crateManager = new CrateManager($this);
 		}
 		return;
 	}
 
-	public function giveKey(Player $player, $id, $amount = 1){
+	public function giveKey(Player $player, $id, $amount = 1) {
 		$this->saveKeyData($player->getName(), [$id => (isset($this->getKeyData($player->getName())[$id]) ? $this->getKeyData($player->getName())[$id] : 0) + $amount,]);
 	}
 
@@ -138,9 +135,9 @@ class Main extends PluginBase{
 	 * @param string $player
 	 * @param        $args
 	 */
-	public function saveKeyData($player, $args){
+	public function saveKeyData($player, $args) {
 		$config = new Config($this->getDataFolder() . self::DATA_FOLDER . strtolower($player) . self::DATA_EXTENSION, Config::YAML);
-		foreach($args as $key => $data){
+		foreach($args as $key => $data) {
 			$config->set($key, $data);
 		}
 		$config->save();
@@ -153,7 +150,7 @@ class Main extends PluginBase{
 	 *
 	 * @return array
 	 */
-	public function getKeyData($player){
+	public function getKeyData($player) {
 		return (new Config($this->getDataFolder() . self::DATA_FOLDER . strtolower($player) . self::DATA_EXTENSION, Config::YAML))->getAll();
 	}
 
@@ -162,18 +159,19 @@ class Main extends PluginBase{
 	 *
 	 * @param string $player
 	 */
-	public function makeKeyData($player){
+	public function makeKeyData($player) {
 		$config = new Config($this->getDataFolder() . self::DATA_FOLDER . strtolower($player) . self::DATA_EXTENSION, Config::YAML);
-		foreach($this->settings as $key => $name){
+		foreach($this->settings as $key => $name) {
 			$config->set($key, 0);
 		}
 		$config->save();
 	}
 
-	public function getCrate(Vector3 $pos){
-		foreach($this->crates as $crate){
-			foreach($crate->getLocations() as $loc){
-				if($loc->equals($pos)) return $crate;
+	public function getCrate(Vector3 $pos) {
+		foreach($this->crates as $crate) {
+			foreach($crate->getLocations() as $loc) {
+				if($loc->equals($pos))
+					return $crate;
 			}
 		}
 	}

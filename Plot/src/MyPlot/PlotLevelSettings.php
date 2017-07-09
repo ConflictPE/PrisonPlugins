@@ -1,9 +1,10 @@
 <?php
+
 namespace MyPlot;
 
 use pocketmine\block\Block;
 
-class PlotLevelSettings{
+class PlotLevelSettings {
 
 	/** @var string */
 	public $name;
@@ -13,9 +14,9 @@ class PlotLevelSettings{
 	public $roadWidth, $plotSize, $groundHeight, $claimPrice, $clearPrice, $disposePrice, $resetPrice;
 	public $restrictEntityMovement;
 
-	public function __construct($name, $settings = []){
+	public function __construct($name, $settings = []) {
 		$this->name = $name;
-		if(!empty($settings)){
+		if(!empty($settings)) {
 			$this->roadBlock = self::parseBlock($settings, "RoadBlock", new Block(5));
 			$this->wallBlock = self::parseBlock($settings, "WallBlock", new Block(44));
 			$this->plotFloorBlock = self::parseBlock($settings, "PlotFloorBlock", new Block(2));
@@ -32,37 +33,37 @@ class PlotLevelSettings{
 		}
 	}
 
-	private static function parseBlock(&$array, $key, $default){
-		if(isset($array[$key])){
+	private static function parseBlock(&$array, $key, $default) {
+		if(isset($array[$key])) {
 			$id = $array[$key];
-			if(is_numeric($id)){
+			if(is_numeric($id)) {
 				$block = new Block($id);
-			}else{
+			} else {
 				$split = explode(":", $id);
-				if(count($split) === 2 and is_numeric($split[0]) and is_numeric($split[1])){
+				if(count($split) === 2 and is_numeric($split[0]) and is_numeric($split[1])) {
 					$block = new Block($split[0], $split[1]);
-				}else{
+				} else {
 					$block = $default;
 				}
 			}
-		}else{
+		} else {
 			$block = $default;
 		}
 		return $block;
 	}
 
-	private static function parseNumber(&$array, $key, $default){
-		if(isset($array[$key]) and is_numeric($array[$key])){
+	private static function parseNumber(&$array, $key, $default) {
+		if(isset($array[$key]) and is_numeric($array[$key])) {
 			return $array[$key];
-		}else{
+		} else {
 			return $default;
 		}
 	}
 
-	private static function parseBool(&$array, $key, $default){
-		if(isset($array[$key]) and is_bool($array[$key])){
+	private static function parseBool(&$array, $key, $default) {
+		if(isset($array[$key]) and is_bool($array[$key])) {
 			return $array[$key];
-		}else{
+		} else {
 			return $default;
 		}
 	}

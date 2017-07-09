@@ -8,7 +8,7 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 
-class PCListener implements Listener{
+class PCListener implements Listener {
 
 	/*
 		PureChat by 64FF00 (Twitter: @64FF00)
@@ -22,25 +22,21 @@ class PCListener implements Listener{
 		  888  888   Y88b  d88P       888  888        888       Y88b  d88P Y88b  d88P
 		  888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
 	*/
-
 	private $plugin;
 
 	/**
 	 * @param PureChat $plugin
 	 */
-	public function __construct(PureChat $plugin){
+	public function __construct(PureChat $plugin) {
 		$this->plugin = $plugin;
 	}
 
-	public function onGroupChanged(PPGroupChangedEvent $event){
+	public function onGroupChanged(PPGroupChangedEvent $event) {
 		/** @var \pocketmine\IPlayer $player */
 		$player = $event->getPlayer();
-
-		if($player instanceof Player){
+		if($player instanceof Player) {
 			$levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
 			$nameTag = $this->plugin->getNametag($player, $levelName);
-
 			$player->setNameTag($nameTag);
 		}
 	}
@@ -50,13 +46,11 @@ class PCListener implements Listener{
 	 *
 	 * @priority HIGH
 	 */
-	public function onPlayerJoin(PlayerJoinEvent $event){
+	public function onPlayerJoin(PlayerJoinEvent $event) {
 		/** @var \pocketmine\Player $player */
 		$player = $event->getPlayer();
 		$levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
 		$nameTag = $this->plugin->getNametag($player, $levelName);
-
 		$player->setNameTag($nameTag);
 	}
 
@@ -65,14 +59,11 @@ class PCListener implements Listener{
 	 *
 	 * @priority HIGH
 	 */
-	public function onPlayerChat(PlayerChatEvent $event){
+	public function onPlayerChat(PlayerChatEvent $event) {
 		$player = $event->getPlayer();
 		$message = $event->getMessage();
-
 		$levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
 		$chatFormat = $this->plugin->getChatFormat($player, $message, $levelName);
-
 		$event->setFormat($chatFormat);
 	}
 }

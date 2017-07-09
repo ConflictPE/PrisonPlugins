@@ -26,13 +26,14 @@ use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\utils\Config;
 
-class Main extends BasicPlugin implements CommandExecutor, Listener{
+class Main extends BasicPlugin implements CommandExecutor, Listener {
 
 	const SPAM_DELAY = 5;
 	protected $wcfg;
 
-	public function onEnable(){
-		if(!is_dir($this->getDataFolder())) mkdir($this->getDataFolder());
+	public function onEnable() {
+		if(!is_dir($this->getDataFolder()))
+			mkdir($this->getDataFolder());
 		mc::plugin_init($this, $this->getFile());
 		$cfg = $this->modConfig(__NAMESPACE__, [
 			"max-players" => ["MaxPlayerMgr", false],
@@ -51,13 +52,11 @@ class Main extends BasicPlugin implements CommandExecutor, Listener{
 			"motd" => WpMotdMgr::defaults(),
 		], mc::_("/%s [world] %s %s"));
 		$this->modules[] = new WpList($this);
-
 		// Make sure that loaded worlds are inded loaded...
-		foreach($this->getServer()->getLevels() as $lv){
+		foreach($this->getServer()->getLevels() as $lv) {
 			$this->loadCfg($lv);
 		}
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -65,117 +64,142 @@ class Main extends BasicPlugin implements CommandExecutor, Listener{
 	// Save/Load configurations
 	//
 	//////////////////////////////////////////////////////////////////////
-	public function loadCfg($world){
-
-		if($world instanceof Level) $world = $world->getName();
-		if(isset($this->wcfg[$world])) return true; // world is already loaded!
-		if(!$this->getServer()->isLevelGenerated($world)) return false;
-		if(!$this->getServer()->isLevelLoaded($world)){
+	public function loadCfg($world) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if(isset($this->wcfg[$world]))
+			return true; // world is already loaded!
+		if(!$this->getServer()->isLevelGenerated($world))
+			return false;
+		if(!$this->getServer()->isLevelLoaded($world)) {
 			$path = $this->getServer()->getDataPath() . "worlds/" . $world . "/";
-		}else{
+		} else {
 			$level = $this->getServer()->getLevelByName($world);
-			if(!$level) return false;
+			if(!$level)
+				return false;
 			$path = $level->getProvider()->getPath();
 		}
 		$path .= "wpcfg.yml";
-		if(is_file($path)){
+		if(is_file($path)) {
 			$this->wcfg[$world] = (new Config($path, Config::YAML, []))->getAll();
-			foreach($this->modules as $i => $mod){
-				if(!($mod instanceof BaseWp)) continue;
-				if(isset($this->wcfg[$world][$i])){
+			foreach($this->modules as $i => $mod) {
+				if(!($mod instanceof BaseWp))
+					continue;
+				if(isset($this->wcfg[$world][$i])) {
 					$mod->setCfg($world, $this->wcfg[$world][$i]);
-				}else{
+				} else {
 					$mod->unsetCfg($world);
 				}
 			}
-		}else{
+		} else {
 			$this->wcfg[$world] = [];
-			foreach($this->modules as $i => $mod){
-				if(!($mod instanceof BaseWp)) continue;
+			foreach($this->modules as $i => $mod) {
+				if(!($mod instanceof BaseWp))
+					continue;
 				$mod->unsetCfg($world);
 			}
 		}
 		return true;
 	}
 
-	public function saveCfg($world){
-
-		if($world instanceof Level) $world = $world->getName();
-		if(!isset($this->wcfg[$world])) return false; // Nothing to save!
-		if(!$this->getServer()->isLevelGenerated($world)) return false;
-		if(!$this->getServer()->isLevelLoaded($world)){
+	public function saveCfg($world) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if(!isset($this->wcfg[$world]))
+			return false; // Nothing to save!
+		if(!$this->getServer()->isLevelGenerated($world))
+			return false;
+		if(!$this->getServer()->isLevelLoaded($world)) {
 			$path = $this->getServer()->getDataPath() . "worlds/" . $world . "/";
-		}else{
+		} else {
 			$level = $this->getServer()->getLevelByName($world);
-			if(!$level) return false;
+			if(!$level)
+				return false;
 			$path = $level->getProvider()->getPath();
 		}
 		$path .= "wpcfg.yml";
-		if(count($this->wcfg[$world])){
+		if(count($this->wcfg[$world])) {
 			$yaml = new Config($path, Config::YAML, []);
 			$yaml->setAll($this->wcfg[$world]);
 			$yaml->save();
-		}else{
+		} else {
 			unlink($path);
 		}
 		return true;
 	}
 
-	public function unloadCfg($world){
-
-		if($world instanceof Level) $world = $world->getName();
-		if(isset($this->wcfg[$world])) unset($this->wcfg[$world]);
-		foreach($this->modules as $i => $mod){
-			if(!($mod instanceof BaseWp)) continue;
+	public function unloadCfg($world) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if(isset($this->wcfg[$world]))
+			unset($this->wcfg[$world]);
+		foreach($this->modules as $i => $mod) {
+			if(!($mod instanceof BaseWp))
+				continue;
 			$mod->unsetCfg($world);
 		}
 	}
 
-	public function getCfg($world, $key, $default){
-		if($world instanceof Level) $world = $world->getName();
-		if($this->getServer()->isLevelLoaded($world)) $unload = false;else{
+	public function getCfg($world, $key, $default) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if($this->getServer()->isLevelLoaded($world))
+			$unload = false; else {
 			$unload = true;
-			if(!$this->loadCfg($world)) return $default;
+			if(!$this->loadCfg($world))
+				return $default;
 		}
-		if(isset($this->wcfg[$world]) && isset($this->wcfg[$world][$key])){
+		if(isset($this->wcfg[$world]) && isset($this->wcfg[$world][$key])) {
 			$res = $this->wcfg[$world][$key];
-		}else{
+		} else {
 			$res = $default;
 		}
-		if($unload) $this->unloadCfg($world);
+		if($unload)
+			$this->unloadCfg($world);
 		return $res;
 	}
 
-	public function setCfg($world, $key, $value){
-		if($world instanceof Level) $world = $world->getName();
-		if($this->getServer()->isLevelLoaded($world)) $unload = false;else{
+	public function setCfg($world, $key, $value) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if($this->getServer()->isLevelLoaded($world))
+			$unload = false; else {
 			$unload = true;
-			if(!$this->loadCfg($world)) return false;
+			if(!$this->loadCfg($world))
+				return false;
 		}
-		if(!isset($this->wcfg[$world]) || !isset($this->wcfg[$world][$key]) || $value !== $this->wcfg[$world][$key]){
-			if(!isset($this->wcfg[$world])) $this->wcfg[$world] = [];
+		if(!isset($this->wcfg[$world]) || !isset($this->wcfg[$world][$key]) || $value !== $this->wcfg[$world][$key]) {
+			if(!isset($this->wcfg[$world]))
+				$this->wcfg[$world] = [];
 			$this->wcfg[$world][$key] = $value;
 			$this->saveCfg($world);
 		}
-		if(isset($this->modules[$key]) && ($this->modules[$key] instanceof BaseWp)) $this->modules[$key]->setCfg($world, $value);
-		if($unload) $this->unloadCfg($world);
+		if(isset($this->modules[$key]) && ($this->modules[$key] instanceof BaseWp))
+			$this->modules[$key]->setCfg($world, $value);
+		if($unload)
+			$this->unloadCfg($world);
 		return true;
 	}
 
-	public function unsetCfg($world, $key){
-		if($world instanceof Level) $world = $world->getName();
-		if($this->getServer()->isLevelLoaded($world)) $unload = false;else{
+	public function unsetCfg($world, $key) {
+		if($world instanceof Level)
+			$world = $world->getName();
+		if($this->getServer()->isLevelLoaded($world))
+			$unload = false; else {
 			$unload = true;
-			if(!$this->loadCfg($world)) return false;
+			if(!$this->loadCfg($world))
+				return false;
 		}
-		if(isset($this->wcfg[$world])){
-			if(isset($this->wcfg[$world][$key])){
+		if(isset($this->wcfg[$world])) {
+			if(isset($this->wcfg[$world][$key])) {
 				unset($this->wcfg[$world][$key]);
 				$this->saveCfg($world);
 			}
 		}
-		if(isset($this->modules[$key]) && ($this->modules[$key] instanceof BaseWp)) $this->modules[$key]->unsetCfg($world);
-		if($unload) $this->unloadCfg($world);
+		if(isset($this->modules[$key]) && ($this->modules[$key] instanceof BaseWp))
+			$this->modules[$key]->unsetCfg($world);
+		if($unload)
+			$this->unloadCfg($world);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -183,11 +207,11 @@ class Main extends BasicPlugin implements CommandExecutor, Listener{
 	// Event handlers
 	//
 	//////////////////////////////////////////////////////////////////////
-	public function onLevelLoad(LevelLoadEvent $e){
+	public function onLevelLoad(LevelLoadEvent $e) {
 		$this->loadCfg($e->getLevel());
 	}
 
-	public function onLevelUnload(LevelUnloadEvent $e){
+	public function onLevelUnload(LevelUnloadEvent $e) {
 		$this->unloadCfg($e->getLevel());
 	}
 
@@ -196,82 +220,93 @@ class Main extends BasicPlugin implements CommandExecutor, Listener{
 	// Command dispatcher
 	//
 	//////////////////////////////////////////////////////////////////////
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
-		if($cmd->getName() != "worldprotect") return false;
-		if($sender instanceof Player){
+	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+		if($cmd->getName() != "worldprotect")
+			return false;
+		if($sender instanceof Player) {
 			$world = $sender->getLevel()->getName();
-		}else{
+		} else {
 			$level = $this->getServer()->getDefaultLevel();
-			if($level){
+			if($level) {
 				$world = $level->getName();
-			}else{
+			} else {
 				$world = null;
 			}
 		}
-		if(isset($args[0]) && $this->getServer()->isLevelGenerated($args[0])){
+		if(isset($args[0]) && $this->getServer()->isLevelGenerated($args[0])) {
 			$world = array_shift($args);
 		}
-		if($world === null){
+		if($world === null) {
 			$sender->sendMessage(mc::_("[WP] Must specify a world"));
 			return false;
 		}
-		if(!$this->isAuth($sender, $world)) return true;
+		if(!$this->isAuth($sender, $world))
+			return true;
 		return $this->dispatchSCmd($sender, $cmd, $args, $world);
 	}
 
-	public function canPlaceBreakBlock(Player $c, $world){
+	public function canPlaceBreakBlock(Player $c, $world) {
 		$pname = strtolower($c->getName());
-		if(isset($this->wcfg[$world]["auth"]) && count($this->wcfg[$world]["auth"])){
+		if(isset($this->wcfg[$world]["auth"]) && count($this->wcfg[$world]["auth"])) {
 			// Check if user is in auth list...
-			if(isset($this->wcfg[$world]["auth"][$pname])) return true;
+			if(isset($this->wcfg[$world]["auth"][$pname]))
+				return true;
 			return false;
 		}
-		if($c->hasPermission("wp.cmd.protect.auth")) return true;
+		if($c->hasPermission("wp.cmd.protect.auth"))
+			return true;
 		return false;
 	}
 
-	public function isAuth($c, $world){
-		if(!($c instanceof Player)) return true;
-		if(!isset($this->wcfg[$world])) return true;
-		if(!isset($this->wcfg[$world]["auth"])) return true;
-		if(!count($this->wcfg[$world]["auth"])) return true;
-
+	public function isAuth($c, $world) {
+		if(!($c instanceof Player))
+			return true;
+		if(!isset($this->wcfg[$world]))
+			return true;
+		if(!isset($this->wcfg[$world]["auth"]))
+			return true;
+		if(!count($this->wcfg[$world]["auth"]))
+			return true;
 		$iusr = strtolower($c->getName());
-		if(isset($this->wcfg[$world][$iusr])) return true;
+		if(isset($this->wcfg[$world][$iusr]))
+			return true;
 		$c->sendMessage(mc::_("[WP] You are not allowed to do this"));
 		return false;
 	}
 
-	public function authAdd($world, $usr){
+	public function authAdd($world, $usr) {
 		$auth = $this->getCfg($world, "auth", []);
-		if(isset($auth[$usr])) return;
+		if(isset($auth[$usr]))
+			return;
 		$auth[$usr] = $usr;
 		$this->setCfg($world, "auth", $auth);
 	}
 
-	public function authCheck($world, $usr){
+	public function authCheck($world, $usr) {
 		$auth = $this->getCfg($world, "auth", []);
 		return isset($auth[$usr]);
 	}
 
-	public function authRm($world, $usr){
+	public function authRm($world, $usr) {
 		$auth = $this->getCfg($world, "auth", []);
-		if(!isset($auth[$usr])) return;
+		if(!isset($auth[$usr]))
+			return;
 		unset($auth[$usr]);
-		if(count($auth)){
+		if(count($auth)) {
 			$this->setCfg($world, "auth", $auth);
-		}else{
+		} else {
 			$this->unsetCfg($world, "auth");
 		}
 	}
 
-	public function msg($pl, $txt){
-		if(MPMU::apiVersion("1.12.0")){
+	public function msg($pl, $txt) {
+		if(MPMU::apiVersion("1.12.0")) {
 			$pl->sendTip($txt);
 			return;
 		}
 		list($time, $otxt) = $this->getState("spam", $pl, [0, ""]);
-		if(time() - $time < self::SPAM_DELAY && $otxt == $txt) return;
+		if(time() - $time < self::SPAM_DELAY && $otxt == $txt)
+			return;
 		$this->setState("spam", $pl, [time(), $txt]);
 		$pl->sendMessage($txt);
 	}
@@ -279,8 +314,9 @@ class Main extends BasicPlugin implements CommandExecutor, Listener{
 	/**
 	 * @API
 	 */
-	public function getMaxPlayers($world){
-		if(isset($this->modules["max-players"])) return $this->modules["max-players"]->getMaxPlayers($world);
+	public function getMaxPlayers($world) {
+		if(isset($this->modules["max-players"]))
+			return $this->modules["max-players"]->getMaxPlayers($world);
 		return null;
 	}
 }

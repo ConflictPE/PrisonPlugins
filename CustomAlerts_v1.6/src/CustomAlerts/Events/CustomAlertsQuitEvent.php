@@ -1,5 +1,4 @@
 <?php
-
 /*
  * CustomAlerts (v1.6) by EvolSoft
  * Developer: EvolSoft (Flavius12)
@@ -14,7 +13,7 @@ namespace CustomAlerts\Events;
 use pocketmine\event\plugin\PluginEvent;
 use pocketmine\Player;
 
-class CustomAlertsQuitEvent extends PluginEvent{
+class CustomAlertsQuitEvent extends PluginEvent {
 
 	public static $handlerList = null;
 
@@ -28,7 +27,7 @@ class CustomAlertsQuitEvent extends PluginEvent{
 	 * @param Player $player
 	 * @param string $pocketminemessage The default PocketMine quit message
 	 */
-	public function __construct(Player $player, $pocketminemessage){
+	public function __construct(Player $player, $pocketminemessage) {
 		$this->player = $player;
 		$this->pocketminemessage = $pocketminemessage;
 	}
@@ -38,7 +37,7 @@ class CustomAlertsQuitEvent extends PluginEvent{
 	 *
 	 * @return Player
 	 */
-	public function getPlayer(){
+	public function getPlayer() {
 		return $this->player;
 	}
 
@@ -47,7 +46,7 @@ class CustomAlertsQuitEvent extends PluginEvent{
 	 *
 	 * @return string
 	 */
-	public function getPocketMineQuitMessage(){
+	public function getPocketMineQuitMessage() {
 		return $this->pocketminemessage;
 	}
 }

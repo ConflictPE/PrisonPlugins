@@ -1,4 +1,5 @@
 <?php
+
 namespace Lottery;
 
 use onebone\economyapi\EconomyAPI;
@@ -14,9 +15,9 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
-class Lottery extends PluginBase implements Listener{
+class Lottery extends PluginBase implements Listener {
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->getLogger()->info('§aCPELottery Loading...');
 		@mkdir($this->getDataFolder());
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -55,7 +56,7 @@ class Lottery extends PluginBase implements Listener{
 		]);
 		$list = $this->getConf()->get('reward');
 		$num = 0;
-		foreach($list as $i){
+		foreach($list as $i) {
 			$this->itemdata[$num] = ['id' => $i['id'], "meta" => 0, "amount" => $i['amount']];
 			$this->chance[$num] = ['id' => $i['id'], 'chance' => $i['chance'], 'name' => $i['name']];
 			$num++;
@@ -63,14 +64,14 @@ class Lottery extends PluginBase implements Listener{
 		$this->getLogger()->info('§6CPELottery Loaded!!!');
 	}
 
-	public function onTouch(PlayerInteractEvent $event){
+	public function onTouch(PlayerInteractEvent $event) {
 		$player = $event->getPlayer();
 		$id = $event->getBlock()->getId();
 		$han = $event->getItem()->getId();
-		if($han == 341 && $id == 25){
+		if($han == 341 && $id == 25) {
 			$money = EconomyAPI::getInstance()->myMoney($player);
 			$cost = $this->getConf()->get('cost');
-			if($money >= $cost){
+			if($money >= $cost) {
 				$player->sendPopup("§eNormal Lottery Start!");
 				EconomyAPI::getInstance()->reduceMoney($player, $cost);
 				$num = mt_rand(0, (count($this->itemdata) - 1));
@@ -78,44 +79,43 @@ class Lottery extends PluginBase implements Listener{
 				$chance = $this->chance[$num]['chance'] * 1000;
 				$name = $this->chance[$num]['name'];
 				$p = mt_rand(0, 1000);
-				if($p <= $chance){
+				if($p <= $chance) {
 					$this->give($player, $data);
 					$player->getInventory()->removeItem(Item::get(Item::SLIMEBALL, 0, 1));
 					$player->sendMessage("§b§l»§r §fYou got §e" . $data['amount'] . " " . $name . " §ffrom Lottery.");
 					$particle = new LavaParticle($event->getBlock());
-					for($i = 0; $i < 10; $i++){
+					for($i = 0; $i < 10; $i++) {
 						$event->getBlock()->getLevel()->addParticle($particle);
 						$player->getLevel()->addSound(new EndermanTeleportSound($player));
 					}
-
-				}else{
+				} else {
 					$bl = $event->getBlock();
 					$blx = $bl->getX();
 					$bly = $bl->getY();
 					$blz = $bl->getZ();
 					$player->sendMessage("§6- §7Nothing. Try Again next time. :/");
 					$player->getInventory()->removeItem(Item::get(Item::SLIMEBALL, 0, 1));
-					for($i = 0; $i < 50; $i++){
+					for($i = 0; $i < 50; $i++) {
 						$event->getBlock()->getLevel()->addParticle(new HappyVillagerParticle(new Vector3($blx, $bly + 0.9, $blz)));
 					}
 				}
-			}else{
+			} else {
 				$player->sendPopup("§cNeed 500 Coins to Lottery!");
 			}
 		}
 	}
 
-	public function give(Player $player, $data){
+	public function give(Player $player, $data) {
 		$item = new Item($data['id'], $data['meta'], $data['amount']);
 		$player->getInventory()->addItem($item);
 	}
 
-	public function getConf(){
+	public function getConf() {
 		return new Config($this->getDataFolder() . 'Config.yml', Config::YAML, []);
 	}
 
-	public function onDamage(EntityDamageEvent $event){
-		if($event->getCause() == 4){
+	public function onDamage(EntityDamageEvent $event) {
+		if($event->getCause() == 4) {
 			$event->setCancelled(true);
 		}
 	}

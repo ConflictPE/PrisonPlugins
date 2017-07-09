@@ -16,17 +16,17 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener {
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		if(!is_dir($this->getDataFolder())){
+		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
-		if(!file_exists($this->getDataFolder() . "areas.json")){
+		if(!file_exists($this->getDataFolder() . "areas.json")) {
 			file_put_contents($this->getDataFolder() . "areas.json", "[]");
 		}
-		if(!file_exists($this->getDataFolder() . "config.yml")){
+		if(!file_exists($this->getDataFolder() . "config.yml")) {
 			$c = $this->getResource("config.yml");
 			$o = stream_get_contents($c);
 			fclose($c);
@@ -34,7 +34,7 @@ class Main extends PluginBase implements Listener{
 		}
 		$this->areas = [];
 		$data = json_decode(file_get_contents($this->getDataFolder() . "areas.json"), true);
-		foreach($data as $datum){
+		foreach($data as $datum) {
 			$area = new Area($datum["name"], $datum["flags"], $datum["pos1"], $datum["pos2"], $datum["level"], $datum["whitelist"], $this);
 		}
 		$c = yaml_parse(file_get_contents($this->getDataFolder() . "config.yml"));
@@ -42,51 +42,51 @@ class Main extends PluginBase implements Listener{
 		$this->edit = $c["Default"]["Edit"];
 		$this->touch = $c["Default"]["Touch"];
 		$this->levels = [];
-		foreach($c["Worlds"] as $level => $flags){
+		foreach($c["Worlds"] as $level => $flags) {
 			$this->levels[$level] = $flags;
 		}
 	}
 
-	public function onCommand(CommandSender $p, Command $cmd, $label, array $args){
-		if(!($p instanceof Player)){
+	public function onCommand(CommandSender $p, Command $cmd, $label, array $args) {
+		if(!($p instanceof Player)) {
 			$p->sendMessage(TextFormat::RED . "Command must be used in-game.");
 			return true;
 		}
-		if(!isset($args[0])){
+		if(!isset($args[0])) {
 			return false;
 		}
 		$n = strtolower($p->getName());
 		$action = strtolower($args[0]);
-		switch($action){
+		switch($action) {
 			case "pos1":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.pos1")){
-					if(isset($this->sel1[$n]) || isset($this->sel2[$n])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.pos1")) {
+					if(isset($this->sel1[$n]) || isset($this->sel2[$n])) {
 						$o = "You're already selecting a position!";
-					}else{
+					} else {
 						$this->sel1[$n] = true;
 						$o = "Please place or break the first position.";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
 			case "pos2":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.pos2")){
-					if(isset($this->sel1[$n]) || isset($this->sel2[$n])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.pos2")) {
+					if(isset($this->sel1[$n]) || isset($this->sel2[$n])) {
 						$o = "You're already selecting a position!";
-					}else{
+					} else {
 						$this->sel2[$n] = true;
 						$o = "Please place or break the second position.";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
 			case "create":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.create")){
-					if(isset($args[1])){
-						if(isset($this->pos1[$n]) && isset($this->pos2[$n])){
-							if(!isset($this->areas[strtolower($args[1])])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.create")) {
+					if(isset($args[1])) {
+						if(isset($this->pos1[$n]) && isset($this->pos2[$n])) {
+							if(!isset($this->areas[strtolower($args[1])])) {
 								$area = new Area(strtolower($args[1]), [
 									"edit" => true,
 									"god" => false,
@@ -104,114 +104,114 @@ class Main extends PluginBase implements Listener{
 								unset($this->pos1[$n]);
 								unset($this->pos2[$n]);
 								$o = "Area created!";
-							}else{
+							} else {
 								$o = "An area with that name already exists.";
 							}
-						}else{
+						} else {
 							$o = "Please select both positions first.";
 						}
-					}else{
+					} else {
 						$o = "Please specify a name for this area.";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
 			case "list":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.list")){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.list")) {
 					$o = "Areas:";
-					foreach($this->areas as $area){
+					foreach($this->areas as $area) {
 						$o = $o . " " . $area->getName() . ";";
 					}
 				}
 				break;
 			case "flag":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.flag")){
-					if(isset($args[1])){
-						if(isset($this->areas[strtolower($args[1])])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.flag")) {
+					if(isset($args[1])) {
+						if(isset($this->areas[strtolower($args[1])])) {
 							$area = $this->areas[strtolower($args[1])];
-							if(isset($args[2])){
-								if(isset($area->flags[strtolower($args[2])])){
+							if(isset($args[2])) {
+								if(isset($area->flags[strtolower($args[2])])) {
 									$flag = strtolower($args[2]);
-									if(isset($args[3])){
+									if(isset($args[3])) {
 										$mode = strtolower($args[3]);
-										if($mode == "true" || $mode == "on"){
+										if($mode == "true" || $mode == "on") {
 											$mode = true;
-										}else{
+										} else {
 											$mode = false;
 										}
 										$area->setFlag($flag, $mode);
-									}else{
+									} else {
 										$area->toggleFlag($flag);
 									}
-									if($area->getFlag($flag)){
+									if($area->getFlag($flag)) {
 										$status = "on";
-									}else{
+									} else {
 										$status = "off";
 									}
 									$o = "Flag " . $flag . " set to " . $status . " for area " . $area->getName() . "!";
-								}else{
+								} else {
 									$o = "Flag not found. (Flags: edit, god, touch)";
 								}
-							}else{
+							} else {
 								$o = "Please specify a flag. (Flags: edit, god, touch)";
 							}
-						}else{
+						} else {
 							$o = "Area doesn't exist.";
 						}
-					}else{
+					} else {
 						$o = "Please specify the area you would like to flag.";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
 			case "delete":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.delete")){
-					if(isset($args[1])){
-						if(isset($this->areas[strtolower($args[1])])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.delete")) {
+					if(isset($args[1])) {
+						if(isset($this->areas[strtolower($args[1])])) {
 							$area = $this->areas[strtolower($args[1])];
 							$area->delete();
 							$o = "Area deleted!";
-						}else{
+						} else {
 							$o = "Area does not exist.";
 						}
-					}else{
+					} else {
 						$o = "Please specify an area to delete.";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
 			case "whitelist":
-				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.delete")){
-					if(isset($args[1]) && isset($this->areas[strtolower($args[1])])){
+				if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.command") || $p->hasPermission("iprotector.command.area") || $p->hasPermission("iprotector.command.area.delete")) {
+					if(isset($args[1]) && isset($this->areas[strtolower($args[1])])) {
 						$area = $this->areas[strtolower($args[1])];
-						if(isset($args[2])){
+						if(isset($args[2])) {
 							$action = strtolower($args[2]);
-							switch($action){
+							switch($action) {
 								case "add":
 									$w = ($this->getServer()->getPlayer($args[3]) instanceof Player ? strtolower($this->getServer()->getPlayer($args[3])->getName()) : strtolower($args[3]));
-									if(!$area->isWhitelisted($w)){
+									if(!$area->isWhitelisted($w)) {
 										$area->setWhitelisted($w);
 										$o = "Player $w has been whitelisted in area " . $area->getName() . ".";
-									}else{
+									} else {
 										$o = "Player $w is already whitelisted in area " . $area->getName() . ".";
 									}
 									break;
 								case "list":
 									$o = "Area " . $area->getName() . "'s whitelist:";
-									foreach($area->getWhitelist() as $w){
+									foreach($area->getWhitelist() as $w) {
 										$o .= " $w;";
 									}
 									break;
 								case "delete":
 								case "remove":
 									$w = ($this->getServer()->getPlayer($args[3]) instanceof Player ? strtolower($this->getServer()->getPlayer($args[3])->getName()) : strtolower($args[3]));
-									if($area->isWhitelisted($w)){
+									if($area->isWhitelisted($w)) {
 										$area->setWhitelisted($w, false);
 										$o = "Player $w has been unwhitelisted in area " . $area->getName() . ".";
-									}else{
+									} else {
 										$o = "Player $w is already unwhitelisted in area " . $area->getName() . ".";
 									}
 									break;
@@ -219,13 +219,13 @@ class Main extends PluginBase implements Listener{
 									$o = "Please specify a valid action. Usage: /area whitelist " . $area->getName() . " <add/list/remove> [player]";
 									break;
 							}
-						}else{
+						} else {
 							$o = "Please specify an action. Usage: /area whitelist " . $area->getName() . " <add/list/remove> [player]";
 						}
-					}else{
+					} else {
 						$o = "Area doesn't exist. Usage: /area whitelist <area> <add/list/remove> [player]";
 					}
-				}else{
+				} else {
 					$o = "You do not have permission to use this subcommand.";
 				}
 				break;
@@ -237,32 +237,32 @@ class Main extends PluginBase implements Listener{
 		return true;
 	}
 
-	public function onHurt(EntityDamageEvent $event){
-		if($event->getEntity() instanceof Player){
+	public function onHurt(EntityDamageEvent $event) {
+		if($event->getEntity() instanceof Player) {
 			$p = $event->getEntity();
 			$x = false;
-			if(!$this->canGetHurt($p)){
+			if(!$this->canGetHurt($p)) {
 				$event->setCancelled();
 			}
 		}
 	}
 
-	public function onBlockBreak(BlockBreakEvent $event){
+	public function onBlockBreak(BlockBreakEvent $event) {
 		$b = $event->getBlock();
 		$p = $event->getPlayer();
 		$n = strtolower($p->getName());
-		if(isset($this->sel1[$n])){
+		if(isset($this->sel1[$n])) {
 			unset($this->sel1[$n]);
 			$this->pos1[$n] = new Vector3($b->getX(), $b->getY(), $b->getZ());
 			$p->sendMessage("Position 1 set to: (" . $this->pos1[$n]->getX() . ", " . $this->pos1[$n]->getY() . ", " . $this->pos1[$n]->getZ() . ")");
 			$event->setCancelled();
-		}else if(isset($this->sel2[$n])){
+		} else if(isset($this->sel2[$n])) {
 			unset($this->sel2[$n]);
 			$this->pos2[$n] = new Vector3($b->getX(), $b->getY(), $b->getZ());
 			$p->sendMessage("Position 2 set to: (" . $this->pos2[$n]->getX() . ", " . $this->pos2[$n]->getY() . ", " . $this->pos2[$n]->getZ() . ")");
 			$event->setCancelled();
-		}else{
-			if(!$this->canEdit($p, $b)){
+		} else {
+			if(!$this->canEdit($p, $b)) {
 				$event->setCancelled();
 			}
 		}
@@ -273,44 +273,44 @@ class Main extends PluginBase implements Listener{
 	 *
 	 * @priority HIGHEST
 	 */
-	public function onBlockPlace(BlockPlaceEvent $event){
+	public function onBlockPlace(BlockPlaceEvent $event) {
 		$b = $event->getBlock();
 		$p = $event->getPlayer();
 		$n = strtolower($p->getName());
-		if(isset($this->sel1[$n])){
+		if(isset($this->sel1[$n])) {
 			unset($this->sel1[$n]);
 			$this->pos1[$n] = new Vector3($b->getX(), $b->getY(), $b->getZ());
 			$p->sendMessage("Position 1 set to: (" . $this->pos1[$n]->getX() . ", " . $this->pos1[$n]->getY() . ", " . $this->pos1[$n]->getZ() . ")");
 			$event->setCancelled();
-		}else if(isset($this->sel2[$n])){
+		} else if(isset($this->sel2[$n])) {
 			unset($this->sel2[$n]);
 			$this->pos2[$n] = new Vector3($b->getX(), $b->getY(), $b->getZ());
 			$p->sendMessage("Position 2 set to: (" . $this->pos2[$n]->getX() . ", " . $this->pos2[$n]->getY() . ", " . $this->pos2[$n]->getZ() . ")");
 			$event->setCancelled();
-		}else{
-			if(!$this->canEdit($p, $b)){
+		} else {
+			if(!$this->canEdit($p, $b)) {
 				$event->setCancelled();
 			}
 		}
 	}
 
-	public function onBlockTouch(PlayerInteractEvent $event){
+	public function onBlockTouch(PlayerInteractEvent $event) {
 		$b = $event->getBlock();
 		$p = $event->getPlayer();
-		if(!$this->canTouch($p, $b)){
+		if(!$this->canTouch($p, $b)) {
 			$event->setCancelled();
 		}
-		if(!$this->canEdit($p, $b)){
+		if(!$this->canEdit($p, $b)) {
 			$item = $p->getItemInHand();
-			if(($b->getId() == Item::DIRT or $b->getId() == Item::GRASS) and $item instanceof Tool and ($item->isHoe() or $item->isShovel())){
+			if(($b->getId() == Item::DIRT or $b->getId() == Item::GRASS) and $item instanceof Tool and ($item->isHoe() or $item->isShovel())) {
 				$event->setCancelled();
 			}
 		}
 	}
 
-	public function saveAreas(){
+	public function saveAreas() {
 		$areas = [];
-		foreach($this->areas as $area){
+		foreach($this->areas as $area) {
 			$areas[] = [
 				"name" => $area->getName(),
 				"flags" => $area->getFlags(),
@@ -323,25 +323,25 @@ class Main extends PluginBase implements Listener{
 		file_put_contents($this->getDataFolder() . "areas.json", json_encode($areas));
 	}
 
-	public function canEdit($p, $t){
-		if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.access")){
+	public function canEdit($p, $t) {
+		if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.access")) {
 			return true;
 		}
 		$o = true;
 		$g = (isset($this->levels[$t->getLevel()->getName()]) ? $this->levels[$t->getLevel()->getName()]["Edit"] : $this->edit);
-		if($g){
+		if($g) {
 			$o = false;
 		}
-		foreach($this->areas as $area){
-			if($area->contains(new Vector3($t->getX(), $t->getY(), $t->getZ()), $t->getLevel()->getName())){
-				if($area->getFlag("edit")){
+		foreach($this->areas as $area) {
+			if($area->contains(new Vector3($t->getX(), $t->getY(), $t->getZ()), $t->getLevel()->getName())) {
+				if($area->getFlag("edit")) {
 					$o = false;
 				}
-				if($area->isWhitelisted(strtolower($p->getName()))){
+				if($area->isWhitelisted(strtolower($p->getName()))) {
 					$o = true;
 					break;
 				}
-				if(!$area->getFlag("edit") && $g){
+				if(!$area->getFlag("edit") && $g) {
 					$o = true;
 					break;
 				}
@@ -350,25 +350,25 @@ class Main extends PluginBase implements Listener{
 		return $o;
 	}
 
-	public function canTouch($p, $t){
-		if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.access")){
+	public function canTouch($p, $t) {
+		if($p->hasPermission("iprotector") || $p->hasPermission("iprotector.access")) {
 			return true;
 		}
 		$o = true;
 		$g = (isset($this->levels[$t->getLevel()->getName()]) ? $this->levels[$t->getLevel()->getName()]["Touch"] : $this->touch);
-		if($g){
+		if($g) {
 			$o = false;
 		}
-		foreach($this->areas as $area){
-			if($area->contains(new Vector3($t->getX(), $t->getY(), $t->getZ()), $t->getLevel()->getName())){
-				if($area->getFlag("touch")){
+		foreach($this->areas as $area) {
+			if($area->contains(new Vector3($t->getX(), $t->getY(), $t->getZ()), $t->getLevel()->getName())) {
+				if($area->getFlag("touch")) {
 					$o = false;
 				}
-				if($area->isWhitelisted(strtolower($p->getName()))){
+				if($area->isWhitelisted(strtolower($p->getName()))) {
 					$o = true;
 					break;
 				}
-				if(!$area->getFlag("touch") && $g){
+				if(!$area->getFlag("touch") && $g) {
 					$o = true;
 					break;
 				}
@@ -377,19 +377,19 @@ class Main extends PluginBase implements Listener{
 		return $o;
 	}
 
-	public function canGetHurt($p){
+	public function canGetHurt($p) {
 		$o = true;
 		$g = (isset($this->levels[$p->getLevel()->getName()]) ? $this->levels[$p->getLevel()->getName()]["God"] : $this->god);
-		if($g){
+		if($g) {
 			$o = false;
 		}
-		foreach($this->areas as $area){
-			if($area->contains(new Vector3($p->getX(), $p->getY(), $p->getZ()), $p->getLevel()->getName())){
-				if(!$area->getFlag("god") && $g){
+		foreach($this->areas as $area) {
+			if($area->contains(new Vector3($p->getX(), $p->getY(), $p->getZ()), $p->getLevel()->getName())) {
+				if(!$area->getFlag("god") && $g) {
 					$o = true;
 					break;
 				}
-				if($area->getFlag("god")){
+				if($area->getFlag("god")) {
 					$o = false;
 				}
 			}

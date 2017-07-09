@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2016  onebone <jyc00410@gmail.com>
@@ -24,16 +23,16 @@ use onebone\economyapi\EconomyAPI;
 use onebone\economyapi\task\MySQLPingTask;
 use pocketmine\Player;
 
-class MySQLProvider implements Provider{
+class MySQLProvider implements Provider {
 
 	/**
 	 * @var \mysqli
 	 */
 	private $db;
 
-	public function __construct($file){
+	public function __construct($file) {
 		$this->db = new \mysqli($file["host"], $file["user"], $file["password"], $file["db"], $file["port"]);
-		if($this->db->connect_error){
+		if($this->db->connect_error) {
 			EconomyAPI::getInstance()->getLogger()->critical("Could not connect to MySQL server: " . $this->db->connect_error);
 			return;
 		}
@@ -41,7 +40,6 @@ class MySQLProvider implements Provider{
 			username VARCHAR(20) PRIMARY KEY,
 			money FLOAT
 		);");
-
 		EconomyAPI::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new MySQLPingTask(EconomyAPI::getInstance(), $this->db), 600);
 	}
 
@@ -50,29 +48,27 @@ class MySQLProvider implements Provider{
 	 *
 	 * @return bool
 	 */
-	public function accountExists($player){
-		if($player instanceof Player){
+	public function accountExists($player) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
-
 		$result = $this->db->query("SELECT * FROM user_money WHERE username='" . $this->db->real_escape_string($player) . "'");
 		return $result->num_rows > 0 ? true : false;
 	}
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $defaultMoney
+	 * @param float $defaultMoney
 	 *
 	 * @return bool
 	 */
-	public function createAccount($player, $defaultMoney = 1000){
-		if($player instanceof Player){
+	public function createAccount($player, $defaultMoney = 1000) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
-
-		if(!$this->accountExists($player)){
+		if(!$this->accountExists($player)) {
 			$this->db->query("INSERT INTO user_money (username, money) VALUES ('" . $this->db->real_escape_string($player) . "', $defaultMoney);");
 		}
 		return false;
@@ -83,8 +79,8 @@ class MySQLProvider implements Provider{
 	 *
 	 * @return bool
 	 */
-	public function removeAccount($player){
-		if($player instanceof Player){
+	public function removeAccount($player) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
@@ -95,8 +91,8 @@ class MySQLProvider implements Provider{
 	 *
 	 * @return float|bool
 	 */
-	public function getMoney($player){
-		if($player instanceof Player){
+	public function getMoney($player) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
@@ -104,12 +100,12 @@ class MySQLProvider implements Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */
-	public function setMoney($player, $amount){
-		if($player instanceof Player){
+	public function setMoney($player, $amount) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
@@ -117,12 +113,12 @@ class MySQLProvider implements Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */
-	public function addMoney($player, $amount){
-		if($player instanceof Player){
+	public function addMoney($player, $amount) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
@@ -130,12 +126,12 @@ class MySQLProvider implements Provider{
 
 	/**
 	 * @param \pocketmine\Player|string $player
-	 * @param float                     $amount
+	 * @param float $amount
 	 *
 	 * @return bool
 	 */
-	public function reduceMoney($player, $amount){
-		if($player instanceof Player){
+	public function reduceMoney($player, $amount) {
+		if($player instanceof Player) {
 			$player = $player->getName();
 		}
 		$player = strtolower($player);
@@ -144,22 +140,21 @@ class MySQLProvider implements Provider{
 	/**
 	 * @return array
 	 */
-	public function getAll(){
-
+	public function getAll() {
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName(){
+	public function getName() {
 		return "MySQL";
 	}
 
-	public function save(){
+	public function save() {
 	}
 
-	public function close(){
-		if($this->db instanceof \mysqli){
+	public function close() {
+		if($this->db instanceof \mysqli) {
 			$this->db->close();
 		}
 	}

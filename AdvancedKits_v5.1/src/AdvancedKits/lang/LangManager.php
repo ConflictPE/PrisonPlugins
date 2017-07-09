@@ -5,7 +5,7 @@ namespace AdvancedKits\lang;
 use AdvancedKits\Main;
 use pocketmine\utils\Config;
 
-class LangManager{
+class LangManager {
 
 	const LANG_VERSION = 0;
 
@@ -13,7 +13,7 @@ class LangManager{
 	private $defaults;
 	private $data;
 
-	public function __construct(Main $ak){
+	public function __construct(Main $ak) {
 		$this->ak = $ak;
 		$this->defaults = [
 			"lang-version" => 0,
@@ -34,20 +34,20 @@ class LangManager{
 			"no-perm-sign" => "You don't have permission to create a sign kit",
 		];
 		$this->data = new Config($this->ak->getDataFolder() . "lang.properties", Config::PROPERTIES, $this->defaults);
-		if($this->data->get("lang-version") != self::LANG_VERSION){
+		if($this->data->get("lang-version") != self::LANG_VERSION) {
 			$this->ak->getLogger()->alert("Translation file is outdated. The old file has been renamed and a new one has been created");
 			@rename($this->ak->getDataFolder() . "lang.properties", $this->ak->getDataFolder() . "lang.properties.old");
 			$this->data = new Config($this->ak->getDataFolder() . "lang.properties", Config::PROPERTIES, $this->defaults);
 		}
 	}
 
-	public function getTranslation(string $dataKey, ...$args) : string{
-		if(!isset($this->defaults[$dataKey])){
+	public function getTranslation(string $dataKey, ...$args) : string {
+		if(!isset($this->defaults[$dataKey])) {
 			$this->ak->getLogger()->error("Invalid datakey $dataKey passed to method LangManager::getTranslation()");
 			return "";
 		}
 		$str = $this->data->get($dataKey, $this->defaults[$dataKey]);
-		foreach($args as $key => $arg){
+		foreach($args as $key => $arg) {
 			$str = str_replace("{%" . $key . "}", $arg, $str);
 		}
 		return $str;

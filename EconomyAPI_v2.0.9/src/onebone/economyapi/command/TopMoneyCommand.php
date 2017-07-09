@@ -1,5 +1,4 @@
 <?php
-
 /*
  * EconomyS, the massive economy plugin with many features for PocketMine-MP
  * Copyright (C) 2013-2016  onebone <jyc00410@gmail.com>
@@ -25,41 +24,37 @@ use onebone\economyapi\task\SortTask;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
-class TopMoneyCommand extends Command{
+class TopMoneyCommand extends Command {
 
 	/** @var EconomyAPI */
 	private $plugin;
 
-	public function __construct(EconomyAPI $plugin){
+	public function __construct(EconomyAPI $plugin) {
 		$desc = $plugin->getCommandMessage("topmoney");
 		parent::__construct("topmoney", $desc["description"], $desc["usage"]);
-
 		$this->setPermission("economyapi.command.topmoney");
-
 		$this->plugin = $plugin;
 	}
 
-	public function execute(CommandSender $sender, $label, array $params){
-		if(!$this->plugin->isEnabled()) return false;
-		if(!$this->testPermission($sender)) return false;
-
+	public function execute(CommandSender $sender, $label, array $params) {
+		if(!$this->plugin->isEnabled())
+			return false;
+		if(!$this->testPermission($sender))
+			return false;
 		$page = (int) array_shift($params);
-
 		$server = $this->plugin->getServer();
-
 		$banned = [];
-		foreach($server->getNameBans()->getEntries() as $entry){
-			if($this->plugin->accountExists($entry->getName())){
+		foreach($server->getNameBans()->getEntries() as $entry) {
+			if($this->plugin->accountExists($entry->getName())) {
 				$banned[] = $entry->getName();
 			}
 		}
 		$ops = [];
-		foreach($server->getOps()->getAll() as $op){
-			if($this->plugin->accountExists($op)){
+		foreach($server->getOps()->getAll() as $op) {
+			if($this->plugin->accountExists($op)) {
 				$ops[] = $op;
 			}
 		}
-
 		$task = new SortTask($sender->getName(), $this->plugin->getAllMoney(), $this->plugin->getConfig()->get("add-op-at-rank"), $page, $ops, $banned);
 		$server->getScheduler()->scheduleAsyncTask($task);
 	}

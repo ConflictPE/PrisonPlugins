@@ -1,4 +1,5 @@
 <?php
+
 namespace falkirks\simplewarp;
 
 use falkirks\simplewarp\event\PlayerWarpEvent;
@@ -13,61 +14,61 @@ use pocketmine\Server;
  * Class Warp
  * @package falkirks\simplewarp
  */
-class Warp{
+class Warp {
 
 	protected $name;
 	protected $destination;
 	protected $isPublic;
 
-	public function __construct($name, Destination $destination, $isPublic = false){
+	public function __construct($name, Destination $destination, $isPublic = false) {
 		$this->name = $name;
 		$this->destination = $destination;
 		$this->isPublic = $isPublic;
 		SimpleWarpPermissions::setupPermission($this);
 	}
 
-	public function teleport(Player $player){
+	public function teleport(Player $player) {
 		$ev = new PlayerWarpEvent($player, $this);
 		$this->getServer()->getPluginManager()->callEvent($ev);
-		if($ev->isCancelled()){
+		if($ev->isCancelled()) {
 			return;
 		}
 		$ev->getDestination()->teleport($player);
 	}
 
-	public function canUse(CommandSender $player){
+	public function canUse(CommandSender $player) {
 		return ($this->isPublic || $player->hasPermission(SimpleWarpPermissions::BASE_WARP_PERMISSION) || $player->hasPermission(SimpleWarpPermissions::BASE_WARP_PERMISSION . "." . $this->name));
 	}
 
 	/**
 	 * @param boolean $isPublic
 	 */
-	public function setPublic($isPublic = true){
+	public function setPublic($isPublic = true) {
 		$this->isPublic = $isPublic;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getName(){
+	public function getName() {
 		return $this->name;
 	}
 
 	/**
 	 * @return Destination
 	 */
-	public function getDestination(){
+	public function getDestination() {
 		return $this->destination;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function isPublic(){
+	public function isPublic() {
 		return $this->isPublic;
 	}
 
-	private function getServer(){
+	private function getServer() {
 		return Server::getInstance();
 	}
 

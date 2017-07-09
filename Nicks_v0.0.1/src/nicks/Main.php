@@ -8,7 +8,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
 
-class Main extends PluginBase{
+class Main extends PluginBase {
 
 	const DATA_FILE = "data.yml";
 	/** @var Config */
@@ -26,7 +26,7 @@ class Main extends PluginBase{
 	 *
 	 * @return mixed
 	 */
-	public static function translateColors($string, $symbol = "&"){
+	public static function translateColors($string, $symbol = "&") {
 		$string = str_replace($symbol . "0", TF::BLACK, $string);
 		$string = str_replace($symbol . "1", TF::DARK_BLUE, $string);
 		$string = str_replace($symbol . "2", TF::DARK_GREEN, $string);
@@ -43,14 +43,12 @@ class Main extends PluginBase{
 		$string = str_replace($symbol . "d", TF::LIGHT_PURPLE, $string);
 		$string = str_replace($symbol . "e", TF::YELLOW, $string);
 		$string = str_replace($symbol . "f", TF::WHITE, $string);
-
 		$string = str_replace($symbol . "k", TF::OBFUSCATED, $string);
 		$string = str_replace($symbol . "l", TF::BOLD, $string);
 		$string = str_replace($symbol . "m", TF::STRIKETHROUGH, $string);
 		$string = str_replace($symbol . "n", TF::UNDERLINE, $string);
 		$string = str_replace($symbol . "o", TF::ITALIC, $string);
 		$string = str_replace($symbol . "r", TF::RESET, $string);
-
 		return $string;
 	}
 
@@ -62,7 +60,7 @@ class Main extends PluginBase{
 	 *
 	 * @return mixed
 	 */
-	public static function untranslateColors($string, $symbol = "&"){
+	public static function untranslateColors($string, $symbol = "&") {
 		$string = str_replace(TF::BLACK, $symbol . "0", $string);
 		$string = str_replace(TF::DARK_BLUE, $symbol . "1", $string);
 		$string = str_replace(TF::DARK_GREEN, $symbol . "2", $string);
@@ -79,14 +77,12 @@ class Main extends PluginBase{
 		$string = str_replace(TF::LIGHT_PURPLE, $symbol . "d", $string);
 		$string = str_replace(TF::YELLOW, $symbol . "e", $string);
 		$string = str_replace(TF::WHITE, $symbol . "f", $string);
-
 		$string = str_replace(TF::OBFUSCATED, $symbol . "k", $string);
 		$string = str_replace(TF::BOLD, $symbol . "l", $string);
 		$string = str_replace(TF::STRIKETHROUGH, $symbol . "m", $string);
 		$string = str_replace(TF::UNDERLINE, $symbol . "n", $string);
 		$string = str_replace(TF::ITALIC, $symbol . "o", $string);
 		$string = str_replace(TF::RESET, $symbol . "r", $string);
-
 		return $string;
 	}
 
@@ -97,18 +93,18 @@ class Main extends PluginBase{
 	 *
 	 * @return mixed
 	 */
-	public static function cleanString($string){
+	public static function cleanString($string) {
 		$string = self::translateColors($string);
 		$string = TF::clean($string);
 		return $string;
 	}
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->loadConfigs();
 		$this->command = new NickCommand($this);
 	}
 
-	public function loadConfigs(){
+	public function loadConfigs() {
 		$this->saveResource(self::DATA_FILE);
 		$this->data = new Config($this->getDataFolder() . self::DATA_FILE, Config::YAML);
 	}
@@ -120,12 +116,13 @@ class Main extends PluginBase{
 	 *
 	 * @return string
 	 */
-	public function getNick($player){
-		if($player instanceof Player) $player = $player->getName();
+	public function getNick($player) {
+		if($player instanceof Player)
+			$player = $player->getName();
 		$player = strtolower($player);
-		if($this->data->exists($player)){
+		if($this->data->exists($player)) {
 			return self::translateColors($this->data->get($player, ""));
-		}else{
+		} else {
 			return "";
 		}
 	}
@@ -136,8 +133,9 @@ class Main extends PluginBase{
 	 * @param $player
 	 * @param $nick
 	 */
-	public function setNick($player, $nick){
-		if($player instanceof Player) $player = $player->getName();
+	public function setNick($player, $nick) {
+		if($player instanceof Player)
+			$player = $player->getName();
 		$player = strtolower($player);
 		$this->data->set($player, self::untranslateColors($nick));
 		$this->data->save(true);
@@ -148,8 +146,9 @@ class Main extends PluginBase{
 	 *
 	 * @param $player
 	 */
-	public function removeNick($player){
-		if($player instanceof Player) $player = $player->getName();
+	public function removeNick($player) {
+		if($player instanceof Player)
+			$player = $player->getName();
 		$player = strtolower($player);
 		$this->data->remove($player);
 		$this->data->save(true);

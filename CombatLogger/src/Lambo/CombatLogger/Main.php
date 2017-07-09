@@ -11,17 +11,17 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener {
 
 	public $players = [];
 	public $interval = 10;
 	public $blockedcommands = [];
 
-	public function onEnable(){
+	public function onEnable() {
 		$this->saveDefaultConfig();
 		$this->interval = $this->getConfig()->get("interval");
 		$cmds = $this->getConfig()->get("blocked-commands");
-		foreach($cmds as $cmd){
+		foreach($cmds as $cmd) {
 			$this->blockedcommands[$cmd] = 1;
 		}
 		$this->getServer()->getLogger()->info("CombatLogger enabled");
@@ -29,7 +29,7 @@ class Main extends PluginBase implements Listener{
 		$this->getServer()->getScheduler()->scheduleRepeatingTask(new Scheduler($this, $this->interval), 20);
 	}
 
-	public function onDisable(){
+	public function onDisable() {
 		$this->getServer()->getLogger()->info("CombatLogger disabled");
 	}
 
@@ -39,10 +39,10 @@ class Main extends PluginBase implements Listener{
 	 * @priority        MONITOR
 	 * @ignoreCancelled true
 	 */
-	public function EntityDamageEvent(EntityDamageEvent $event){
-		if($event instanceof EntityDamageByEntityEvent){
-			if($event->getDamager() instanceof Player and $event->getEntity() instanceof Player){
-				foreach([$event->getDamager(), $event->getEntity()] as $players){
+	public function EntityDamageEvent(EntityDamageEvent $event) {
+		if($event instanceof EntityDamageByEntityEvent) {
+			if($event->getDamager() instanceof Player and $event->getEntity() instanceof Player) {
+				foreach([$event->getDamager(), $event->getEntity()] as $players) {
 					$this->setTime($players);
 				}
 			}
@@ -55,8 +55,8 @@ class Main extends PluginBase implements Listener{
 	 * @priority        MONITOR
 	 * @ignoreCancelled true
 	 */
-	public function PlayerDeathEvent(PlayerDeathEvent $event){
-		if(isset($this->players[$event->getEntity()->getName()])){
+	public function PlayerDeathEvent(PlayerDeathEvent $event) {
+		if(isset($this->players[$event->getEntity()->getName()])) {
 			unset($this->players[$event->getEntity()->getName()]);
 			/*$cause = $event->getEntity()->getLastDamageCause();
 			if($cause instanceof EntityDamageByEntityEvent){
@@ -76,10 +76,10 @@ class Main extends PluginBase implements Listener{
 	 * @priority        HIGH
 	 * @ignoreCancelled true
 	 */
-	public function PlayerQuitEvent(PlayerQuitEvent $event){
-		if(isset($this->players[$event->getPlayer()->getName()])){
+	public function PlayerQuitEvent(PlayerQuitEvent $event) {
+		if(isset($this->players[$event->getPlayer()->getName()])) {
 			$player = $event->getPlayer();
-			if((time() - $this->players[$player->getName()]) < $this->interval){
+			if((time() - $this->players[$player->getName()]) < $this->interval) {
 				$player->kill();
 			}
 		}
@@ -91,23 +91,23 @@ class Main extends PluginBase implements Listener{
 	 * @priority        HIGH
 	 * @ignoreCancelled true
 	 */
-	public function PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent $event){
-		if(isset($this->players[$event->getPlayer()->getName()])){
+	public function PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent $event) {
+		if(isset($this->players[$event->getPlayer()->getName()])) {
 			$cmd = strtolower(explode(' ', $event->getMessage())[0]);
-			if(isset($this->blockedcommands[$cmd])){
+			if(isset($this->blockedcommands[$cmd])) {
 				$event->getPlayer()->sendMessage("§6§l» §r§3You are in combat, therefore this command cannot be executed");
 				$event->setCancelled();
 			}
 		}
 	}
 
-	private function setTime(Player $player){
+	private function setTime(Player $player) {
 		$msg = "§l§c» §r§bYou are now in combat.";
-		if(isset($this->players[$player->getName()])){
-			if((time() - $this->players[$player->getName()]) > $this->interval){
+		if(isset($this->players[$player->getName()])) {
+			if((time() - $this->players[$player->getName()]) > $this->interval) {
 				$player->sendMessage($msg);
 			}
-		}else{
+		} else {
 			$player->sendMessage($msg);
 		}
 		$this->players[$player->getName()] = time();

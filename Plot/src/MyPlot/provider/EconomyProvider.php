@@ -1,13 +1,14 @@
 <?php
+
 namespace MyPlot\provider;
 
 use pocketmine\Player;
 
-interface EconomyProvider{
+interface EconomyProvider {
 
 	/**
 	 * @param Player $player
-	 * @param int    $amount
+	 * @param int $amount
 	 *
 	 * @return bool
 	 */

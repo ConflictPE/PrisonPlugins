@@ -1,4 +1,5 @@
 <?php
+
 namespace falkirks\simplewarp;
 
 use falkirks\simplewarp\api\SimpleWarpAPI;
@@ -9,7 +10,7 @@ use falkirks\simplewarp\utils\WeakPosition;
 use pocketmine\utils\TextFormat;
 use Traversable;
 
-class WarpManager implements \ArrayAccess, \IteratorAggregate{
+class WarpManager implements \ArrayAccess, \IteratorAggregate {
 
 	const MEMORY_TILL_CLOSE = 0;
 	const FLUSH_ON_CHANGE = 1;
@@ -28,12 +29,12 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 
 	private $flag;
 
-	public function __construct(SimpleWarpAPI $api, DataStore $store, $flag = WarpManager::MEMORY_TILL_CLOSE){
+	public function __construct(SimpleWarpAPI $api, DataStore $store, $flag = WarpManager::MEMORY_TILL_CLOSE) {
 		$this->api = $api;
 		$this->store = $store;
 		$this->flag = $flag;
 		$this->warps = [];
-		if($this->flag < 2){
+		if($this->flag < 2) {
 			$this->warps = $this->loadWarps();
 		}
 	}
@@ -42,10 +43,10 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 * WARNING
 	 * This function is for internal use only.
 	 */
-	public function saveAll(){
-		if($this->flag === 0){
+	public function saveAll() {
+		if($this->flag === 0) {
 			$this->store->clear();
-			foreach($this->warps as $warp){
+			foreach($this->warps as $warp) {
 				$this->store->add($warp->getName(), $this->warpToData($warp));
 			}
 			$this->saveStore(true);
@@ -66,9 +67,9 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 * <p>
 	 * The return value will be casted to boolean if non-boolean was returned.
 	 */
-	public function offsetExists($offset){
+	public function offsetExists($offset) {
 		$this->reloadStore();
-		if(isset($this->warps[$offset]) || ($this->flag >= 2 && $this->store->exists($offset))){
+		if(isset($this->warps[$offset]) || ($this->flag >= 2 && $this->store->exists($offset))) {
 			return true;
 		}
 		return false;
@@ -85,8 +86,8 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 *
 	 * @return mixed Can return all value types.
 	 */
-	public function offsetGet($offset){
-		if($this->flag >= 2){
+	public function offsetGet($offset) {
+		if($this->flag >= 2) {
 			$this->reloadStore();
 			return $this->warpFromData($offset, $this->store->get($offset));
 		}
@@ -101,23 +102,22 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 * @param mixed $offset <p>
 	 *                      The offset to assign the value to.
 	 *                      </p>
-	 * @param mixed $value  <p>
+	 * @param mixed $value <p>
 	 *                      The value to set.
 	 *                      </p>
 	 *
 	 * @return void
 	 */
-	public function offsetSet($offset, $value){
-		if($value instanceof Warp && $value->getName() === $offset){
-			if($this->flag < 2){
+	public function offsetSet($offset, $value) {
+		if($value instanceof Warp && $value->getName() === $offset) {
+			if($this->flag < 2) {
 				$this->warps[$offset] = $value;
 			}
-
-			if($this->flag >= 1){
+			if($this->flag >= 1) {
 				$this->store->add($offset, $this->warpToData($value));
 				$this->saveStore();
 			}
-		}else{
+		} else {
 			//TODO report failure
 		}
 	}
@@ -133,12 +133,11 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 *
 	 * @return void
 	 */
-	public function offsetUnset($offset){
-		if($this->flag < 2){
+	public function offsetUnset($offset) {
+		if($this->flag < 2) {
 			unset($this->warps[$offset]);
 		}
-
-		if($this->flag >= 1){
+		if($this->flag >= 1) {
 			$this->store->remove($offset);
 			$this->saveStore();
 		}
@@ -151,28 +150,28 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 * @return Traversable An instance of an object implementing <b>Iterator</b> or
 	 * <b>Traversable</b>
 	 */
-	public function getIterator(){
-		if($this->flag >= 2){
+	public function getIterator() {
+		if($this->flag >= 2) {
 			return $this->loadWarps();
 		}
 		return $this->warps;
 	}
 
-	protected function reloadStore(){
-		if($this->flag >= 2 && $this->store instanceof Reloadable){
+	protected function reloadStore() {
+		if($this->flag >= 2 && $this->store instanceof Reloadable) {
 			$this->store->reload();
 		}
 	}
 
-	protected function saveStore($force = false){
-		if(($this->flag > 0 || $force) && $this->store instanceof Saveable){
+	protected function saveStore($force = false) {
+		if(($this->flag > 0 || $force) && $this->store instanceof Saveable) {
 			$this->store->save();
 		}
 	}
 
-	protected function loadWarps(){
+	protected function loadWarps() {
 		$out = [];
-		foreach($this->store->getIterator() as $name => $data){
+		foreach($this->store->getIterator() as $name => $data) {
 			$out[$name] = $this->warpFromData($name, $data);
 		}
 		return $out;
@@ -188,13 +187,12 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 * @return Warp
 	 * @throws \Exception
 	 */
-	protected function warpFromData($name, array $array){
-		if(isset($array["level"]) && isset($array["x"]) && isset($array["y"]) && isset($array["z"]) && isset($array["public"])){ // This is an internal warp
+	protected function warpFromData($name, array $array) {
+		if(isset($array["level"]) && isset($array["x"]) && isset($array["y"]) && isset($array["z"]) && isset($array["public"])) { // This is an internal warp
 			return new Warp($name, new Destination(new WeakPosition($array["x"], $array["y"], $array["z"], $array["level"])), $array["public"]);
-		}elseif(isset($array["address"]) && isset($array["port"]) && isset($array["public"])){
+		} elseif(isset($array["address"]) && isset($array["port"]) && isset($array["public"])) {
 			return new Warp($name, new Destination($array["address"], $array["port"]), $array["public"]);
 		}
-
 		$this->api->getSimpleWarp()->getLogger()->critical("A warp with the name " . TextFormat::AQUA . $name . TextFormat::RESET . " is incomplete. It will be removed automatically when your server stops.");
 		return null;
 	}
@@ -208,8 +206,8 @@ class WarpManager implements \ArrayAccess, \IteratorAggregate{
 	 *
 	 * @return array
 	 */
-	protected function warpToData(Warp $warp){
-		if($warp->getDestination()->isInternal()){
+	protected function warpToData(Warp $warp) {
+		if($warp->getDestination()->isInternal()) {
 			//TODO implement yaw and pitch
 			$pos = $warp->getDestination()->getPosition();
 			return [
