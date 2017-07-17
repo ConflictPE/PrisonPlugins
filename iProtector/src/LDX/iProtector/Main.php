@@ -301,7 +301,7 @@ class Main extends PluginBase implements Listener {
 			$event->setCancelled();
 		}
 		if(!$this->canEdit($p, $b)) {
-			$item = $p->getItemInHand();
+			$item = $p->getInventory()->getItemInHand();
 			if(($b->getId() == Item::DIRT or $b->getId() == Item::GRASS) and $item instanceof Tool and ($item->isHoe() or $item->isShovel())) {
 				$event->setCancelled();
 			}

@@ -24,6 +24,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\protocol\AddItemEntityPacket;
 use pocketmine\network\protocol\BlockEventPacket;
 use pocketmine\network\protocol\SetEntityDataPacket;
+use pocketmine\network\protocol\TileEventPacket;
 use pocketmine\tile\Chest;
 use pocketmine\utils\TextFormat as TF;
 
@@ -82,7 +83,7 @@ class EventListener implements Listener {
 					}
 					$player->sendMessage(Main::applyColors(str_replace("{name}", Main::applyColors($this->plugin->settings["keys"][$id]), $this->plugin->settings["messages"]["open-crate"])));
 					$eid = Entity::$entityCount++;
-					$pk = new BlockEventPacket();
+					$pk = new TileEventPacket();
 					$pk->x = $block->x;
 					$pk->y = $block->y;
 					$pk->z = $block->z;
@@ -103,9 +104,9 @@ class EventListener implements Listener {
 					$pk->eid = $eid;
 					$flags = 0;
 					$flags |= 1 << Entity::DATA_FLAG_INVISIBLE;
-					$flags |= 1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG;
+					$flags |= 1 << Entity::DATA_FLAG_SHOW_NAMETAG;
 					$flags |= 1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG;
-					$flags |= 1 << Entity::DATA_FLAG_IMMOBILE;
+					$flags |= 1 << Entity::DATA_FLAG_NOT_MOVE;
 					$pk->metadata = [
 						Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
 						Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $name],

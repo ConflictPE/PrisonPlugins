@@ -80,8 +80,8 @@ class CrateManager {
 		foreach($locations as $crate) {
 			if($crate instanceof Position) {
 				//				if(!$crate->getLevel()->getBlock($crate)->getId() === Block::CHEST) {
-				//					$nbt = new CompoundTag(false, [
-				//						new ListTag("Items", []),
+				//					$nbt = new Compound(false, [
+				//						new Enum("Items", []),
 				//						new StringTag("id", Tile::CHEST),
 				//						new IntTag("x", $crate->x),
 				//						new IntTag("y", $crate->y),
@@ -94,7 +94,8 @@ class CrateManager {
 				//				}
 				$crateClass = new Crate($name, $description, $locations, $crateId, $itemPrizes, $moneyPrizes);
 				$this->plugin->crates[self::clean($name)] = $crateClass;
-				$this->plugin->text[] = new FloatingTextParticle(new Vector3($crate->x + 0.5, $crate->y + 0.5, $crate->z + 0.5), str_pad($description, strlen($name), " ", STR_PAD_BOTH), str_pad($name, strlen($description), " ", STR_PAD_BOTH));
+				$this->plugin->text[] = new FloatingTextParticle(new Vector3($crate->x + 0.5, $crate->y + 0.5, $crate->z + 0.5), "", $name);
+				$this->plugin->text[] = new FloatingTextParticle(new Vector3($crate->x + 0.5, $crate->y + 0.2, $crate->z + 0.5), "", $description);
 			}
 		}
 	}

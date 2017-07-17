@@ -13,6 +13,7 @@ use crates\Main;
 use pocketmine\math\Vector3;
 use pocketmine\network\protocol\BlockEventPacket;
 use pocketmine\network\protocol\RemoveEntityPacket;
+use pocketmine\network\protocol\TileEventPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 
@@ -49,7 +50,7 @@ class DespawnItemTask extends PluginTask {
 		$pk = new RemoveEntityPacket();
 		$pk->eid = $this->eid;
 		$this->player->dataPacket($pk);
-		$pk = new BlockEventPacket();
+		$pk = new TileEventPacket();
 		$pk->x = $this->pos->x;
 		$pk->y = $this->pos->y;
 		$pk->z = $this->pos->z;

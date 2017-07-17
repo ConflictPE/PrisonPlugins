@@ -18,7 +18,7 @@ use pocketmine\level\Location;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
-use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\Compound;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\plugin\PluginBase;
@@ -88,7 +88,7 @@ class PrisonCells extends PluginBase implements Listener {
 					$this->getLogger()->notice("No sign found for cell '{$uID}', creating new sign.");
 					if(!$lvl->isChunkLoaded($signPos->x >> 4, $signPos->z >> 4) instanceof Chunk)
 						$lvl->loadChunk($signPos->x >> 4, $signPos->z >> 4, true);
-					$sign = Tile::createTile("Sign", $lvl, new CompoundTag("", [
+					$sign = Tile::createTile("Sign", $lvl->getChunk($signPos->x >> 4, $signPos->z >> 4), new Compound("", [
 						new StringTag("id", Tile::SIGN),
 						new StringTag("Text1", ""),
 						new StringTag("Text2", ""),
@@ -246,7 +246,7 @@ class PrisonCells extends PluginBase implements Listener {
 											$sender->sendMessage($text);
 											return true;
 										}
-										if($sign->namedtag instanceof CompoundTag) {
+										if($sign->namedtag instanceof Compound) {
 											$sign->namedtag->RentedCell = new ByteTag("RentedCell", 0);
 										}
 										$this->setUp[$sender->getName()]["sign"] = $sign;
@@ -277,7 +277,7 @@ class PrisonCells extends PluginBase implements Listener {
 											"edit" => isset($setup["flags"]["edit"]) ? $setup["flags"]["edit"] : $this->getConfig()->getNested("cells.default.flags.edit"),
 											"public" => isset($setup["flags"]["public"]) ? $setup["flags"]["public"] : $this->getConfig()->getNested("cells.default.flags.public"),
 										];
-										if($sign->namedtag instanceof CompoundTag) {
+										if($sign->namedtag instanceof Compound) {
 											$sign->namedtag->CellID = new StringTag("CellID", $uID);
 										}
 										if(empty($args[2])) {
@@ -374,7 +374,7 @@ class PrisonCells extends PluginBase implements Listener {
 			if($player instanceof Prisoner) {
 				$sign = $player->getLevel()->getTile($event->getBlock());
 				if($sign instanceof Sign) {
-					if($sign->namedtag instanceof CompoundTag and isset($sign->namedtag->CellID)) {
+					if($sign->namedtag instanceof Compound and isset($sign->namedtag->CellID)) {
 						$uID = $sign->namedtag["CellID"];
 						$cell = $this->getCellByID($uID);
 						if($cell instanceof Cell) {

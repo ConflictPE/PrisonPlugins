@@ -5,7 +5,7 @@ namespace PrisonCells;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
-use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\Compound;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\tile\Sign;
 use pocketmine\utils\Config;
@@ -121,7 +121,7 @@ class Cell {
 			foreach($texts as $key => $text) {
 				$texts[$key] = str_replace(["{CELL_ID}", "{OWNER}"], [$this->uID, $ownerName], $text);
 			}
-			if($this->sign->namedtag instanceof CompoundTag) {
+			if($this->sign->namedtag instanceof Compound) {
 				$this->sign->namedtag->Text1 = new StringTag("Text1", $texts[0]);
 				$this->sign->namedtag->Text2 = new StringTag("Text2", $texts[1]);
 				$this->sign->namedtag->Text3 = new StringTag("Text3", $texts[2]);
@@ -129,7 +129,7 @@ class Cell {
 				$this->sign->namedtag->RentedCell = new ByteTag("RentedCell", 0);
 			}
 			$this->sign->spawnToAll();
-			$this->lvl->clearChunkCache($this->sign->getX() >> 4, $this->sign->getZ() >> 4);
+			$this->lvl->chunkCacheClear($this->sign->getX() >> 4, $this->sign->getZ() >> 4);
 		} else {
 			// OPEN
 			$cfg = $this->prisonCells->getConfig()->getNested("cells.sign.not_rented");
@@ -142,7 +142,7 @@ class Cell {
 			foreach($texts as $key => $text) {
 				$texts[$key] = str_replace(["{CELL_ID}", "{PRICE}"], [$this->uID, $this->price], $text);
 			}
-			if($this->sign->namedtag instanceof CompoundTag) {
+			if($this->sign->namedtag instanceof Compound) {
 				$this->sign->namedtag->Text1 = new StringTag("Text1", $texts[0]);
 				$this->sign->namedtag->Text2 = new StringTag("Text2", $texts[1]);
 				$this->sign->namedtag->Text3 = new StringTag("Text3", $texts[2]);
@@ -150,7 +150,7 @@ class Cell {
 				$this->sign->namedtag->RentedCell = new ByteTag("RentedCell", 0);
 			}
 			$this->sign->spawnToAll();
-			$this->lvl->clearChunkCache($this->sign->getX() >> 4, $this->sign->getZ() >> 4);
+			$this->lvl->chunkCacheClear($this->sign->getX() >> 4, $this->sign->getZ() >> 4);
 		}
 	}
 

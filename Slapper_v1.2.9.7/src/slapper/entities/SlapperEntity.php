@@ -3,8 +3,10 @@
 namespace slapper\entities;
 
 use pocketmine\entity\Entity;
+use pocketmine\level\format\Chunk;
+use pocketmine\level\format\FullChunk;
 use pocketmine\level\Level;
-use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\Compound;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
@@ -57,9 +59,9 @@ class SlapperEntity extends Entity {
 		90 => 0.5,
 	];
 
-	public function __construct(Level $level, CompoundTag $nbt) {
-		parent::__construct($level, $nbt);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_IMMOBILE, true);
+	public function __construct(FullChunk $chunk, Compound $nbt) {
+		parent::__construct($chunk, $nbt);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_NOT_MOVE, true);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 	}
