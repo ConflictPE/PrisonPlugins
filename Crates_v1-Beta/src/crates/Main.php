@@ -38,6 +38,7 @@ class Main extends PluginBase {
 	public $crates = [];
 	public $text = [];
 	private $crateManager;
+	public $openCrates = [];
 
 	public static function applyColors($string, $symbol = "&") {
 		$string = str_replace($symbol . "0", TF::BLACK, $string);

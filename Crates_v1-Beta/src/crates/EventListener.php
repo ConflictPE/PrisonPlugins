@@ -58,6 +58,10 @@ class EventListener implements Listener {
 			$crate = $this->plugin->getCrate($block);
 			if($crate instanceof Crate) {
 				$event->setCancelled(true);
+				if(isset($this->plugin->openCrates[$player->getName()])) {
+					$player->sendTip(Main::applyColors("&6Please wait for your current crate to finish opening!"));
+					return;
+				}
 				$id = $crate->getId();
 				if(((isset($this->plugin->getKeyData($player->getName())[$id]) ? $this->plugin->getKeyData($player->getName())[$id] : 0)) >= 1) {
 					$this->plugin->saveKeyData($player->getName(), [$id => $this->plugin->getKeyData($player->getName())[$id] - 1,]);
@@ -114,7 +118,7 @@ class EventListener implements Listener {
 					$player->dataPacket($pk);
 					$particle = new HappyVillagerParticle(new Vector3($block->x + 0.5, $block->y, $block->z + 0.5));
 					$player->dataPacket($particle->encode());
-					new DespawnItemTask($this->plugin, $player, $eid, new Vector3($tile->x, $tile->y, $tile->z));
+					$this->plugin->openCrates[$player->getName()] = new DespawnItemTask($this->plugin, $player, $eid, new Vector3($tile->x, $tile->y, $tile->z));
 					$player->sendMessage(Main::applyColors(str_replace([
 						"{amount}",
 						"{name}",

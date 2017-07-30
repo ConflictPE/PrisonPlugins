@@ -219,7 +219,7 @@ class Main extends PluginBase implements Listener {
 
 	public function onKill(PlayerDeathEvent $ev) {
 		$lastdmg = $ev->getEntity()->getLastDamageCause();
-		$p = $ev->getPlayer();
+		$p = $ev->getEntity();
 		if($lastdmg instanceof EntityDamageByEntityEvent) {
 			$dmgr = $lastdmg->getDamager();
 			if(isset($this->kills[strtolower($dmgr->getName())])) {

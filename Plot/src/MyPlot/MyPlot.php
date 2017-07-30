@@ -246,7 +246,7 @@ class MyPlot extends PluginBase implements Listener {
 		$pos = $this->getPlotPosition($plot);
 		$plotSize = $plotLevel->plotSize;
 		$pos->x += floor($plotSize / 2);
-		$pos->z -= 1;
+		$pos->z += 1.25;
 		$pos->y += 1;
 		$player->teleport($pos);
 		return true;

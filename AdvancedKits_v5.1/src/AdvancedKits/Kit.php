@@ -81,6 +81,9 @@ class Kit {
 				}
 			}
 		}
+		$player->getInventory()->sendContents($player);
+		$player->getInventory()->sendArmorContents($player);
+
 		if(isset($this->data["commands"]) and is_array($this->data["commands"])) {
 			foreach($this->data["commands"] as $cmd) {
 				$this->ak->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $player->getName(), $cmd));

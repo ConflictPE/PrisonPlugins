@@ -57,6 +57,7 @@ class DespawnItemTask extends PluginTask {
 		$pk->case1 = 1;
 		$pk->case2 = 0;
 		$this->player->dataPacket($pk);
+		unset($this->plugin->openCrates[$this->player->getName()]);
 	}
 
 }

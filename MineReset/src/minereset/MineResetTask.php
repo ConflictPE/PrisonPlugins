@@ -2,6 +2,8 @@
 namespace minereset;
 
 use pocketmine\level\format\Chunk;
+use pocketmine\level\format\FullChunk;
+use pocketmine\level\format\LevelProvider;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\AsyncTask;
@@ -73,18 +75,29 @@ class MineResetTask extends AsyncTask{
 				}
 			}
 		}
-		$this->setResult($chunks);
+		foreach($chunks as $hash => $chunk){
+			$chunks[$hash] = $chunk->toFastBinary();
+		}
+		$this->setResult(serialize($chunks));
 	}
 
 	public function onCompletion(Server $server){
-		$chunks = $this->getResult();
+		$chunks = unserialize($this->getResult());
 		$plugin = $server->getPluginManager()->getPlugin("MineReset");
 		if($plugin instanceof MineReset and $plugin->isEnabled()){
 			$level = $server->getLevel($this->levelId);
-			if($level != null){
+			if($level !== null){
+				/** @var FullChunk $chunk */
 				foreach($chunks as $hash => $chunk){
+					if($chunk === null) continue;
+					$chunk = $this->chunkClass::fromFastBinary($chunk);
 					Level::getXZ($hash, $x, $z);
 					$level->setChunk($x, $z, $chunk, false);
+					foreach($level->getPlayers() as $p) {
+						if(isset($p->usedChunks[$hash])) {
+							$level->requestChunk($x, $z, $p, LevelProvider::ORDER_ZXY);
+						}
+					}
 				}
 			}
 			$plugin->getRegionBlocker()->freeZone($this->regionId, $this->levelId);
