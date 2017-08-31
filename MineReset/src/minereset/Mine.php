@@ -1,6 +1,8 @@
 <?php
 namespace minereset;
 
+use pocketmine\level\format\FullChunk;
+use pocketmine\level\format\mcregion\McRegion;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 
@@ -68,8 +70,11 @@ class Mine{
 			for($x = $this->getA()->getX(); $x - 16 <= $this->getB()->getX(); $x += 16){
 				for($z = $this->getA()->getZ(); $z - 16 <= $this->getB()->getZ(); $z += 16){
 					$chunk = $this->level->getChunk($x >> 4, $z >> 4, true);
-					$chunkClass = get_class($chunk);
-					$chunks[Level::chunkHash($x >> 4, $z >> 4)] = $chunk->toFastBinary();
+					if($chunk !== null) {
+						$chunkClass = get_class($chunk);
+						$chunks[Level::chunkHash($x >> 4, $z >> 4)] = $chunk->toFastBinary();
+						$this->base->getLogger()->debug("resetting chunk at " . ($x >> 4) . " " . ($z >> 4) . "(" . $x * 16 . " " . $z * 16 . ")");
+					}
 				}
 			}
 

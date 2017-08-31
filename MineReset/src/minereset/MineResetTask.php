@@ -54,20 +54,26 @@ class MineResetTask extends AsyncTask{
 			}
 			$id[$i] = $blockId;
 		}
-
 		$m = array_values(unserialize($this->ratioData));
 		$sum[0] = $m[0];
-		for($l = 1; $l < count($m); $l++) $sum[$l] = $sum[$l - 1] + $m[$l];
+		for ($l = 1; $l < count($m); $l++)
+			$sum[$l] = $sum[$l - 1] + $m[$l];
 
-		for($x = $this->a->getX(); $x <= $this->b->getX(); $x++){
-			for($y = $this->a->getY(); $y <= $this->b->getY(); $y++){
-				for($z = $this->a->getZ(); $z <= $this->b->getZ(); $z++){
+		$totalBlocks = ($this->b->x - $this->a->x + 1)*($this->b->y - $this->a->y + 1)*($this->b->z - $this->a->z + 1);
+		$interval = $totalBlocks / 8; //TODO determine the interval programmatically
+		$lastUpdate = 0;
+		$currentBlocks = 0;
+
+		for ($x = $this->a->getX(); $x <= $this->b->getX(); $x++) {
+			for ($y = $this->a->getY(); $y <= $this->b->getY(); $y++) {
+				for ($z = $this->a->getZ(); $z <= $this->b->getZ(); $z++) {
 					$a = rand(0, end($sum));
-					for($l = 0; $l < count($sum); $l++){
-						if($a <= $sum[$l]){
+					for ($l = 0; $l < count($sum); $l++) {
+						if ($a <= $sum[$l]) {
 							$hash = Level::chunkHash($x >> 4, $z >> 4);
 							if(isset($chunks[$hash])){
 								$chunks[$hash]->setBlock($x & 0x0f, $y & 0x7f, $z & 0x0f, $id[$l][0] & 0xff, $id[$l][1] & 0xff);
+								$currentBlocks++;
 							}
 							$l = count($sum);
 						}
@@ -75,29 +81,28 @@ class MineResetTask extends AsyncTask{
 				}
 			}
 		}
-		foreach($chunks as $hash => $chunk){
-			$chunks[$hash] = $chunk->toFastBinary();
-		}
-		$this->setResult(serialize($chunks));
+		$this->setResult($chunks);
 	}
 
 	public function onCompletion(Server $server){
-		$chunks = unserialize($this->getResult());
+		$chunks = $this->getResult();
 		$plugin = $server->getPluginManager()->getPlugin("MineReset");
 		if($plugin instanceof MineReset and $plugin->isEnabled()){
 			$level = $server->getLevel($this->levelId);
-			if($level !== null){
+			if($level instanceof Level){
 				/** @var FullChunk $chunk */
 				foreach($chunks as $hash => $chunk){
-					if($chunk === null) continue;
-					$chunk = $this->chunkClass::fromFastBinary($chunk);
+					$plugin->getLogger()->debug($this->mineId . " reset at {$chunk->getX()} {$chunk->getZ()}!");
 					Level::getXZ($hash, $x, $z);
-					$level->setChunk($x, $z, $chunk, false);
-					foreach($level->getPlayers() as $p) {
-						if(isset($p->usedChunks[$hash])) {
-							$level->requestChunk($x, $z, $p, LevelProvider::ORDER_ZXY);
-						}
-					}
+					$level->setChunk($x, $z, $chunk, true, true);
+					//$h = Level::chunkHash($x, $z);
+					//foreach($level->getPlayers() as $p) {
+					//	if(isset($p->usedChunks[$h])) {
+					//		$level->requestChunk($x, $z, $p);
+					//		$plugin->getLogger()->debug("requested chunk for " . $p->getName() . "!");
+					//	}
+					//}
+					//$level->chunkCacheClear($x, $z);
 				}
 			}
 			$plugin->getRegionBlocker()->freeZone($this->regionId, $this->levelId);
