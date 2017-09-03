@@ -100,9 +100,9 @@ class EventListener implements Listener {
 					$pk->x = $block->x + 0.5;
 					$pk->y = $block->y + 1.2;
 					$pk->z = $block->z + 0.5;
-					$pk->speedZ = 0;
-					$pk->speedY = 0;
-					$pk->speedZ = 0;
+					$pk->speedX = 0.0;
+					$pk->speedY = 0.0;
+					$pk->speedZ = 0.0;
 					$player->dataPacket($pk);
 					$pk = new SetEntityDataPacket();
 					$pk->eid = $eid;
