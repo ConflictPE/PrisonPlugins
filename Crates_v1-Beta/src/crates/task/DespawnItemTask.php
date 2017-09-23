@@ -11,7 +11,6 @@ namespace crates\task;
 
 use crates\Main;
 use pocketmine\math\Vector3;
-use pocketmine\network\protocol\BlockEventPacket;
 use pocketmine\network\protocol\RemoveEntityPacket;
 use pocketmine\network\protocol\TileEventPacket;
 use pocketmine\Player;

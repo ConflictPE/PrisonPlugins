@@ -13,6 +13,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 
 //use pocketmine\level\Level;
 //use pocketmine\event\level\LevelLoadEvent;

@@ -21,7 +21,7 @@ class SlapperHuman extends Human {
 	}
 
 	public function getDisplayName() {
-		return $this->namedtag->CustomName;
+		return $this->namedtag["CustomName"] ?? "";
 	}
 
 	public function spawnTo(Player $player) {

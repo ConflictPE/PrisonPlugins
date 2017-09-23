@@ -3,7 +3,6 @@
 namespace ClearLagg;
 
 use pocketmine\entity\Creature;
-use pocketmine\entity\DroppedItem;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\plugin\PluginBase;

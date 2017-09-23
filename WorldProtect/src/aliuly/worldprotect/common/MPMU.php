@@ -2,8 +2,10 @@
 
 namespace aliuly\worldprotect\common;
 
+use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 
 /**
@@ -39,8 +41,8 @@ abstract class MPMU {
 	 */
 	static public function apiVersion($version = "") {
 		if($version == "")
-			return \pocketmine\API_VERSION;
-		return self::apiCheck(\pocketmine\API_VERSION, $version);
+			return "";
+		return self::apiCheck("", $version);
 	}
 
 	/**

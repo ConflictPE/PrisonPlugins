@@ -2,6 +2,8 @@
 
 namespace aliuly\worldprotect\common;
 
+use pocketmine\plugin\Plugin;
+
 /**
  * Simple translation class in the style of **gettext**.
  *

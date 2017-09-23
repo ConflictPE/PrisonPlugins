@@ -5,6 +5,7 @@ namespace quest;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
+use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
@@ -170,7 +171,7 @@ class Main extends PluginBase implements Listener {
 						break;
 					case "cancel":
 						if(isset($args[1])) {
-							if(file_exists($this->getDataFolder() . "players/" . strtolower($playern) . ".sq3")) {
+							if(file_exists($this->getDataFolder() . "players/" . strtolower($s->getName()) . ".sq3")) {
 								if($this->dataExists($s->getName(), $args[1])) {
 									$playerDat = $this->getUserData($s->getName());
 									$playerDat->query("DELETE FROM database WHERE quest='$args[1]';");
@@ -222,10 +223,10 @@ class Main extends PluginBase implements Listener {
 		$p = $ev->getEntity();
 		if($lastdmg instanceof EntityDamageByEntityEvent) {
 			$dmgr = $lastdmg->getDamager();
-			if(isset($this->kills[strtolower($dmgr->getName())])) {
-				$this->kills[strtolower($dmgr->getName())]++;
+			if(isset($this->kills[strtolower($dmgr->getNameTag())])) {
+				$this->kills[strtolower($dmgr->getNameTag())]++;
 			} else {
-				$this->kills[strtolower($dmgr->getName())] = 1;
+				$this->kills[strtolower($dmgr->getNameTag())] = 1;
 			}
 		}
 	}

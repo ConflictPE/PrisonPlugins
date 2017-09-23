@@ -13,6 +13,7 @@ namespace CustomAlerts;
 use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByBlockEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -80,7 +81,7 @@ class CustomAlerts extends PluginBase {
 	/**
 	 * Translate Minecraft colors
 	 *
-	 * @param char $symbol Color symbol
+	 * @param string $symbol Color symbol
 	 * @param string $message The message to be translated
 	 *
 	 * @return string The translated message

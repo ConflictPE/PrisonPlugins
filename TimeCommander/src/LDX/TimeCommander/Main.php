@@ -1,6 +1,5 @@
 <?php
 namespace LDX\TimeCommander;
-use pocketmine\command\CommandExecuter;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\plugin\PluginBase;
 

@@ -34,7 +34,7 @@ class Main extends PluginBase implements Listener {
 	}
 
 	/**
-	 * @param EnityDamageEvent $event
+	 * @param EntityDamageEvent $event
 	 *
 	 * @priority        MONITOR
 	 * @ignoreCancelled true

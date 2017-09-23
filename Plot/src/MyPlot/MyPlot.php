@@ -325,9 +325,9 @@ class MyPlot extends PluginBase implements Listener {
 		}
 		foreach($chunkIndexes as $index) {
 			Level::getXZ($index, $X, $Z);
-			$chunk = $level->getChunk($X, $Z);
-			foreach($level->getChunkPlayers($X, $Z) as $player) {
-				$player->onChunkChanged($chunk);
+			/** @var Player $player */
+			foreach($level->getUsingChunk($X, $Z) as $player) {
+				$level->requestChunk($X, $Z, $player);
 			}
 		}
 		$plot->biome = $biome->getName();

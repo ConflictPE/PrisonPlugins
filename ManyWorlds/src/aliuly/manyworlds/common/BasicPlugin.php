@@ -6,6 +6,7 @@ namespace aliuly\manyworlds\common;
 //: - Config shortcuts and multi-module|feature management
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 

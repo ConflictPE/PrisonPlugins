@@ -29,6 +29,7 @@ use aliuly\manyworlds\common\mc;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\utils\TextFormat;
 
 class MwLvDat extends BasicCli {
@@ -110,7 +111,7 @@ class MwLvDat extends BasicCli {
 					}
 					$changed = true;
 					$unload = true;
-					$provider->getLevelData()->LevelName = new String("LevelName", $v);
+					$provider->getLevelData()->LevelName = new StringTag("LevelName", $v);
 					break;
 				case "generator":    // generatorName(String)
 					if($provider->getLevelData()->generatorName == $v) {
@@ -119,7 +120,7 @@ class MwLvDat extends BasicCli {
 					}
 					$changed = true;
 					$unload = true;
-					$provider->getLevelData()->generatorName = new String("generatorName", $v);
+					$provider->getLevelData()->generatorName = new StringTag("generatorName", $v);
 					break;
 				case "preset":    // String("generatorOptions");
 					if($provider->getLevelData()->generatorOptions == $v) {
@@ -128,7 +129,7 @@ class MwLvDat extends BasicCli {
 					}
 					$changed = true;
 					$unload = true;
-					$provider->getLevelData()->generatorOptions = new String("generatorOptions", $v);
+					$provider->getLevelData()->generatorOptions = new StringTag("generatorOptions", $v);
 					break;
 				default:
 					$c->sendMessage(mc::_("Unknown key %1%, ignored", $k));

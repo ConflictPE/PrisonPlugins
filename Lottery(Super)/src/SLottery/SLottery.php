@@ -7,7 +7,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\Item;
 use pocketmine\level\particle\LavaParticle;
-use pocketmine\level\sound\ExplodeSound;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -85,7 +84,7 @@ class SLottery extends PluginBase implements Listener {
 					$particle = new LavaParticle($event->getBlock());
 					for($i = 10; $i < 50; $i++) {
 						$event->getBlock()->getLevel()->addParticle($particle);
-						$player->getLevel()->addSound(new ExplodeSound($player));
+						//$player->getLevel()->addSound(new ExplodeSound($player));
 					}
 				} else {
 					$player->sendMessage("§6- §7Got nothing. Try Again next time.");

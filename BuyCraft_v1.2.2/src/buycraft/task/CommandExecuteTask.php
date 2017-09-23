@@ -9,7 +9,6 @@ namespace buycraft\task;
  */
 use buycraft\api\ApiTask;
 use buycraft\util\PackageCommand;
-use pocketmine\item\Block;
 
 class CommandExecuteTask extends ApiTask {
 

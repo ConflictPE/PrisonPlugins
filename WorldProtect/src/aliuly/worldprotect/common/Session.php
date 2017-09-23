@@ -5,6 +5,7 @@ namespace aliuly\worldprotect\common;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
 /**

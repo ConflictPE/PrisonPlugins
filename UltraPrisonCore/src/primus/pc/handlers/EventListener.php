@@ -3,7 +3,6 @@
 namespace primus\pc\handlers;
 
 use _64FF00\PurePerms\PPGroup;
-use pocketmine\block\Sign;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\Listener;

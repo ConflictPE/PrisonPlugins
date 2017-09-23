@@ -4,6 +4,7 @@ namespace supertext;
 
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
+use pocketmine\scheduler\CallbackTask;
 use pocketmine\utils\Config;
 
 class supertext extends \pocketmine\plugin\PluginBase implements \pocketmine\event\Listener {//To Do teleport
@@ -89,7 +90,7 @@ class supertext extends \pocketmine\plugin\PluginBase implements \pocketmine\eve
 			}
 		}
 		//To test Delay Task(by judging tick)
-		$this->getServer()->getScheduler()->scheduleDelayedTask(new callbacktask([
+		$this->getServer()->getScheduler()->scheduleDelayedTask(new CallbackTask([
 			$this,
 			"timer",
 		]), $this->getServer()->getTicksPerSecond());

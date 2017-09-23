@@ -22,7 +22,6 @@ use pocketmine\item\Item;
 use pocketmine\level\particle\HappyVillagerParticle;
 use pocketmine\math\Vector3;
 use pocketmine\network\protocol\AddItemEntityPacket;
-use pocketmine\network\protocol\BlockEventPacket;
 use pocketmine\network\protocol\SetEntityDataPacket;
 use pocketmine\network\protocol\TileEventPacket;
 use pocketmine\tile\Chest;

@@ -4,6 +4,7 @@ namespace aliuly\worldprotect\common;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
