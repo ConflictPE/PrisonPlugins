@@ -2,11 +2,11 @@
 
 namespace PrisonCells;
 
-use core\CorePlayer;
+use classicprison\ClassicPrisonPlayer;
 use onebone\economyapi\EconomyAPI;
 use pocketmine\tile\Sign;
 
-class Prisoner extends CorePlayer {
+class Prisoner extends ClassicPrisonPlayer {
 
 	protected $cells = [];
 	protected $lastCellSignTapTime = 0;

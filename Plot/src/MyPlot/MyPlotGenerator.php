@@ -53,11 +53,11 @@ class MyPlotGenerator extends Generator {
 		]);
 	}
 
-	public function getName() {
+	public function getName() : string {
 		return "myplot";
 	}
 
-	public function getSettings() {
+	public function getSettings() : array {
 		return $this->settings;
 	}
 
@@ -65,7 +65,7 @@ class MyPlotGenerator extends Generator {
 		$this->level = $level;
 	}
 
-	public function generateChunk($chunkX, $chunkZ) {
+	public function generateChunk(int $chunkX, int $chunkZ) {
 		$shape = $this->getShape($chunkX << 4, $chunkZ << 4);
 		$chunk = $this->level->getChunk($chunkX, $chunkZ);
 		$chunk->setGenerated();
@@ -153,10 +153,10 @@ class MyPlotGenerator extends Generator {
 		return $shape;
 	}
 
-	public function populateChunk($chunkX, $chunkZ) {
+	public function populateChunk(int $chunkX, int $chunkZ) {
 	}
 
-	public function getSpawn() {
+	public function getSpawn() : Vector3 {
 		return new Vector3(0, $this->groundHeight, 0);
 	}
 

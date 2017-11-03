@@ -12,6 +12,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\item\Item;
+use pocketmine\item\tool\hoe\Hoe;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
 use pocketmine\level\Location;
@@ -439,7 +440,7 @@ class PrisonCells extends PluginBase implements Listener {
 				}
 			}
 			$item = $event->getItem();
-			if($item->getId() === Item::BUCKET or $item->isHoe()) {
+			if($item->getId() === Item::BUCKET or $item instanceof Hoe) {
 				$event->setCancelled(true);
 				return;
 			}
@@ -528,7 +529,7 @@ class PrisonCells extends PluginBase implements Listener {
 	/**
 	 * @param PlayerCreationEvent $event
 	 *
-	 * @priority HIGHEST
+	 * @priority MONITOR
 	 */
 	public function onCreation(PlayerCreationEvent $event) {
 		$event->setPlayerClass(Prisoner::class);

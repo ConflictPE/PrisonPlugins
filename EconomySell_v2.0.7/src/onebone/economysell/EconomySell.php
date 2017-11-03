@@ -157,7 +157,7 @@ class EconomySell extends PluginBase implements Listener {
 				}
 			}
 			if($cnt >= $sell ["amount"]) {
-				$this->removeItem($player, new Item($sell["item"], $sell["meta"], $sell["amount"]));
+				$this->removeItem($player, Item::get($sell["item"], $sell["meta"], $sell["amount"]));
 				EconomyAPI::getInstance()->addMoney($player, $sell ["cost"], true, "EconomySell");
 				$player->sendMessage($this->getMessage("sold-item", [
 					$sell ["amount"],
@@ -207,21 +207,7 @@ class EconomySell extends PluginBase implements Listener {
 	}
 
 	public function removeItem(Player $sender, Item $getitem) {
-		$getcount = $getitem->getCount();
-		if($getcount <= 0)
-			return;
-		for($index = 0; $index < $sender->getInventory()->getSize(); $index++) {
-			$setitem = $sender->getInventory()->getItem($index);
-			if($getitem->getId() == $setitem->getId() and $getitem->getDamage() == $setitem->getDamage()) {
-				if($getcount >= $setitem->getCount()) {
-					$getcount -= $setitem->getCount();
-					$sender->getInventory()->setItem($index, Item::get(Item::AIR, 0, 1));
-				} else if($getcount < $setitem->getCount()) {
-					$sender->getInventory()->setItem($index, Item::get($getitem->getID(), $getitem->getDamage(), $setitem->getCount() - $getcount));
-					break;
-				}
-			}
-		}
+		$sender->getInventory()->removeItem($getitem);
 	}
 
 	private function prepareLangPref() {

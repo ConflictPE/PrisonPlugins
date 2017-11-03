@@ -15,7 +15,7 @@ class SlapperHuman extends Human {
 
 	public function __construct(FullChunk $chunk, Compound $nbt) {
 		parent::__construct($chunk, $nbt);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_NOT_MOVE, true);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_IMMOBILE, true);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 	}

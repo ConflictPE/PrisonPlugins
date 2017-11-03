@@ -105,13 +105,8 @@ class EventListener implements Listener {
 					$player->dataPacket($pk);
 					$pk = new SetEntityDataPacket();
 					$pk->eid = $eid;
-					$flags = 0;
-					$flags |= 1 << Entity::DATA_FLAG_INVISIBLE;
-					$flags |= 1 << Entity::DATA_FLAG_SHOW_NAMETAG;
-					$flags |= 1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG;
-					$flags |= 1 << Entity::DATA_FLAG_NOT_MOVE;
 					$pk->metadata = [
-						Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
+						Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, [Entity::DATA_FLAG_INVISIBLE, Entity::DATA_FLAG_CAN_SHOW_NAMETAG, Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG, Entity::DATA_FLAG_IMMOBILE]],
 						Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $name],
 					];
 					$player->dataPacket($pk);
