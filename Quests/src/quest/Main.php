@@ -77,7 +77,7 @@ class Main extends PluginBase implements Listener {
 						if(isset($args[1])) {
 							if($this->cfg->exists($args[1])) {
 								if($this->dataExists($s->getName(), $args[1])) {
-									$s->sendMessage("§6- §cYou are already taken this quest");
+									$s->sendMessage("§6- §cYou have already taken this Quest!");
 									return true;
 								}
 								if(!$s->hasPermission("quest.access." . $args[1])) {
@@ -129,7 +129,7 @@ class Main extends PluginBase implements Listener {
 													$s->sendMessage($conf["finish-message"]);
 												}
 											} else {
-												$s->sendMessage("§6- §cNot enough Lifes, cancel");
+												$s->sendMessage("§6- §cNot enough kills!");
 											}
 											break;
 										case "item":
@@ -146,12 +146,12 @@ class Main extends PluginBase implements Listener {
 													$this->getServer()->dispatchCommand(new ConsoleCommandSender(), $this->translate($command, $s));
 												}
 											} else {
-												$s->sendMessage("§6- §cYou haven't reached the requirement.");
+												$s->sendMessage("§6- §cYou don't have the required items!");
 											}
 											break;
 									}
 								} else {
-									$s->sendMessage("§6- §cNo quest name " . $args[1] . " found in your quests list");
+									$s->sendMessage("§6- §cNo Quest with name " . $args[1] . " found in your list!");
 								}
 							}
 						} else {
@@ -166,7 +166,7 @@ class Main extends PluginBase implements Listener {
 								$s->sendMessage("§6- §a" . $res["quest"]);
 							}
 						} else {
-							$s->sendMessage("§6- §cCannot find for you a data file, use /quest see <id> to get a quest and register that file");
+							$s->sendMessage("§6- §cCouldn't find your Quest data, use /quest see <id> to start a quest!");
 						}
 						break;
 					case "cancel":
@@ -175,12 +175,12 @@ class Main extends PluginBase implements Listener {
 								if($this->dataExists($s->getName(), $args[1])) {
 									$playerDat = $this->getUserData($s->getName());
 									$playerDat->query("DELETE FROM database WHERE quest='$args[1]';");
-									$s->sendMessage("§6- §aSucceed Cancel Quest!");
+									$s->sendMessage("§6- §aSuccessfully canceled Quest!");
 								} else {
-									$s->sendMessage("§cYou do not have that quest on your list");
+									$s->sendMessage("§cYou have not started that Quest!");
 								}
 							} else {
-								$s->sendMessage("§cYou do not have any database");
+								$s->sendMessage("§cYou don't have any quest data :c");
 							}
 						} else {
 							$s->sendMessage("§cusage: /quest cancel <id>");

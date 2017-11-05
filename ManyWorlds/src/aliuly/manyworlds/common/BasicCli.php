@@ -141,7 +141,7 @@ abstract class BasicCli {
 				$sender->sendMessage($ln);
 			return true;
 		}
-		$pageHeight = 5;
+		$pageHeight = 20;
 		$lineCount = count($txt);
 		$pageCount = intval($lineCount / $pageHeight) + ($lineCount % $pageHeight ? 1 : 0);
 		$hdr = TextFormat::GREEN . $hdr . TextFormat::RESET;

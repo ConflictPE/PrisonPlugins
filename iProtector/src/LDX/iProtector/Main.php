@@ -10,7 +10,9 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\Item;
-use pocketmine\item\Tool;
+use pocketmine\item\tool\hoe\Hoe;
+use pocketmine\item\tool\shovel\Shovel;
+use pocketmine\item\tool\Tool;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -302,7 +304,7 @@ class Main extends PluginBase implements Listener {
 		}
 		if(!$this->canEdit($p, $b)) {
 			$item = $p->getInventory()->getItemInHand();
-			if(($b->getId() == Item::DIRT or $b->getId() == Item::GRASS) and $item instanceof Tool and ($item->isHoe() or $item->isShovel())) {
+			if(($b->getId() === Item::DIRT or $b->getId() === Item::GRASS) and $item instanceof Tool and ($item instanceof Hoe or $item instanceof Shovel)) {
 				$event->setCancelled();
 			}
 		}

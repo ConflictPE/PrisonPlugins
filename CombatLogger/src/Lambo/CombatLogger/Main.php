@@ -22,15 +22,10 @@ class Main extends PluginBase implements Listener {
 		$this->interval = $this->getConfig()->get("interval");
 		$cmds = $this->getConfig()->get("blocked-commands");
 		foreach($cmds as $cmd) {
-			$this->blockedcommands[$cmd] = 1;
+			$this->blockedcommands[$cmd] = true;
 		}
-		$this->getServer()->getLogger()->info("CombatLogger enabled");
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask(new Scheduler($this, $this->interval), 20);
-	}
-
-	public function onDisable() {
-		$this->getServer()->getLogger()->info("CombatLogger disabled");
+		$this->getServer()->getScheduler()->scheduleRepeatingTask(new Scheduler($this), 20);
 	}
 
 	/**
@@ -58,15 +53,6 @@ class Main extends PluginBase implements Listener {
 	public function PlayerDeathEvent(PlayerDeathEvent $event) {
 		if(isset($this->players[$event->getEntity()->getName()])) {
 			unset($this->players[$event->getEntity()->getName()]);
-			/*$cause = $event->getEntity()->getLastDamageCause();
-			if($cause instanceof EntityDamageByEntityEvent){
-				$e = $cause->getDamager();
-				if($e instanceof Player){
-					$message = "death.attack.player";
-					$params[] = $e->getName();
-					$event->setDeathMessage(new TranslationContainer($message, $params));
-				}
-			}*/
 		}
 	}
 
@@ -80,6 +66,19 @@ class Main extends PluginBase implements Listener {
 		if(isset($this->players[$event->getPlayer()->getName()])) {
 			$player = $event->getPlayer();
 			if((time() - $this->players[$player->getName()]) < $this->interval) {
+				$last = $player->getLastDamageCause();
+				if($last instanceof EntityDamageByEntityEvent) {
+					$attacker = $last->getDamager();
+					if($attacker instanceof Player) {
+						$player->attack($player->getHealth(), $ev = new EntityDamageByEntityEvent($attacker, $player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, [
+							EntityDamageEvent::MODIFIER_BASE => $player->getHealth()
+						]));
+
+						if(!$ev->isCancelled()) {
+							return;
+						}
+					}
+				}
 				$player->kill();
 			}
 		}
