@@ -32,7 +32,7 @@ class Task extends PluginTask {
 				$this->length = -1;
 
 			foreach($this->getOwner()->getServer()->getOnlinePlayers() as $p) {
-				$p->sendDirectMessage($this->plugin->translateColors("&", $this->plugin->broadcast($this->cfg, $message)))
+				$p->sendDirectMessage($this->plugin->translateColors("&", $this->plugin->broadcast($this->cfg, $message)));
 			}
 		}
 	}
