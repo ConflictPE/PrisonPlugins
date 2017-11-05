@@ -21,7 +21,7 @@ use jacknoordhuis\autoinv\event\EventManager;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\EventPriority;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\network\mcpe\protocol\LevelEventPacket;
+use pocketmine\network\protocol\LevelEventPacket;
 use pocketmine\Player;
 
 class InventoryFullAlert extends EventHandler {
