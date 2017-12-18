@@ -5,7 +5,7 @@ namespace buycraft\packages;
 class Category {
 
 	/** @var  Package[] */
-	private $packages;
+	private $packages = [];
 	private $id;
 	private $name;
 	private $desc;
