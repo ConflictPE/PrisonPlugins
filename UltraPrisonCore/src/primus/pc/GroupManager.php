@@ -11,28 +11,12 @@ class GroupManager {
 		$this->plugin = $plugin;
 		$this->pp = $plugin->getServer()->getPluginManager()->getPlugin('PurePerms');
 		$this->order = $plugin->getConfig()->get('order');
-		$c = 0;
-		$plugin->getLogger()->info(TextFormat::BOLD . '---------------[' . TextFormat::RED . '+' . TextFormat::WHITE . ']---------------');
-		$plugin->getLogger()->info('Loaded prison ' . TextFormat::UNDERLINE . 'groups' . TextFormat::RESET . TextFormat::WHITE . ':');
 		foreach($this->order as $groupName) {
 			$group = $plugin->getPurePerms()->getGroup($groupName);
-			if($group instanceof PPGroup) {
-				$c++;
-				$plugin->getLogger()->info(' ' . $c . '. - ' . TextFormat::GOLD . $group->getName() . TextFormat::WHITE . ' : ' . TextFormat::GREEN . $plugin->getEconomy()->formatMoney($this->getPrice($group)));
-			} else {
-				$r = $this->pp->addGroup($groupName);
-				if($r === 1) {
-					$plugin->getLogger()->info('Created group: ' . TextFormat::GREEN . $groupName . TextFormat::WHITE . '');
-				} elseif($r === -1) {
-					$plugin->getLogger()->info('Failed to add group: ' . $groupName . ' due to - Invalid name');
-				} elseif($r === 0) {
-					$plugin->getLogger()->info('Failed to add group: ' . $groupName . ' due to - Already exists');
-				} else {
-					$plugin->getLogger()->info('Failed to add. Please add manualy group: ' . TextFormat::GREEN . $groupName . '');
-				}
+			if(!($group instanceof PPGroup)) {
+				$this->pp->addGroup($groupName);
 			}
 		}
-		$plugin->getLogger()->info(TextFormat::BOLD . '---------------[' . TextFormat::RED . '+' . TextFormat::WHITE . ']---------------');
 	}
 
 	public function getPrice(PPGroup $group) {
