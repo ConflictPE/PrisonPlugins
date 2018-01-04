@@ -39,12 +39,6 @@ class HUD extends Task {
 		"{nextrank}",
 		"{rank}",
 		"{name}",
-		"{onlineplayer}",
-		"{maxplayer}",
-		"{itemid}",
-		"{itemname}",
-		"{itemdamage}",
-		"{health}",
 	];
 
 	public function __construct(PrisonCore $core, string $text = "", string $sub_title = "") {
@@ -103,9 +97,7 @@ class HUD extends Task {
 		$money = $this->plugin->getEconomy()->getMoney($player);
 		$left = $nextGroupPrice - $money;
 		$left = $left <= 0 ? "§aRankup now!" : "§b$" . $left . " §3left to rankup.";
-		$maxplayer = $this->plugin->getServer()->getMaxPlayers();
 		$inv = $player->getInventory();
-		$item = $inv ? $inv->getItemInHand() : Item::get(0);
 		return str_replace($this->variables, [
 			$money,
 			$left,
@@ -113,12 +105,6 @@ class HUD extends Task {
 			$nextGroup,
 			$group->getName(),
 			$player->getDisplayName(),
-			count($this->plugin->getServer()->getOnlinePlayers()),
-			$maxplayer,
-			$item->getId(),
-			$item->getName(),
-			$item->getDamage(),
-			$player->getHealth(),
 		], $text);
 	}
 
